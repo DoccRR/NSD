@@ -73,14 +73,54 @@ html,body{
   margin-bottom:25px;
 }
 
+/* Última slide (Snake más grande, rectangular) */
+.slide.snake-slide{
+  flex:0 0 95%;
+  max-width:1200px;
+  height:90%;
+  align-items:center;
+  justify-content:center;
+}
+.slide.snake-slide::after{content:none;}
+.slide.snake-slide span{display:none;}
+
+/* Snake */
+.play-inner{
+  position:relative;
+  z-index:2; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; gap:12px;
+  height:100%;
+}
+#snakeWrap{
+  flex:1;
+  display:flex; justify-content:center; align-items:center;
+  background:#000;
+  border:1px solid #444;
+  border-radius:12px; padding:8px;
+  width:100%;
+}
+#snakeCanvas{
+  display:block;
+  width:100%; max-width:1000px;
+  height:auto; background:#000;
+  aspect-ratio:1/1;
+}
+.snake-ui{font-size:12px; color:var(--muted); text-align:center;}
+.score{
+  position:absolute; top:10px; left:10px;
+  font-size:14px; color:#bbb;
+  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
+}
+
 /* Footer */
 .footer-genres, .footer-records{
   position:absolute;
   width:100%; text-align:center;
   font-size:12px; color:var(--muted);
 }
-.footer-genres{bottom:30px;}
-.footer-records{bottom:10px; letter-spacing:2px;}
+.footer-genres{bottom:90px;}
+.footer-records{bottom:70px; letter-spacing:2px;}
 
 /* Arrows */
 .arrow{
@@ -108,38 +148,13 @@ html,body{
 .welcome-overlay h1{font-size:2rem; margin-bottom:10px;}
 .welcome-overlay p{margin:5px 0;}
 
-/* PLAY snake */
-.play-inner{
-  position:relative;
-  z-index:2; width:100%;
-  display:flex; flex-direction:column;
-  align-items:center; gap:12px;
-  padding-bottom:30px;
-}
-#snakeWrap{
-  background:#000;
-  border:1px solid #444;
-  border-radius:12px; padding:8px;
-}
-#snakeCanvas{
-  display:block;
-  width:min(90vw, 520px);
-  height:auto; background:#000;
-}
-.snake-ui{font-size:12px; color:var(--muted); text-align:center;}
-.score{
-  position:absolute; top:10px; left:10px;
-  font-size:12px; color:#bbb;
-  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
-}
-
 /* Hidden Soundcloud iframe */
 #scPlayer{display:none;}
 
 /* Fixed Player Controls */
 #playerControls{
   position:fixed;
-  bottom:30px; left:50%;
+  bottom:20px; left:50%;
   transform:translateX(-50%);
   background:#000;
   border:2px solid var(--fg);
@@ -154,9 +169,7 @@ html,body{
   background:none; border:none; color:#fff;
   font-size:20px; cursor:pointer;
 }
-#volumeSlider{
-  width:100px;
-}
+#volumeSlider{width:100px;}
 </style>
 </head>
 <body>
@@ -187,20 +200,19 @@ html,body{
   <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
   <!-- SNAKE última slide -->
-  <div class="slide" style="background:#000">
-    <span>PLAY</span>
+  <div class="slide snake-slide">
     <div class="play-inner">
       <div id="snakeWrap">
         <div class="score" id="score">SCORE: 0</div>
         <canvas id="snakeCanvas" width="400" height="400"></canvas>
       </div>
-      <div class="snake-ui">Click/tap para girar • Flechas del teclado también funcionan</div>
+      <div class="snake-ui">Mueve con flechas o deslizando el dedo en pantalla</div>
     </div>
   </div>
 </main>
 
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
-<div class="footer-records"></div>
+<div class="footer-records">NOIZE SECRET DOCTRINE</div>
 
 <!-- Hidden Soundcloud -->
 <iframe id="scPlayer" width="100%" height="166" scrolling="no" frameborder="no"
@@ -274,13 +286,11 @@ function step(){
 }
 function draw(){
   ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-  // comida = mini NSD rojo
   const fx=food.x*CELL+CELL/2, fy=food.y*CELL+CELL/2;
   ctx.fillStyle= '#e60000';
   ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
   ctx.fillStyle='#fff'; ctx.font=(CELL*0.5)+"px Orbitron"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("NSD",fx,fy+1);
 
-  // snake blanca
   ctx.fillStyle= '#fff';
   snake.forEach(seg=>{
     const margin=CELL*0.25;
@@ -297,17 +307,26 @@ window.addEventListener('keydown',e=>{
   else if(k==='ArrowRight') pendingDir={x:1,y:0};
   if(k.startsWith('Arrow')) e.preventDefault();
 });
-function clickDir(evt){
-  const rect=canvas.getBoundingClientRect();
-  const cx=(evt.touches?evt.touches[0].clientX:evt.clientX)-rect.left;
-  const cy=(evt.touches?evt.touches[0].clientY:evt.clientY)-rect.top;
-  const hx=(snake[0].x+0.5)*CELL, hy=(snake[0].y+0.5)*CELL;
-  const dx=cx-hx, dy=cy-hy;
-  if(Math.abs(dx)>Math.abs(dy)){pendingDir={x:dx>0?1:-1,y:0};}
-  else{pendingDir={x:0,y:dy>0?1:-1};}
-}
-canvas.addEventListener('click',clickDir);
-canvas.addEventListener('touchstart',e=>{e.preventDefault();clickDir(e);},{passive:false});
+
+/* Controles táctiles: deslizar */
+let touchStartX=null, touchStartY=null;
+canvas.addEventListener('touchstart',e=>{
+  const t=e.touches[0];
+  touchStartX=t.clientX; touchStartY=t.clientY;
+},{passive:true});
+canvas.addEventListener('touchmove',e=>{
+  if(!touchStartX||!touchStartY) return;
+  const t=e.touches[0];
+  const dx=t.clientX-touchStartX, dy=t.clientY-touchStartY;
+  if(Math.abs(dx)>30||Math.abs(dy)>30){
+    if(Math.abs(dx)>Math.abs(dy)){
+      pendingDir={x:dx>0?1:-1,y:0};
+    }else{
+      pendingDir={x:0,y:dy>0?1:-1};
+    }
+    touchStartX=null; touchStartY=null;
+  }
+},{passive:true});
 
 reset();
 
@@ -341,3 +360,4 @@ volumeSlider.addEventListener('input',()=>{
 </script>
 </body>
 </html>
+
