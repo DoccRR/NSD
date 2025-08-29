@@ -63,6 +63,7 @@ body::before {
   overflow:hidden;
   transition:transform .3s ease;
   text-decoration:none;
+  cursor:pointer;
 }
 .slide:hover{transform:scale(1.03);}
 
@@ -111,6 +112,43 @@ body::before {
 .arrow:hover{color:#fff;}
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
+
+/* Overlay para Welcome */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  color:var(--fg);
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px;
+  z-index:100;
+}
+.overlay.active{display:flex;}
+.overlay h1{
+  font-size:clamp(24px,4vw,40px);
+  margin-bottom:20px;
+}
+.overlay p{
+  font-size:clamp(16px,3vw,22px);
+  margin-top:10px;
+  color:var(--muted);
+}
+.overlay button{
+  margin-top:30px;
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#fff;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s;
+}
+.overlay button:hover{background:#ddd;}
 </style>
 </head>
 <body>
@@ -120,8 +158,8 @@ body::before {
 <div class="arrow right">❯</div>
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- Slide principal -->
-  <div class="slide" style="background-image:url('NSD.jpg')">
+  <!-- Slide principal (WELCOME abre la "página interna") -->
+  <div class="slide welcome-slide" style="background-image:url('NSD.jpg')">
     <span>WELCOME</span>
   </div>
 
@@ -151,26 +189,35 @@ body::before {
 </footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
 
+<!-- Overlay oculto -->
+<div class="overlay" id="welcomeOverlay">
+  <h1>This is NSD aKa Noize Secret Doctrine official website.</h1>
+  <p>Underground crew.</p>
+  <button id="closeOverlay">Close</button>
+</div>
+
 <script>
-// hacer que las flechas scrolleen
+// referencias
 const container = document.querySelector('.carousel-container');
 const leftArrow = document.querySelector('.arrow.left');
 const rightArrow = document.querySelector('.arrow.right');
+const welcomeSlide = document.querySelector('.welcome-slide');
+const overlay = document.getElementById('welcomeOverlay');
+const closeOverlay = document.getElementById('closeOverlay');
 
+// scroll con flechas
 function getScrollAmount(){
   const slide = container.querySelector('.slide');
-  return slide ? slide.offsetWidth + 60 : 400; // ancho + margen
+  return slide ? slide.offsetWidth + 60 : 400;
 }
-
 leftArrow.addEventListener('click', () => {
   container.scrollBy({left:-getScrollAmount(), behavior:'smooth'});
 });
-
 rightArrow.addEventListener('click', () => {
   container.scrollBy({left:getScrollAmount(), behavior:'smooth'});
 });
 
-// hacer que la rueda del ratón scrollee en horizontal
+// scroll con rueda
 container.addEventListener('wheel', (e) => {
   e.preventDefault();
   container.scrollBy({
@@ -178,6 +225,14 @@ container.addEventListener('wheel', (e) => {
     behavior: 'smooth'
   });
 }, { passive: false });
+
+// abrir/cerrar overlay
+welcomeSlide.addEventListener('click', () => {
+  overlay.classList.add('active');
+});
+closeOverlay.addEventListener('click', () => {
+  overlay.classList.remove('active');
+});
 </script>
 
 </body>
