@@ -30,14 +30,13 @@
       background-size: cover;
       background-position: center;
       position: relative;
-      text-align: center;
     }
     h1, h2 {
       margin: 0;
       padding: 10px;
       text-align: center;
     }
-    a {
+    a, button {
       color: white;
       text-decoration: none;
       border: 1px solid white;
@@ -45,6 +44,8 @@
       margin-top: 20px;
       display: inline-block;
       border-radius: 10px;
+      background: black;
+      cursor: pointer;
     }
     /* Player */
     #player-controls {
@@ -72,7 +73,7 @@
     #volume {
       width: 80px;
     }
-    /* Snake Slide */
+    /* Snake */
     #snakeCanvas {
       border: 2px solid white;
       margin-top: 20px;
@@ -93,11 +94,17 @@
       border: 1px solid white;
       cursor: pointer;
     }
-    /* Fondo oscuro detrás del texto en la portada */
-    .overlay-text {
-      background: rgba(0, 0, 0, 0.6);
+    /* Sub-welcome */
+    #welcome-inner {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: black;
+      width: 100%;
+      height: 100%;
+      text-align: center;
       padding: 20px;
-      border-radius: 12px;
     }
   </style>
 </head>
@@ -106,39 +113,59 @@
 
     <!-- Slide 1: Welcome -->
     <div class="slide" style="background:url('NSD.png') center/cover no-repeat;">
-      <div class="overlay-text">
+      <h1>NOIZE SECRET DOCTRINE</h1>
+      <button id="enterBtn">ENTER</button>
+
+      <!-- Sub-welcome oculto -->
+      <div id="welcome-inner">
         <h1>NOIZE SECRET DOCTRINE</h1>
         <p style="max-width:600px; text-align:center; margin-top:20px;">
           This is NSD aKa Noize Secret Doctrine official website.
         </p>
         <p style="margin-top:10px;">Underground crew.</p>
+
+        <h2>DOCTRINE RECORDS</h2>
+        <a href="https://doctrinerecords.bandcamp.com/" target="_blank">Visit</a>
+
+        <h2>HARDCORE / SPEEDCORE</h2>
+        <a href="https://soundcloud.com/noizesd" target="_blank">SoundCloud</a>
       </div>
     </div>
 
-    <!-- Slide 2: Doctrine Records -->
-    <div class="slide" style="background:url('doctrine.png') center/cover no-repeat;">
-      <h2>DOCTRINE RECORDS</h2>
-      <a href="https://doctrinerecords.bandcamp.com/" target="_blank">Visit</a>
+    <!-- Slide 2: Buy Music -->
+    <div class="slide" style="background:url('buy.png') center/cover no-repeat;">
+      <h2>BUY MUSIC</h2>
+      <a href="https://noizesecretdoctrine.bandcamp.com/" target="_blank">Bandcamp</a>
     </div>
 
-    <!-- Slide 3: Hardcore / Speedcore -->
-    <div class="slide" style="background:url('hardcore.png') center/cover no-repeat;">
-      <h2>HARDCORE / SPEEDCORE</h2>
-      <a href="https://soundcloud.com/noizesd" target="_blank">SoundCloud</a>
+    <!-- Slide 3: SoundCloud -->
+    <div class="slide" style="background:url('sc.png') center/cover no-repeat;">
+      <h2>SOUNDCLOUD</h2>
+      <a href="https://soundcloud.com/noizesd" target="_blank">Listen</a>
     </div>
 
-    <!-- Slide 4: Merchandising -->
+    <!-- Slide 4: YouTube -->
+    <div class="slide" style="background:url('yt.png') center/cover no-repeat;">
+      <h2>YOUTUBE</h2>
+      <a href="https://www.youtube.com/@noizesecretdoctrine" target="_blank">Watch</a>
+    </div>
+
+    <!-- Slide 5: Spotify -->
+    <div class="slide" style="background:url('spotify.png') center/cover no-repeat;">
+      <h2>SPOTIFY</h2>
+      <a href="https://open.spotify.com/artist/4c2oC3NnL3G6sFJzi10BG3" target="_blank">Listen</a>
+    </div>
+
+    <!-- Slide 6: Merchandising -->
     <div class="slide" style="background:url('merch.png') center/cover no-repeat;">
       <h2>MERCHANDISING</h2>
-      <a href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" target="_blank">Shop Now</a>
+      <a href="https://triple6-shop.nl/collections/nsd" target="_blank">Shop Now</a>
     </div>
 
-    <!-- Slide 5: Snake -->
+    <!-- Slide 7: Snake -->
     <div class="slide" id="snake-slide" style="background:#000; flex-direction:column;">
       <h2>SNAKE</h2>
-      <button id="startSnake" style="padding:15px 30px; background:#000; color:#fff; border:2px solid #fff; border-radius:10px; cursor:pointer; font-size:18px;">
-        PLAY NSDAKE
-      </button>
+      <button id="startSnake">PLAY NSDAKE</button>
 
       <canvas id="snakeCanvas" width="400" height="400" style="display:none; background:#000;"></canvas>
 
@@ -147,7 +174,7 @@
         <input type="text" id="nickname" placeholder="Enter Nickname">
         <button id="saveScore">Save</button>
         <div id="scoreboard" style="margin-top:15px;"></div>
-        <button id="restartSnake" style="margin-top:15px; padding:10px 20px; background:#000; color:#fff; border:2px solid #fff; cursor:pointer;">PLAY NSDAKE</button>
+        <button id="restartSnake">PLAY NSDAKE</button>
       </div>
     </div>
   </div>
@@ -164,6 +191,14 @@
 
   <script src="https://w.soundcloud.com/player/api.js"></script>
   <script>
+    /* === ENTER Welcome === */
+    const enterBtn = document.getElementById("enterBtn");
+    const welcomeInner = document.getElementById("welcome-inner");
+    enterBtn.addEventListener("click", ()=>{
+      enterBtn.style.display="none";
+      welcomeInner.style.display="flex";
+    });
+
     /* === SoundCloud Player === */
     const iframe = document.getElementById('sc-player');
     const widget = SC.Widget(iframe);
