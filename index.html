@@ -132,7 +132,16 @@ html,body{
 }
 #gameOverOverlay h2{font-size:2rem; margin-bottom:15px;}
 #nicknameInput{padding:8px; margin:10px; font-size:16px; border-radius:6px;}
-#submitScore{padding:8px 16px; background:var(--accent); border:none; color:#fff; font-weight:bold; border-radius:6px; cursor:pointer;}
+#submitScore, #playAgainBtn{
+  padding:8px 16px; 
+  background:var(--accent); 
+  border:none; 
+  color:#fff; 
+  font-weight:bold; 
+  border-radius:6px; 
+  cursor:pointer;
+  margin-top:5px;
+}
 #ranking{margin-top:20px; text-align:left;}
 
 /* Footer */
@@ -230,6 +239,7 @@ html,body{
           <div id="ranking"></div>
           <input type="text" id="nicknameInput" placeholder="Enter nickname" maxlength="12">
           <button id="submitScore">Save Score</button>
+          <button id="playAgainBtn">Play Again</button>
         </div>
       </div>
       <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
@@ -279,6 +289,7 @@ const overlay=document.getElementById('gameOverOverlay');
 const rankingEl=document.getElementById('ranking');
 const nicknameInput=document.getElementById('nicknameInput');
 const submitScoreBtn=document.getElementById('submitScore');
+const playAgainBtn=document.getElementById('playAgainBtn');
 const GRID=20,SPEED=140;
 const W=canvasEl.width,H=canvasEl.height;
 const CELL=W/GRID;
@@ -336,6 +347,10 @@ submitScoreBtn.addEventListener('click',()=>{
   ranking.sort((a,b)=>b.score-a.score);
   renderRanking();
   nicknameInput.value="";
+  resetSnake(); // reinicia tras guardar puntaje
+});
+playAgainBtn.addEventListener('click',()=>{
+  resetSnake(); // reinicia sin necesidad de nickname
 });
 window.addEventListener('keydown',e=>{
   if(e.key==='ArrowUp') pendingDir={x:0,y:-1};
