@@ -19,10 +19,8 @@
 *{box-sizing:border-box;}
 html,body{
   height:100%; margin:0; font-family:var(--font-futuristic);
-  background:var(--bg); color:var(--fg); overflow:hidden;
-  background-image:url("fondo.png");
-  background-size:cover;
-  background-position:center;
+  background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
+  color:var(--fg); overflow:hidden;
 }
 
 /* Carousel wrapper */
@@ -97,51 +95,72 @@ html,body{
   z-index:10;
   cursor:pointer;
   user-select:none;
+  animation:blink 1.5s infinite;
 }
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
 
-/* Welcome inner page */
-.welcome-content{
+@keyframes blink{
+  0%,100%{opacity:0.4;}
+  50%{opacity:1;}
+}
+
+/* Welcome overlay */
+.welcome-overlay{
   position:absolute;
-  top:0; left:0; width:100%; height:100%;
+  inset:0;
   background:#000;
-  display:flex;
+  color:#fff;
+  display:none;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
   padding:20px;
-  opacity:0;
-  visibility:hidden;
-  transition:opacity .4s ease;
+  z-index:5;
 }
-.welcome-content.active{
-  opacity:1;
-  visibility:visible;
+.welcome-overlay h1{font-size:2rem; margin-bottom:10px;}
+.welcome-overlay p{margin:5px 0;}
+
+/* Modal SoundCloud */
+#playerModal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:20;
 }
-.welcome-content h1{
-  font-size:clamp(24px,4vw,40px);
-  margin-bottom:20px;
+#playerModal iframe{
+  width:80%;
+  max-width:600px;
+  height:300px;
 }
-.welcome-content p{
-  font-size:clamp(16px,2vw,22px);
+#playerModal button{
+  position:absolute;
+  top:20px; right:20px;
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:30px;
+  cursor:pointer;
 }
 </style>
 </head>
 <body>
 
 <!-- Flechas -->
-<div class="arrow left">❮</div>
-<div class="arrow right">❯</div>
+<div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
+<div class="arrow right" onclick="scrollCarousel(1)">❯</div>
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- Slide principal (WELCOME) -->
-  <div class="slide" id="welcome-slide" style="background-image:url('NSD.jpg'); cursor:pointer;">
+  <!-- Slide principal con overlay -->
+  <div class="slide" style="background-image:url('NSD.jpg')" onclick="toggleWelcome()">
     <span>WELCOME</span>
-    <div class="welcome-content" id="welcome-content">
-      <h1>This is NSD aKa Noize Secret Doctrine official website.</h1>
-      <p>Underground crew.</p>
+    <div class="welcome-overlay" id="welcomeOverlay">
+      <h1>THIS IS NSD AKA NOIZE SECRET DOCTRINE OFFICIAL WEBSITE</h1>
+      <p>UNDERGROUND CREW</p>
     </div>
   </div>
 
@@ -165,17 +184,12 @@ html,body{
     <span>BOOKINGS</span>
   </a>
 
-  <!-- Slide con reproductor SoundCloud -->
-  <div class="slide" style="background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
-    <span>SOUNDCLOUD PLAYER</span>
-    <iframe 
-      width="100%" 
-      height="300" 
-      scrolling="no" 
-      frameborder="no" 
-      allow="autoplay" 
-      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
-    </iframe>
+  <!-- Slide con botón de player -->
+  <div class="slide" style="background-image:url('fondo.png'); background-size:cover; background-position:center; display:flex; justify-content:center; align-items:center; flex-direction:column;">
+    <span>LISTEN</span>
+    <button onclick="openModal()" style="background:#111; color:#fff; padding:15px 30px; border:none; border-radius:8px; font-size:1rem; cursor:pointer; text-transform:uppercase; margin-bottom:40px;">
+      ▶ PLAY NSD
+    </button>
   </div>
 </main>
 
@@ -184,34 +198,43 @@ html,body{
 </footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
 
+<!-- Modal con SoundCloud -->
+<div id="playerModal">
+  <button onclick="closeModal()">✕</button>
+  <iframe 
+    scrolling="no" 
+    frameborder="no" 
+    allow="autoplay" 
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23000000&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
+  </iframe>
+</div>
+
 <script>
-// flechas
-const container = document.querySelector('.carousel-container');
-document.querySelector('.arrow.left').addEventListener('click', () => {
-  container.scrollBy({ left: -window.innerWidth * 0.8, behavior: 'smooth' });
-});
-document.querySelector('.arrow.right').addEventListener('click', () => {
-  container.scrollBy({ left: window.innerWidth * 0.8, behavior: 'smooth' });
-});
+const carousel = document.querySelector('.carousel-container');
+function scrollCarousel(direction){
+  const slideWidth = document.querySelector('.slide').offsetWidth + 60;
+  carousel.scrollBy({left: slideWidth * direction, behavior:'smooth'});
+}
 
 // scroll con rueda del ratón
-container.addEventListener('wheel', (e) => {
+carousel.addEventListener('wheel', e=>{
   e.preventDefault();
-  container.scrollBy({ left: e.deltaY, behavior: 'smooth' });
+  carousel.scrollBy({left:e.deltaY, behavior:'smooth'});
 });
 
-// welcome toggle
-const welcomeSlide = document.getElementById('welcome-slide');
-const welcomeContent = document.getElementById('welcome-content');
-let welcomeActive = false;
-welcomeSlide.addEventListener('click', () => {
-  welcomeActive = !welcomeActive;
-  if (welcomeActive) {
-    welcomeContent.classList.add('active');
-  } else {
-    welcomeContent.classList.remove('active');
-  }
-});
+// overlay welcome
+function toggleWelcome(){
+  const overlay = document.getElementById('welcomeOverlay');
+  overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// modal soundcloud
+function openModal(){
+  document.getElementById('playerModal').style.display = 'flex';
+}
+function closeModal(){
+  document.getElementById('playerModal').style.display = 'none';
+}
 </script>
 
 </body>
