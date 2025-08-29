@@ -11,8 +11,8 @@
   --bg:#000000;
   --fg:#ffffff;
   --muted:#9ca3af;   
-  --card:#d1d1d1;    /* fondo gris enlaces */
-  --card-text:#000000; /* letras negras enlaces */
+  --card:#d1d1d1;    
+  --card-text:#000000; 
   --card-hover:#bdbdbd;
   --radius:16px;
   --font-futuristic:"Orbitron", "Rajdhani", "Exo 2", sans-serif;
@@ -43,6 +43,20 @@ body{
   text-align:right;
 }
 
+/* Bottom-left second title */
+.bottom-title-left{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  font-weight:900;
+  font-size:clamp(32px,5vw,64px);
+  color:#fff;
+  text-transform:uppercase;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  z-index:2;
+}
+
 /* Central wrapper for links */
 .wrap{
   display:flex;
@@ -68,15 +82,15 @@ body{
   display:flex;
   align-items:center;
   gap:15px;
-  padding:25px; /* un poco más grande */
+  padding:25px; 
   background:var(--card);
   color:var(--card-text);
   border-radius:var(--radius);
-  font-size:20px; /* más grande */
+  font-size:20px; 
   font-weight:700;
   width:100%;
-  justify-content:center; /* centra texto y icono */
-  text-decoration:none; /* quita subrayado */
+  justify-content:center; 
+  text-decoration:none; 
   transition: transform .08s ease, background .2s ease;
 }
 .link-btn:hover{
@@ -113,6 +127,9 @@ body{
   .top-title-right{
     font-size:clamp(24px,8vw,40px);
   }
+  .bottom-title-left{
+    font-size:clamp(24px,8vw,40px);
+  }
   .link-btn{
     padding:20px;
     font-size:18px;
@@ -127,6 +144,7 @@ body{
 <body>
 
 <div class="top-title-right">NOIZE SECRET DOCTRINE</div>
+<div class="bottom-title-left">NSD</div>
 
 <main class="wrap">
   <div class="links" role="navigation" aria-label="Social & music links">
