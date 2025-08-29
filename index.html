@@ -136,20 +136,27 @@ html,body{
 /* Hidden Soundcloud iframe */
 #scPlayer{display:none;}
 
-/* Fixed Play Button */
-#playBtn{
+/* Fixed Player Controls */
+#playerControls{
   position:fixed;
-  bottom:15px; left:50%;
+  bottom:30px; left:50%;
   transform:translateX(-50%);
-  background:var(--accent);
-  border:none; border-radius:30px;
-  padding:12px 28px;
+  background:#000;
+  border:2px solid var(--fg);
+  border-radius:40px;
+  padding:10px 20px;
   font-size:16px; font-weight:700;
-  color:#fff; cursor:pointer;
-  display:flex; align-items:center; gap:10px;
+  color:#fff;
+  display:flex; align-items:center; gap:15px;
   z-index:50;
 }
-#playBtn span{font-size:18px;}
+#playerControls button{
+  background:none; border:none; color:#fff;
+  font-size:20px; cursor:pointer;
+}
+#volumeSlider{
+  width:100px;
+}
 </style>
 </head>
 <body>
@@ -177,7 +184,7 @@ html,body{
   <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
 
   <!-- MERCH -->
-  <a class="slide" href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
   <!-- SNAKE última slide -->
   <div class="slide" style="background:#000">
@@ -193,15 +200,20 @@ html,body{
 </main>
 
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
-<div class="footer-records">DOCTRINE RECORDS</div>
+<div class="footer-records"></div>
 
 <!-- Hidden Soundcloud -->
 <iframe id="scPlayer" width="100%" height="166" scrolling="no" frameborder="no"
   src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23e60000&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
 </iframe>
 
-<!-- Play Button -->
-<button id="playBtn"><span>▶</span> PLAY NSD</button>
+<!-- Player Controls -->
+<div id="playerControls">
+  <button id="prevBtn">⏮</button>
+  <button id="playPauseBtn"><span>▶</span></button>
+  <button id="nextBtn">⏭</button>
+  <input type="range" id="volumeSlider" min="0" max="100" value="80">
+</div>
 
 <script src="https://w.soundcloud.com/player/api.js"></script>
 <script>
@@ -302,19 +314,29 @@ reset();
 /* === SoundCloud hidden player === */
 const iframeElement = document.getElementById('scPlayer');
 const widget = SC.Widget(iframeElement);
-const playBtn = document.getElementById('playBtn');
+
+const playPauseBtn = document.getElementById('playPauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const volumeSlider = document.getElementById('volumeSlider');
+
 let isPlaying = false;
 
-playBtn.addEventListener('click',()=>{
+playPauseBtn.addEventListener('click',()=>{
   if(!isPlaying){
     widget.play();
-    playBtn.innerHTML='<span>⏸</span> PAUSE NSD';
+    playPauseBtn.innerHTML='<span>⏸</span>';
     isPlaying=true;
   } else {
     widget.pause();
-    playBtn.innerHTML='<span>▶</span> PLAY NSD';
+    playPauseBtn.innerHTML='<span>▶</span>';
     isPlaying=false;
   }
+});
+prevBtn.addEventListener('click',()=>widget.prev());
+nextBtn.addEventListener('click',()=>widget.next());
+volumeSlider.addEventListener('input',()=>{
+  widget.setVolume(volumeSlider.value/100);
 });
 </script>
 </body>
