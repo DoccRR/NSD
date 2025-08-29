@@ -53,7 +53,7 @@ html,body{
   transition:transform .3s ease;
   text-decoration:none;
 }
-.slide:hover{transform:scale(1.03);}
+.slide:hover{transform:scale(1.03);} 
 .slide::after{
   content:"";
   position:absolute;
@@ -142,7 +142,8 @@ html,body{
   cursor:pointer;
   margin-top:5px;
 }
-#ranking{margin-top:20px; text-align:left;}
+#ranking{margin-top:20px; text-align:left; min-height:120px;}
+#rankError{margin-top:8px; color:#ff8080; font-size:12px;}
 
 /* Footer */
 .footer-genres, .footer-records{
@@ -237,7 +238,8 @@ html,body{
         <div id="gameOverOverlay">
           <h2>NSD TOP FREAKS</h2>
           <div id="ranking"></div>
-          <input type="text" id="nicknameInput" placeholder="Enter nickname" maxlength="12">
+          <div id="rankError" aria-live="polite"></div>
+          <input type="text" id="nicknameInput" placeholder="Nickname" maxlength="20">
           <button id="submitScore">Save Score</button>
           <button id="playAgainBtn">Play Again</button>
         </div>
@@ -269,6 +271,26 @@ html,body{
 ></iframe>
 <script src="https://w.soundcloud.com/player/api.js"></script>
 
+<!-- ========================= -->
+<!--        FIREBASE          -->
+<!-- ========================= -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+  // ⚙️ Rellena con TU config de Firebase
+  const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://nsdsnake-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_PROJECT_ID.appspot.com",
+    messagingSenderId: "XXXXXXXXXXXX",
+    appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+
 <script>
 /* Carousel */
 const carousel=document.querySelector('.carousel-container');
@@ -287,6 +309,7 @@ const ctx=canvasEl.getContext('2d');
 const scoreEl=document.getElementById('score');
 const overlay=document.getElementById('gameOverOverlay');
 const rankingEl=document.getElementById('ranking');
+const rankErrorEl=document.getElementById('rankError');
 const nicknameInput=document.getElementById('nicknameInput');
 const submitScoreBtn=document.getElementById('submitScore');
 const playAgainBtn=document.getElementById('playAgainBtn');
@@ -294,7 +317,6 @@ const GRID=20,SPEED=140;
 const W=canvasEl.width,H=canvasEl.height;
 const CELL=W/GRID;
 let snake,dir,food,score,pendingDir,gameLoop,lives=2;
-let ranking=[];
 
 function resetSnake(){
   snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
@@ -335,23 +357,62 @@ function drawSnake(){
   ctx.fillStyle='#fff'; snake.forEach(seg=>{const m=CELL*0.25; ctx.fillRect(seg.x*CELL+m/2,seg.y*CELL+m/2,CELL-m,CELL-m);});
   scoreEl.textContent='SCORE: '+score+' | LIVES: '+lives;
 }
+
+// =====================
+//  Ranking (Firebase)
+// =====================
 function renderRanking(){
-  rankingEl.innerHTML="";
-  ranking
-    .slice(0,5)
-    .forEach((r,i)=>{rankingEl.innerHTML+=`<div>${i+1}. ${r.name} — ${r.score}</div>`;});
+  rankingEl.innerHTML = "Loading...";
+  rankErrorEl.textContent = "";
+
+  db.ref("scores")
+    .orderByChild("score")
+    .limitToLast(5)
+    .once("value")
+    .then(snapshot=>{
+      const arr = [];
+      snapshot.forEach(child=>{ arr.push(child.val()); });
+      arr.sort((a,b)=> (b.score||0) - (a.score||0));
+      if(arr.length===0){
+        rankingEl.innerHTML = "No scores yet";
+        return;
+      }
+      rankingEl.innerHTML = arr.map((r,i)=>`<div>${i+1}. ${escapeHtml(r.nickname||'Anon')} — ${Number(r.score)||0}</div>`).join("");
+    })
+    .catch(err=>{
+      rankingEl.innerHTML = "";
+      rankErrorEl.textContent = "Error loading ranking: " + err.message;
+      console.error('[Ranking] ', err);
+    });
 }
-submitScoreBtn.addEventListener('click',()=>{
-  const name=(nicknameInput.value||"Anon").slice(0,12);
-  ranking.push({name,score});
-  ranking.sort((a,b)=>b.score-a.score);
-  renderRanking();
-  nicknameInput.value="";
-  resetSnake(); // reinicia tras guardar puntaje
+
+function saveScore(){
+  const nickname = (nicknameInput.value || "Anon").slice(0,20);
+  const safeScore = Math.max(0, Math.min(9999, Number(score)||0));
+
+  submitScoreBtn.disabled = true;
+  rankErrorEl.textContent = "";
+
+  return db.ref("scores").push({ nickname, score: safeScore })
+    .then(()=>{ nicknameInput.value=""; })
+    .catch(err=>{
+      rankErrorEl.textContent = "Error saving score: " + err.message;
+      console.error('[SaveScore] ', err);
+    })
+    .finally(()=>{ submitScoreBtn.disabled = false; });
+}
+
+// Helpers
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+}
+
+submitScoreBtn.addEventListener('click', async ()=>{
+  await saveScore();
+  resetSnake(); // reinicia tras guardar
 });
-playAgainBtn.addEventListener('click',()=>{
-  resetSnake(); // reinicia sin necesidad de nickname
-});
+playAgainBtn.addEventListener('click',()=>{ resetSnake(); });
+
 window.addEventListener('keydown',e=>{
   if(e.key==='ArrowUp') pendingDir={x:0,y:-1};
   else if(e.key==='ArrowDown') pendingDir={x:0,y:1};
@@ -458,4 +519,5 @@ volumeSlider.addEventListener('input', function(e){
 
 </body>
 </html>
+
 
