@@ -13,7 +13,6 @@
   --muted:#9ca3af;   
   --card:#0b0b0b;    
   --card-hover:#141414;
-  --ring:#ffffff;    
   --radius:16px;
   --maxw:620px;
   --font-futuristic:"Orbitron", "Rajdhani", "Exo 2", sans-serif;
@@ -23,72 +22,55 @@
 *{box-sizing:border-box;}
 html,body{height:100%; margin:0; font-family: var(--font-futuristic); background:var(--bg); color:var(--fg); overflow-x:hidden;}
 a{color:inherit;text-decoration:none; font-weight:700;}
-
 body{
   position:relative;
   min-height:100vh;
   background:#000 url('NSD.jpg') center/cover no-repeat;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
+  align-items:center;
 }
 
-/* Top title */
-.top-title{
-  width:100%;
-  text-align:center;
-  font-size:clamp(36px, 8vw, 80px);
-  font-weight:900;
-  color:#fff;
-  margin-top:20px;
-  z-index:2;
-  text-transform:uppercase;
-}
-
-/* Lateral NSD */
-.side-text-left{
+/* Lateral NOIZE SECRET DOCTRINE */
+.side-title-left{
   position:absolute;
   top:0;
   bottom:0;
-  left:10px;
+  left:0;
   display:flex;
   flex-direction:column;
   justify-content:center;
   font-weight:900;
   letter-spacing:0.1em;
-  line-height:1.5;
+  line-height:1;
+  font-size:clamp(48px, 8vw, 120px);
+  color:#fff;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-size:clamp(24px, 4vw, 48px);
-  color:rgba(255,255,255,0.15);
+  padding-left:10px;
 }
 
-/* Central wrapper */
+/* Central wrapper for links */
 .wrap{
-  position:relative;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:20px;
-  padding:20px 16px 80px;
+  justify-content:center;
+  gap:25px;
   z-index:2;
-  width:100%;
 }
 
 /* Links */
 .links{
   display:flex;
   flex-direction:column;
-  gap:14px;
-  max-width:var(--maxw);
-  width:100%;
+  gap:20px;
+  align-items:center; /* centrado horizontal */
 }
-
 .link-btn{
   display:flex;
   align-items:center;
-  justify-content:flex-start; /* icon on the left */
-  gap:20px; /* space between icon and text */
+  gap:20px;
   padding:18px 18px;
   background:var(--card);
   border:1px solid #1f1f1f;
@@ -103,27 +85,21 @@ body{
   border-color:#2a2a2a;
 }
 .link-btn img{
-  width:52px; /* más grande */
-  height:52px;
+  width:60px; /* iconos más grandes */
+  height:60px;
   border-radius:50%;
 }
 
 /* Footer */
-.footer-genres{
+.footer-genres, .footer-records{
+  position:absolute;
+  bottom:10px;
   width:100%;
-  max-width:var(--maxw);
   text-align:center;
-  color:var(--muted);
   font-size:12px;
-  opacity:.9;
-  margin-top:12px;
+  color:var(--muted);
 }
 .footer-records{
-  width:100%;
-  max-width:var(--maxw);
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
   margin-top:4px;
   letter-spacing:0.1em;
 }
@@ -133,8 +109,10 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  margin-top:12px;
   gap:4px;
+  position:absolute;
+  bottom:40px;
+  width:100%;
 }
 .contact-dropbtn{
   background:var(--card);
@@ -157,12 +135,12 @@ body{
   line-height:1.4;
 }
 .contact-dropdown:hover .contact-content{ display:flex; }
+
 </style>
 </head>
 <body>
 
-<div class="top-title">NOIZE SECRET DOCTRINE</div>
-<div class="side-text-left">NSD</div>
+<div class="side-title-left">NOIZE SECRET DOCTRINE</div>
 
 <main class="wrap">
   <div class="links" role="navigation" aria-label="Social & music links">
