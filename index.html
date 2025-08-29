@@ -231,25 +231,27 @@
       </div>
     </div>
   </div> <!-- cierre carousel -->
-  <!-- Música (SoundCloud oculto + controles) -->
-  <iframe id="scPlayer" width="0" height="0" scrolling="no" frameborder="no" allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd/sets/noizesd-tracks&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false&visual=false">
-  </iframe>
-  <div id="controls">
-    <button onclick="prevTrack()">⏮</button>
-    <button onclick="togglePlay()">▶️/⏸</button>
-    <button onclick="nextTrack()">⏭</button>
-    <input type="range" id="volume" min="0" max="100" value="50" onchange="setVolume(this.value)">
+  <!-- Subtítulos -->
+  <div class="subtitles">
+    <p>Noize Secret Doctrine</p>
+    <p>Underground Crew</p>
   </div>
 
-  <div class="subtitles">NOIZE SECRET DOCTRINE — OFFICIAL WEBSITE</div>
+  <!-- Controles de Música -->
+  <div id="controls">
+    <button onclick="prevTrack()">⏮</button>
+    <button onclick="togglePlay()">⏯</button>
+    <button onclick="nextTrack()">⏭</button>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
+  </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <!-- Audio oculto -->
+  <audio id="audioPlayer" style="display:none;"></audio>
 
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
-    /* ===== Firebase Init ===== */
     const firebaseConfig = {
       apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
       authDomain: "nsdsnake.firebaseapp.com",
@@ -261,54 +263,48 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+  </script>
 
-    /* ===== Carrusel Scroll ===== */
+  <!-- Scripts generales -->
+  <script>
+    /* ===== Carrusel ===== */
     const carousel = document.getElementById("carousel");
     function scrollCarousel(dir) {
-      const width = carousel.clientWidth;
+      const width = window.innerWidth;
       carousel.scrollBy({ left: dir * width, behavior: "smooth" });
     }
+    // scroll con rueda
     carousel.addEventListener("wheel", e => {
       e.preventDefault();
       if (e.deltaY > 0) scrollCarousel(1);
       else scrollCarousel(-1);
     });
 
-    /* ===== Welcome Toggle ===== */
-    const welcomeSlide = document.getElementById("welcomeSlide");
-    let welcomeFlipped = false;
-    welcomeSlide.addEventListener("click", () => {
-      if (!welcomeFlipped) {
-        welcomeSlide.style.backgroundImage = "none";
-        welcomeSlide.innerHTML = "This is NSD official website.<br>Underground crew.<br><small>(Click to return)</small>";
-        welcomeSlide.style.backgroundColor = "black";
-        welcomeFlipped = true;
-      } else {
-        welcomeSlide.style.backgroundImage = "url('NSD.jpg')";
-        welcomeSlide.textContent = "WELCOME";
-        welcomeSlide.style.backgroundColor = "transparent";
-        welcomeFlipped = false;
-      }
-    });
+    /* ===== Música (playlist SoundCloud) ===== */
+    const playlist = [
+      "https://api.soundcloud.com/tracks/123456789/stream?client_id=YOUR_CLIENT_ID",
+      "https://api.soundcloud.com/tracks/987654321/stream?client_id=YOUR_CLIENT_ID"
+    ];
+    let currentTrack = 0;
+    const audioPlayer = document.getElementById("audioPlayer");
+    function loadTrack(index) {
+      currentTrack = index;
+      audioPlayer.src = playlist[currentTrack];
+      audioPlayer.play();
+    }
+    function prevTrack() { loadTrack((currentTrack - 1 + playlist.length) % playlist.length); }
+    function nextTrack() { loadTrack((currentTrack + 1) % playlist.length); }
+    function togglePlay() {
+      if (audioPlayer.paused) audioPlayer.play();
+      else audioPlayer.pause();
+    }
+    function setVolume(v) { audioPlayer.volume = v; }
 
-    /* ===== Reproductor SoundCloud API ===== */
-    let widget;
-    window.addEventListener("load", () => {
-      widget = SC.Widget(document.getElementById("scPlayer"));
-    });
-    function togglePlay() { widget.toggle(); }
-    function nextTrack() { widget.next(); }
-    function prevTrack() { widget.prev(); }
-    function setVolume(v) { widget.setVolume(v); }
-
-    /* ===== Snake Game ===== */
+    /* ===== Snake ===== */
     const canvas = document.getElementById("snakeCanvas");
     const ctx = canvas.getContext("2d");
     let box = 20;
-    let snake, food, direction, score, game;
-    let gameOverOverlay = document.getElementById("gameOverOverlay");
-    let rankingDiv = document.getElementById("ranking");
-    let nicknameInput = document.getElementById("nicknameInput");
+    let snake, food, direction, game, score;
 
     function initGame() {
       snake = [{ x: 9 * box, y: 10 * box }];
@@ -318,8 +314,15 @@
         x: Math.floor(Math.random() * 19) * box,
         y: Math.floor(Math.random() * 19) * box
       };
-      if (game) clearInterval(game);
       game = setInterval(draw, 100);
+    }
+
+    document.addEventListener("keydown", dir);
+    function dir(event) {
+      if (event.keyCode == 37 && direction != "RIGHT") direction = "LEFT";
+      else if (event.keyCode == 38 && direction != "DOWN") direction = "UP";
+      else if (event.keyCode == 39 && direction != "LEFT") direction = "RIGHT";
+      else if (event.keyCode == 40 && direction != "UP") direction = "DOWN";
     }
 
     function draw() {
@@ -327,7 +330,7 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = (i === 0) ? "lime" : "white";
+        ctx.fillStyle = (i == 0) ? "lime" : "white";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
         ctx.strokeStyle = "black";
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
@@ -339,12 +342,12 @@
       let snakeX = snake[0].x;
       let snakeY = snake[0].y;
 
-      if (direction === "LEFT") snakeX -= box;
-      if (direction === "UP") snakeY -= box;
-      if (direction === "RIGHT") snakeX += box;
-      if (direction === "DOWN") snakeY += box;
+      if (direction == "LEFT") snakeX -= box;
+      if (direction == "UP") snakeY -= box;
+      if (direction == "RIGHT") snakeX += box;
+      if (direction == "DOWN") snakeY += box;
 
-      if (snakeX === food.x && snakeY === food.y) {
+      if (snakeX == food.x && snakeY == food.y) {
         score++;
         food = {
           x: Math.floor(Math.random() * 19) * box,
@@ -355,72 +358,58 @@
       }
 
       let newHead = { x: snakeX, y: snakeY };
-
-      if (
-        snakeX < 0 || snakeY < 0 ||
-        snakeX >= canvas.width || snakeY >= canvas.height ||
-        collision(newHead, snake)
-      ) {
+      if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
         clearInterval(game);
-        gameOverOverlay.style.display = "flex";
-        saveScore(score);
+        document.getElementById("gameOverOverlay").style.display = "flex";
+        showRanking();
         return;
       }
 
       snake.unshift(newHead);
-
       ctx.fillStyle = "white";
       ctx.font = "20px Orbitron";
-      ctx.fillText("Score: " + score, box, box);
+      ctx.fillText("Score: " + score, 10, canvas.height - 10);
     }
 
     function collision(head, array) {
-      for (let i = 0; i < array.length; i++) {
-        if (head.x === array[i].x && head.y === array[i].y) {
-          return true;
-        }
-      }
-      return false;
+      return array.some(segment => head.x === segment.x && head.y === segment.y);
     }
 
-    document.addEventListener("keydown", e => {
-      if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-      if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-      if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-      if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-    });
-
     function restartGame() {
-      gameOverOverlay.style.display = "none";
+      let nickname = document.getElementById("nicknameInput").value || "Anon";
+      db.ref("scores").push({ name: nickname, score: score });
+      document.getElementById("gameOverOverlay").style.display = "none";
       initGame();
     }
 
-    /* ===== Guardar y mostrar ranking ===== */
-    function saveScore(score) {
-      const nickname = nicknameInput.value.trim() || "Anon";
-      const newRef = db.ref("scores").push();
-      newRef.set({ nickname, score });
-      loadRanking();
-    }
-
-    function loadRanking() {
+    function showRanking() {
+      const rankingDiv = document.getElementById("ranking");
       db.ref("scores").orderByChild("score").limitToLast(5).once("value", snapshot => {
         let scores = [];
-        snapshot.forEach(child => { scores.push(child.val()); });
-        scores.reverse();
-        let html = "<h3>Top 5 Players</h3>";
-        scores.forEach((s, i) => {
-          html += `${i + 1}. ${s.nickname} - ${s.score}<br>`;
+        snapshot.forEach(child => {
+          scores.push(child.val());
         });
-        rankingDiv.innerHTML = html;
+        scores.reverse();
+        rankingDiv.innerHTML = "<h3>Top 5</h3>" + scores.map(s => `${s.name}: ${s.score}`).join("<br>");
       });
     }
 
-    window.onload = () => {
-      initGame();
-      loadRanking();
-    };
+    initGame();
+
+    /* ===== Welcome overlay ===== */
+    const welcomeSlide = document.getElementById("welcomeSlide");
+    let toggled = false;
+    welcomeSlide.addEventListener("click", () => {
+      if (!toggled) {
+        welcomeSlide.style.backgroundImage = "none";
+        welcomeSlide.style.background = "black";
+        welcomeSlide.innerHTML = "This is NSD official website.<br>Underground crew.<br><small>(click to return)</small>";
+      } else {
+        welcomeSlide.style.backgroundImage = "url('NSD.jpg')";
+        welcomeSlide.innerHTML = "WELCOME";
+      }
+      toggled = !toggled;
+    });
   </script>
-  <script src="https://w.soundcloud.com/player/api.js"></script>
 </body>
 </html>
