@@ -73,26 +73,22 @@ html,body{
   margin-bottom:25px;
 }
 
-/* Slide Welcome principal */
-.slide.welcome{
+/* Welcome */
+.slide.welcome{flex:0 0 80%; max-width:800px; height:80%;}
+.slide.welcome::after{content:none;}
+
+/* Snake grande */
+.slide.snake-slide{
   flex:0 0 95%;
   max-width:1200px;
   height:90%;
-}
-.slide.welcome::after{content:none;}
-
-/* Última slide (Snake cuadrada normal) */
-.slide.snake-slide{
-  flex:0 0 80%;
-  max-width:800px;
-  height:80%;
   align-items:center;
   justify-content:center;
 }
 .slide.snake-slide::after{content:none;}
 .slide.snake-slide span{display:none;}
 
-/* Snake */
+/* Snake contenido */
 .play-inner{
   position:relative;
   z-index:2; width:100%;
@@ -104,7 +100,7 @@ html,body{
   flex:1;
   display:flex; justify-content:center; align-items:center;
   background:#000;
-  border:1px solid #444;
+  border:4px solid #fff; 
   border-radius:12px; padding:8px;
   width:100%;
 }
@@ -127,8 +123,8 @@ html,body{
   width:100%; text-align:center;
   font-size:12px; color:var(--muted);
 }
-.footer-genres{bottom:90px;}
-.footer-records{bottom:70px; letter-spacing:2px;}
+.footer-genres{bottom:110px;}
+.footer-records{bottom:90px; letter-spacing:2px;}
 
 /* Arrows */
 .arrow{
@@ -159,7 +155,7 @@ html,body{
 /* Hidden Soundcloud iframe */
 #scPlayer{display:none;}
 
-/* Fixed Player Controls */
+/* Player Controls */
 #playerControls{
   position:fixed;
   bottom:20px; left:50%;
@@ -178,6 +174,19 @@ html,body{
   font-size:20px; cursor:pointer;
 }
 #volumeSlider{width:100px;}
+
+/* 📱 Responsive: Snake full screen en móviles */
+@media(max-width:768px){
+  .slide.snake-slide{
+    flex:0 0 100%;
+    max-width:100%;
+    height:100vh;
+    border-radius:0;
+  }
+  #snakeWrap{border-radius:0; border:none; padding:0;}
+  #snakeCanvas{width:100vw; height:100vh; max-width:none; aspect-ratio:auto;}
+  .snake-ui{position:absolute; bottom:60px; font-size:14px;}
+}
 </style>
 </head>
 <body>
@@ -197,15 +206,15 @@ html,body{
   </div>
 
   <!-- Enlaces -->
-  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener noreferrer" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
-  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener noreferrer" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
-  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener noreferrer" style="background-image:url('soundcloud.png')"><span>SOUNDCLOUD</span></a>
-  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener noreferrer" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
-  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" rel="noopener noreferrer" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
-  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
-  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
+  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
+  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
+  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" style="background-image:url('soundcloud.png')"><span>SOUNDCLOUD</span></a>
+  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
+  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
+  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
-  <!-- SNAKE última slide -->
+  <!-- SNAKE -->
   <div class="slide snake-slide">
     <div class="play-inner">
       <div id="snakeWrap">
@@ -218,7 +227,7 @@ html,body{
 </main>
 
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
-<div class="footer-records">NOIZE SECRET DOCTRINE</div>
+<div class="footer-records">DOCTRINE RECORDS</div>
 
 <!-- Hidden Soundcloud -->
 <iframe id="scPlayer" width="100%" height="166" scrolling="no" frameborder="no"
@@ -235,29 +244,28 @@ html,body{
 
 <script src="https://w.soundcloud.com/player/api.js"></script>
 <script>
-const carousel = document.querySelector('.carousel-container');
-function scrollCarousel(direction){
-  const slideWidth = document.querySelector('.slide').offsetWidth + 60;
-  carousel.scrollBy({left: slideWidth * direction, behavior:'smooth'});
+const carousel=document.querySelector('.carousel-container');
+function scrollCarousel(d){
+  const slideWidth=document.querySelector('.slide').offsetWidth+60;
+  carousel.scrollBy({left:slideWidth*d,behavior:'smooth'});
 }
-carousel.addEventListener('wheel', e=>{
+carousel.addEventListener('wheel',e=>{
   e.preventDefault();
-  carousel.scrollBy({left:e.deltaY, behavior:'smooth'});
+  carousel.scrollBy({left:e.deltaY,behavior:'smooth'});
 });
 function toggleWelcome(id){
-  const overlay = document.getElementById(id);
-  overlay.style.display = overlay.style.display==='flex' ? 'none' : 'flex';
+  const overlay=document.getElementById(id);
+  overlay.style.display=overlay.style.display==='flex'?'none':'flex';
 }
 
 /* === Snake === */
-const canvas = document.getElementById('snakeCanvas');
-const ctx = canvas.getContext('2d');
-const scoreEl = document.getElementById('score');
-const GRID = 20;
-const SPEED = 140;
-const W = canvas.width, H = canvas.height;
-const CELL = W / GRID;
-let snake, dir, food, running, score, pendingDir, gameLoop;
+const canvas=document.getElementById('snakeCanvas');
+const ctx=canvas.getContext('2d');
+const scoreEl=document.getElementById('score');
+const GRID=20,SPEED=140;
+const W=canvas.width,H=canvas.height;
+const CELL=W/GRID;
+let snake,dir,food,running,score,pendingDir,gameLoop;
 
 function reset(){
   snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
@@ -280,29 +288,26 @@ function step(){
     pendingDir=null;
   }
   const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
-  if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID || snake.some(s=>s.x===head.x&&s.y===head.y)){
-    running=false; draw(); 
-    setTimeout(reset,1500);
-    return;
+  if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    running=false; draw();
+    setTimeout(reset,1500); return;
   }
   snake.unshift(head);
   if(head.x===food.x&&head.y===food.y){score+=10; placeFood();}
-  else{snake.pop();}
+  else snake.pop();
   draw();
 }
 function draw(){
   ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-  const fx=food.x*CELL+CELL/2, fy=food.y*CELL+CELL/2;
-  ctx.fillStyle= '#e60000';
-  ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#fff'; ctx.lineWidth=4; ctx.strokeRect(0,0,W,H);
+  const fx=food.x*CELL+CELL/2,fy=food.y*CELL+CELL/2;
+  ctx.fillStyle='#e60000'; ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
   ctx.fillStyle='#fff'; ctx.font=(CELL*0.5)+"px Orbitron"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("NSD",fx,fy+1);
-
-  ctx.fillStyle= '#fff';
+  ctx.fillStyle='#fff';
   snake.forEach(seg=>{
-    const margin=CELL*0.25;
-    ctx.fillRect(seg.x*CELL+margin/2, seg.y*CELL+margin/2, CELL-margin, CELL-margin);
+    const m=CELL*0.25;
+    ctx.fillRect(seg.x*CELL+m/2,seg.y*CELL+m/2,CELL-m,CELL-m);
   });
-
   scoreEl.textContent='SCORE: '+score+(running?'':' — GAME OVER');
 }
 window.addEventListener('keydown',e=>{
@@ -313,56 +318,37 @@ window.addEventListener('keydown',e=>{
   else if(k==='ArrowRight') pendingDir={x:1,y:0};
   if(k.startsWith('Arrow')) e.preventDefault();
 });
-
-/* Controles táctiles: deslizar */
-let touchStartX=null, touchStartY=null;
+let touchStartX=null,touchStartY=null;
 canvas.addEventListener('touchstart',e=>{
-  const t=e.touches[0];
-  touchStartX=t.clientX; touchStartY=t.clientY;
+  const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY;
 },{passive:true});
 canvas.addEventListener('touchmove',e=>{
   if(!touchStartX||!touchStartY) return;
-  const t=e.touches[0];
-  const dx=t.clientX-touchStartX, dy=t.clientY-touchStartY;
+  const t=e.touches[0]; const dx=t.clientX-touchStartX,dy=t.clientY-touchStartY;
   if(Math.abs(dx)>30||Math.abs(dy)>30){
-    if(Math.abs(dx)>Math.abs(dy)){
-      pendingDir={x:dx>0?1:-1,y:0};
-    }else{
-      pendingDir={x:0,y:dy>0?1:-1};
-    }
+    if(Math.abs(dx)>Math.abs(dy)) pendingDir={x:dx>0?1:-1,y:0};
+    else pendingDir={x:0,y:dy>0?1:-1};
     touchStartX=null; touchStartY=null;
   }
-},{passive:true});
-
+  e.preventDefault();
+},{passive:false});
 reset();
 
-/* === SoundCloud hidden player === */
-const iframeElement = document.getElementById('scPlayer');
-const widget = SC.Widget(iframeElement);
-
-const playPauseBtn = document.getElementById('playPauseBtn');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const volumeSlider = document.getElementById('volumeSlider');
-
-let isPlaying = false;
-
+/* SoundCloud */
+const widget=SC.Widget(document.getElementById('scPlayer'));
+const playPauseBtn=document.getElementById('playPauseBtn');
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+const volumeSlider=document.getElementById('volumeSlider');
+let isPlaying=false;
 playPauseBtn.addEventListener('click',()=>{
-  if(!isPlaying){
-    widget.play();
-    playPauseBtn.innerHTML='<span>⏸</span>';
-    isPlaying=true;
-  } else {
-    widget.pause();
-    playPauseBtn.innerHTML='<span>▶</span>';
-    isPlaying=false;
-  }
+  if(!isPlaying){widget.play();playPauseBtn.innerHTML='<span>⏸</span>';isPlaying=true;}
+  else{widget.pause();playPauseBtn.innerHTML='<span>▶</span>';isPlaying=false;}
 });
 prevBtn.addEventListener('click',()=>widget.prev());
 nextBtn.addEventListener('click',()=>widget.next());
-volumeSlider.addEventListener('input',()=>{
-  widget.setVolume(volumeSlider.value/100);
-});
+volumeSlider.addEventListener('input',()=>widget.setVolume(volumeSlider.value/100));
 </script>
 </body>
 </html>
+
