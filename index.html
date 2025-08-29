@@ -64,7 +64,7 @@ body::before {
 }
 .slide:hover{transform:scale(1.03);}
 
-/* Overlay dark gradient */
+/* Overlay gradient en imagen */
 .slide::after{
   content:"";
   position:absolute;
@@ -72,8 +72,6 @@ body::before {
   width:100%; height:60%;
   background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
 }
-
-/* Link text */
 .slide span{
   position:relative;
   z-index:2;
@@ -85,6 +83,34 @@ body::before {
   margin-bottom:25px;
 }
 
+/* --- ESTILO ESPECIAL PARA WELCOME --- */
+#welcomeSlide{
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  color:var(--fg);
+}
+#welcomeSlide.show-info{
+  background:black !important;
+  box-shadow:inset 0 0 30px rgba(255,255,255,0.2);
+}
+#welcomeSlide.show-info::after{display:none;}
+#welcomeSlide-content{
+  text-align:center;
+  padding:20px;
+}
+#welcomeSlide-content h2{
+  font-size:clamp(22px,4vw,36px);
+  margin-bottom:15px;
+}
+#welcomeSlide-content p{
+  font-size:clamp(16px,2.5vw,22px);
+  margin:8px 0;
+  color:var(--muted);
+}
+
 /* Footer info */
 .footer-genres, .footer-records{
   position:absolute;
@@ -94,7 +120,7 @@ body::before {
 .footer-genres{bottom:30px;}
 .footer-records{bottom:10px; letter-spacing:2px;}
 
-/* Arrows */
+/* Arrows generales */
 .arrow{
   position:absolute;
   top:50%;
@@ -109,52 +135,6 @@ body::before {
 .arrow:hover{color:#fff;}
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
-
-/* Overlay "second page" */
-.overlay{
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:var(--bg);
-  color:var(--fg);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  font-family:var(--font-futuristic);
-  z-index:999;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .4s ease;
-}
-.overlay.active{
-  opacity:1;
-  pointer-events:auto;
-}
-.overlay h1{
-  font-size:clamp(22px,4vw,40px);
-  margin-bottom:20px;
-}
-.overlay p{
-  font-size:clamp(16px,3vw,22px);
-  color:var(--muted);
-}
-.overlay button{
-  margin-top:40px;
-  background:none;
-  border:1px solid var(--fg);
-  color:var(--fg);
-  font-size:16px;
-  padding:10px 20px;
-  border-radius:10px;
-  cursor:pointer;
-  transition:background .2s,color .2s;
-}
-.overlay button:hover{
-  background:var(--fg);
-  color:var(--bg);
-}
 </style>
 </head>
 <body>
@@ -164,9 +144,15 @@ body::before {
 <div class="arrow right">❯</div>
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- Slide principal que abre overlay -->
+  <!-- Slide principal -->
   <div class="slide" id="welcomeSlide" style="background-image:url('NSD.jpg')">
     <span>WELCOME</span>
+    <!-- Contenido oculto -->
+    <div id="welcomeSlide-content" style="display:none;">
+      <h2>WELCOME</h2>
+      <p>This is NSD aKa Noize Secret Doctrine official website.</p>
+      <p>Underground crew.</p>
+    </div>
   </div>
 
   <!-- Enlaces -->
@@ -195,13 +181,6 @@ body::before {
 </footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
 
-<!-- Overlay oculto -->
-<div class="overlay" id="welcomeOverlay">
-  <h1>This is NSD aKa Noize Secret Doctrine official website.</h1>
-  <p>Underground crew.</p>
-  <button id="closeOverlay">⟵ Back</button>
-</div>
-
 <script>
 // scroll con flechas
 const container = document.querySelector('.carousel-container');
@@ -228,16 +207,25 @@ container.addEventListener('wheel', (e) => {
   });
 }, { passive: false });
 
-// overlay welcome
+// toggle welcome
 const welcomeSlide = document.getElementById("welcomeSlide");
-const overlay = document.getElementById("welcomeOverlay");
-const closeOverlay = document.getElementById("closeOverlay");
+const welcomeContent = document.getElementById("welcomeSlide-content");
+const welcomeTitle = welcomeSlide.querySelector("span");
 
 welcomeSlide.addEventListener("click", () => {
-  overlay.classList.add("active");
-});
-closeOverlay.addEventListener("click", () => {
-  overlay.classList.remove("active");
+  if(!welcomeSlide.classList.contains("show-info")){
+    // Mostrar segunda "página"
+    welcomeSlide.classList.add("show-info");
+    welcomeContent.style.display = "block";
+    welcomeTitle.style.display = "none";
+    welcomeSlide.style.backgroundImage = "none";
+  } else {
+    // Volver atrás
+    welcomeSlide.classList.remove("show-info");
+    welcomeContent.style.display = "none";
+    welcomeTitle.style.display = "block";
+    welcomeSlide.style.backgroundImage = "url('NSD.jpg')";
+  }
 });
 </script>
 
