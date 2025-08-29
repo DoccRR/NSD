@@ -271,248 +271,191 @@ html,body{
 
 
 <script>
-/* ==============================
-   Snake Game NSD Edition
-   ============================== */
+// ---------------------- Snake Game ---------------------- //
 const canvas = document.getElementById("snakeCanvas");
 const ctx = canvas.getContext("2d");
 let box = 20;
-let snake;
-let food;
-let dx;
-let dy;
-let score;
-let lives;
-let game;
-let ranking = JSON.parse(localStorage.getItem("snakeRanking")) || [];
+let snake = [{ x: 9 * box, y: 10 * box }];
+let direction;
+let score = 0;
+let food = spawnFood();
+let gameLoop;
 
-function resetSnake() {
-  snake = [{ x: 9 * box, y: 10 * box }];
-  dx = box;
-  dy = 0;
-  score = 0;
-  lives = 3;
-  document.getElementById("score").innerText = "SCORE: " + score;
-  placeFood();
-  clearInterval(game);
-  game = setInterval(step, 100);
-}
-
-function placeFood() {
-  food = {
+function spawnFood() {
+  return {
     x: Math.floor(Math.random() * (canvas.width / box)) * box,
-    y: Math.floor(Math.random() * (canvas.height / box)) * box,
+    y: Math.floor(Math.random() * (canvas.height / box)) * box
   };
 }
 
-function step() {
-  const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+  if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+  if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+  if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+});
 
-  // colisiones contra bordes
-  if (
-    head.x < 0 ||
-    head.y < 0 ||
-    head.x >= canvas.width ||
-    head.y >= canvas.height
-  ) {
-    lives--;
-    if (lives > 0) {
-      snake = [{ x: 9 * box, y: 10 * box }];
-      dx = box;
-      dy = 0;
-    } else {
-      gameOver();
-      return;
-    }
+// Touch controls (mobile)
+let startX, startY;
+canvas.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+});
+canvas.addEventListener("touchend", (e) => {
+  let dx = e.changedTouches[0].clientX - startX;
+  let dy = e.changedTouches[0].clientY - startY;
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
+    else if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
+  } else {
+    if (dy > 0 && direction !== "UP") direction = "DOWN";
+    else if (dy < 0 && direction !== "DOWN") direction = "UP";
   }
+});
 
-  // colisión con sí mismo
+// ------------------ Ranking con localStorage ------------------ //
+function saveScore(newScore) {
+  const nickname = document.getElementById("nicknameInput").value || "Anon";
+  let ranking = JSON.parse(localStorage.getItem("snakeRanking")) || [];
+
+  ranking.push({ name: nickname, score: newScore });
+  ranking.sort((a, b) => b.score - a.score);
+  ranking = ranking.slice(0, 10);
+
+  localStorage.setItem("snakeRanking", JSON.stringify(ranking));
+}
+
+function showRanking() {
+  let ranking = JSON.parse(localStorage.getItem("snakeRanking")) || [];
+  const container = document.getElementById("ranking");
+  container.innerHTML = ranking
+    .map((p, i) => `<div>${i + 1}. ${p.name} — ${p.score}</div>`)
+    .join("");
+}
+
+function showGameOver() {
+  document.getElementById("gameOverOverlay").style.display = "flex";
+  showRanking();
+}
+
+// ------------------ Game Loop ------------------ //
+function draw() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Dibujar snake
   for (let i = 0; i < snake.length; i++) {
-    if (head.x === snake[i].x && head.y === snake[i].y) {
-      lives--;
-      if (lives > 0) {
-        snake = [{ x: 9 * box, y: 10 * box }];
-        dx = box;
-        dy = 0;
-      } else {
-        gameOver();
-        return;
-      }
-    }
+    ctx.fillStyle = i === 0 ? "#e60000" : "#fff";
+    ctx.fillRect(snake[i].x, snake[i].y, box, box);
   }
 
-  snake.unshift(head);
+  // Dibujar comida (texto NSD pequeño)
+  ctx.fillStyle = "#0f0";
+  ctx.font = "bold 14px Orbitron, sans-serif";
+  ctx.fillText("NSD", food.x + 2, food.y + 16);
 
-  // comer comida
-  if (head.x === food.x && head.y === food.y) {
-    score += 10;
+  // Movimiento
+  let headX = snake[0].x;
+  let headY = snake[0].y;
+
+  if (direction === "LEFT") headX -= box;
+  if (direction === "UP") headY -= box;
+  if (direction === "RIGHT") headX += box;
+  if (direction === "DOWN") headY += box;
+
+  // Comida
+  if (headX === food.x && headY === food.y) {
+    score++;
     document.getElementById("score").innerText = "SCORE: " + score;
-    placeFood();
+    food = spawnFood();
   } else {
     snake.pop();
   }
 
-  drawSnake();
-}
+  let newHead = { x: headX, y: headY };
 
-function drawSnake() {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  snake.forEach((s, index) => {
-    ctx.fillStyle = index === 0 ? "#e60000" : "#fff";
-    ctx.fillRect(s.x, s.y, box, box);
-  });
-
-  // comida como texto "NSD"
-  ctx.fillStyle = "#0f0";
-  ctx.font = "bold 16px Orbitron, sans-serif";
-  ctx.fillText("NSD", food.x + 2, food.y + 16);
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "14px Orbitron, sans-serif";
-  ctx.fillText("Lives: " + lives, canvas.width - 80, 20);
-}
-
-function gameOver() {
-  clearInterval(game);
-  document.getElementById("gameOverOverlay").style.display = "flex";
-}
-
-/* ==============================
-   Ranking y puntuaciones
-   ============================== */
-document.getElementById("submitScore").addEventListener("click", () => {
-  const nick = document.getElementById("nicknameInput").value.trim();
-  if (nick) {
-    ranking.push({ nick, score });
-    ranking.sort((a, b) => b.score - a.score);
-    ranking = ranking.slice(0, 10);
-    localStorage.setItem("snakeRanking", JSON.stringify(ranking));
-    renderRanking();
+  // Colisiones
+  if (
+    headX < 0 || headY < 0 ||
+    headX >= canvas.width || headY >= canvas.height ||
+    snake.some(s => s.x === newHead.x && s.y === newHead.y)
+  ) {
+    clearInterval(gameLoop);
+    saveScore(score);
+    showGameOver();
+    return;
   }
-});
 
-document.getElementById("playAgainBtn").addEventListener("click", () => {
+  snake.unshift(newHead);
+}
+
+function startGame() {
+  snake = [{ x: 9 * box, y: 10 * box }];
+  direction = null;
+  score = 0;
+  food = spawnFood();
+  document.getElementById("score").innerText = "SCORE: 0";
   document.getElementById("gameOverOverlay").style.display = "none";
-  resetSnake();
-});
-
-function renderRanking() {
-  const rankDiv = document.getElementById("ranking");
-  rankDiv.innerHTML = "";
-  ranking.forEach((r, i) => {
-    const p = document.createElement("p");
-    p.textContent = `${i + 1}. ${r.nick} — ${r.score}`;
-    rankDiv.appendChild(p);
-  });
+  clearInterval(gameLoop);
+  gameLoop = setInterval(draw, 100);
 }
-renderRanking();
 
-/* ==============================
-   Controles teclado y táctiles
-   ============================== */
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft" && dx === 0) {
-    dx = -box;
-    dy = 0;
-  } else if (e.key === "ArrowUp" && dy === 0) {
-    dx = 0;
-    dy = -box;
-  } else if (e.key === "ArrowRight" && dx === 0) {
-    dx = box;
-    dy = 0;
-  } else if (e.key === "ArrowDown" && dy === 0) {
-    dx = 0;
-    dy = box;
-  }
-});
+document.getElementById("submitScore").onclick = () => {
+  saveScore(score);
+  showRanking();
+};
+document.getElementById("playAgainBtn").onclick = startGame;
 
-// Swipe en móvil
-let touchStartX = 0;
-let touchStartY = 0;
+// Iniciar el juego
+startGame();
 
-canvas.addEventListener("touchstart", (e) => {
-  const touch = e.touches[0];
-  touchStartX = touch.clientX;
-  touchStartY = touch.clientY;
-});
-
-canvas.addEventListener("touchend", (e) => {
-  const touch = e.changedTouches[0];
-  const dxTouch = touch.clientX - touchStartX;
-  const dyTouch = touch.clientY - touchStartY;
-
-  if (Math.abs(dxTouch) > Math.abs(dyTouch)) {
-    if (dxTouch > 0 && dx === 0) {
-      dx = box;
-      dy = 0;
-    } else if (dxTouch < 0 && dx === 0) {
-      dx = -box;
-      dy = 0;
-    }
-  } else {
-    if (dyTouch > 0 && dy === 0) {
-      dx = 0;
-      dy = box;
-    } else if (dyTouch < 0 && dy === 0) {
-      dx = 0;
-      dy = -box;
-    }
-  }
-});
-
-// Evitar que el móvil se deslice
-document.getElementById("snakeWrap").addEventListener(
-  "touchmove",
-  (e) => {
-    e.preventDefault();
-  },
-  { passive: false }
-);
-
-/* ==============================
-   Carousel y player
-   ============================== */
+// ---------------------- Carousel ---------------------- //
+const carousel = document.querySelector(".carousel-container");
 function scrollCarousel(dir) {
-  document
-    .querySelector(".carousel-container")
-    .scrollBy({ left: dir * window.innerWidth * 0.8, behavior: "smooth" });
+  carousel.scrollBy({ left: dir * window.innerWidth * 0.8, behavior: "smooth" });
 }
 
-// Player SoundCloud
-const scWidget = SC.Widget(document.getElementById("scPlayer"));
+// ---------------------- SoundCloud Player ---------------------- //
+const scPlayer = SC.Widget(document.getElementById("scPlayer"));
 const playPauseBtn = document.getElementById("playPauseBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const volumeSlider = document.getElementById("volumeSlider");
 
-scWidget.bind(SC.Widget.Events.READY, () => {
+// Habilitar botones cuando el widget cargue
+scPlayer.bind(SC.Widget.Events.READY, () => {
   playPauseBtn.disabled = false;
   prevBtn.disabled = false;
   nextBtn.disabled = false;
   volumeSlider.disabled = false;
 });
 
+// Play/Pause
 let isPlaying = false;
 playPauseBtn.addEventListener("click", () => {
   if (isPlaying) {
-    scWidget.pause();
+    scPlayer.pause();
     playPauseBtn.textContent = "▶";
   } else {
-    scWidget.play();
+    scPlayer.play();
     playPauseBtn.textContent = "⏸";
   }
   isPlaying = !isPlaying;
 });
 
-prevBtn.addEventListener("click", () => scWidget.prev());
-nextBtn.addEventListener("click", () => scWidget.next());
-volumeSlider.addEventListener("input", () =>
-  scWidget.setVolume(volumeSlider.value / 100)
-);
+// Prev / Next
+prevBtn.addEventListener("click", () => scPlayer.prev());
+nextBtn.addEventListener("click", () => scPlayer.next());
 
-resetSnake();
+// Volume
+volumeSlider.addEventListener("input", (e) => {
+  scPlayer.setVolume(e.target.value / 100);
+});
+
+// ---------------------- Bloquear scroll en móvil dentro del snake ---------------------- //
+document.getElementById("snakeCanvas").addEventListener("touchmove", (e) => {
+  e.preventDefault();
+}, { passive: false });
 </script>
 </body>
 </html>
