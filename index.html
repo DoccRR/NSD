@@ -20,7 +20,7 @@
 html,body{
   height:100%; margin:0; font-family:var(--font-futuristic);
   color:var(--fg); overflow:hidden;
-  background: url("fondo.jpg") no-repeat center center fixed;
+  background: url("fondo.png") no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -40,7 +40,7 @@ body::before {
   scroll-snap-type:x mandatory;
   width:100vw; height:100vh;
   padding:40px 0;
-  scroll-behavior:smooth; /* importante para scroll suave */
+  scroll-behavior:smooth;
 }
 .carousel-container::-webkit-scrollbar{display:none;}
 .carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
@@ -158,9 +158,8 @@ const leftArrow = document.querySelector('.arrow.left');
 const rightArrow = document.querySelector('.arrow.right');
 
 function getScrollAmount(){
-  // Desplaza aproximadamente el ancho de un slide
   const slide = container.querySelector('.slide');
-  return slide ? slide.offsetWidth + 60 : 400; // 60 = margen horizontal
+  return slide ? slide.offsetWidth + 60 : 400; // ancho + margen
 }
 
 leftArrow.addEventListener('click', () => {
@@ -170,8 +169,16 @@ leftArrow.addEventListener('click', () => {
 rightArrow.addEventListener('click', () => {
   container.scrollBy({left:getScrollAmount(), behavior:'smooth'});
 });
+
+// hacer que la rueda del ratón scrollee en horizontal
+container.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  container.scrollBy({
+    left: e.deltaY < 0 ? -getScrollAmount()/2 : getScrollAmount()/2,
+    behavior: 'smooth'
+  });
+}, { passive: false });
 </script>
 
 </body>
 </html>
-
