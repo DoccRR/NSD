@@ -41,9 +41,10 @@ body{
   text-transform:uppercase;
   z-index:2;
   text-align:right;
+  white-space: nowrap;
 }
 
-/* Bottom-left second title */
+/* Bottom-left title horizontal */
 .bottom-title-left{
   position:absolute;
   bottom:10px;
@@ -52,9 +53,8 @@ body{
   font-size:clamp(32px,5vw,64px);
   color:#fff;
   text-transform:uppercase;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
   z-index:2;
+  white-space: nowrap;
 }
 
 /* Central wrapper for links */
@@ -124,10 +124,7 @@ body{
 
 /* Responsive adjustments */
 @media(max-width:768px){
-  .top-title-right{
-    font-size:clamp(24px,8vw,40px);
-  }
-  .bottom-title-left{
+  .top-title-right, .bottom-title-left{
     font-size:clamp(24px,8vw,40px);
   }
   .link-btn{
