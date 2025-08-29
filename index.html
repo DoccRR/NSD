@@ -365,6 +365,16 @@ container.addEventListener("touchend",e=>{
   let dx=e.changedTouches[0].screenX-touchStartX;
   if(dx>50) scrollCarousel(-1); else if(dx<-50) scrollCarousel(1);
 });
+  /* ---------------- Scroll con rueda del ratón ---------------- */
+container.addEventListener("wheel", (e) => {
+  e.preventDefault(); // evita que haga scroll en la página
+  if (e.deltaY > 0) {
+    scrollCarousel(1);   // rueda hacia abajo -> siguiente slide
+  } else {
+    scrollCarousel(-1);  // rueda hacia arriba -> slide anterior
+  }
+}, { passive: false });
+
 </script>
 
 <!-- ---------------- SoundCloud Player (hidden iframe + custom controls) ---------------- -->
@@ -431,4 +441,5 @@ volumeSlider.addEventListener("input", e=>{
   if(widgetReady) scWidget.setVolume(parseInt(e.target.value,10));
 });
 </script>
+
 
