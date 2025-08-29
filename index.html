@@ -11,9 +11,6 @@
   --bg:#000000;
   --fg:#ffffff;
   --muted:#9ca3af;
-  --card:#d1d1d1;
-  --card-text:#000000;
-  --card-hover:#bdbdbd;
   --radius:16px;
   --font-futuristic:"Orbitron", "Rajdhani", "Exo 2", sans-serif;
 }
@@ -80,29 +77,29 @@ body{
   width:180px;
   height:220px;
   scroll-snap-align:start;
-  background:var(--card);
   border-radius:var(--radius);
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-end;
+  background-size:cover;
+  background-position:center;
   transition: transform .2s ease;
+  position:relative;
 }
 .slide:hover{
   transform:translateY(-3px);
 }
-.slide img{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  margin-bottom:10px;
-}
+
+/* Slide title below image */
 .slide span{
-  font-weight:700;
-  color:var(--card-text);
+  font-weight:900;
+  color:#fff;
   text-align:center;
   font-size:18px;
+  margin-top:10px;
   text-transform:uppercase;
+  text-shadow:0 0 6px rgba(0,0,0,0.7);
 }
 
 /* Footer texts */
@@ -133,10 +130,6 @@ body{
     width:140px;
     height:180px;
   }
-  .slide img{
-    width:60px;
-    height:60px;
-  }
   .slide span{
     font-size:16px;
   }
@@ -150,41 +143,23 @@ body{
 
 <main class="carousel-container">
   <div class="carousel" role="navigation" aria-label="Social & music links">
-    <div class="slide">
-      <a href="https://noizesecretdoctrine.bandcamp.com" target="_blank">
-        <img src="bandcamp.png" alt="BUY MUSIC">
-        <span>BUY MUSIC</span>
-      </a>
+    <div class="slide" style="background-image:url('bandcamp.png')">
+      <span>BUY MUSIC</span>
     </div>
-    <div class="slide">
-      <a href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank">
-        <img src="spotify.png" alt="SPOTIFY">
-        <span>SPOTIFY</span>
-      </a>
+    <div class="slide" style="background-image:url('spotify.png')">
+      <span>SPOTIFY</span>
     </div>
-    <div class="slide">
-      <a href="https://www.youtube.com/@noizesecretdoctrine" target="_blank">
-        <img src="youtube.png" alt="YOUTUBE">
-        <span>YOUTUBE</span>
-      </a>
+    <div class="slide" style="background-image:url('youtube.png')">
+      <span>YOUTUBE</span>
     </div>
-    <div class="slide">
-      <a href="https://soundcloud.com/noizesd" target="_blank">
-        <img src="soundcloud.png" alt="SOUNDCLOUD">
-        <span>SOUNDCLOUD</span>
-      </a>
+    <div class="slide" style="background-image:url('soundcloud.png')">
+      <span>SOUNDCLOUD</span>
     </div>
-    <div class="slide">
-      <a href="https://www.instagram.com/nsd_noi/" target="_blank">
-        <img src="instagram.png" alt="INSTAGRAM">
-        <span>INSTAGRAM</span>
-      </a>
+    <div class="slide" style="background-image:url('instagram.png')">
+      <span>INSTAGRAM</span>
     </div>
-    <div class="slide">
-      <a href="https://triple6.nl/bookings/" target="_blank">
-        <img src="bookings.png" alt="BOOKINGS">
-        <span>BOOKINGS</span>
-      </a>
+    <div class="slide" style="background-image:url('bookings.png')">
+      <span>BOOKINGS</span>
     </div>
   </div>
 </main>
