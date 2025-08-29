@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -80,6 +80,8 @@
       background: black;
       display: block;
       border: 2px solid white;
+      max-width: 95vw;
+      height: auto;
     }
     #gameOverOverlay {
       position: absolute;
@@ -92,6 +94,16 @@
       color: white;
       font-size: 2em;
       z-index: 20;
+      text-align: center;
+      padding: 10px;
+    }
+    #gameOverOverlay button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
     }
     #ranking {
       margin-top: 15px;
@@ -119,6 +131,23 @@
       border-radius: 5px;
       border: none;
       cursor: pointer;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .slide-content {
+        width: 85%;
+        height: 60%;
+        font-size: 2em;
+        padding: 10px;
+      }
+      #snakeCanvas {
+        width: 90vw;
+        height: 90vw;
+      }
+      #gameOverOverlay {
+        font-size: 1.5em;
+      }
     }
   </style>
 </head>
@@ -214,13 +243,6 @@
       else if (endX - startX > 50) scrollCarousel(-1);
     });
 
-    // Bloquear flechas del teclado en navegador
-    window.addEventListener("keydown", (e) => {
-      if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
-        e.preventDefault();
-      }
-    });
-
     /* ===== Welcome Slide Toggle ===== */
     const welcome = document.getElementById("welcomeSlide");
     let welcomeAlt = false;
@@ -289,7 +311,6 @@
       ctx.font = "20px Orbitron";
       ctx.fillText(food.type, food.x+4, food.y+16);
 
-      // Old head
       let snakeX = snake[0].x;
       let snakeY = snake[0].y;
       if (direction === "LEFT") snakeX -= box;
@@ -297,7 +318,7 @@
       if (direction === "RIGHT") snakeX += box;
       if (direction === "DOWN") snakeY += box;
 
-      // Comida
+      // Comer
       if (snakeX === food.x && snakeY === food.y) {
         score++;
         placeFood();
@@ -329,8 +350,7 @@
     /* ===== Ranking Firebase ===== */
     function saveScore(score) {
       const nickname = "Player" + Math.floor(Math.random()*1000);
-      const newRef = db.ref("scores").push();
-      newRef.set({ nickname, score }).then(loadRanking);
+      db.ref("scores").push({ nickname, score }).then(loadRanking);
     }
 
     function loadRanking() {
