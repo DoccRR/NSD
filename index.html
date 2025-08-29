@@ -23,23 +23,6 @@ html,body{
   background:var(--bg); color:var(--fg); overflow:hidden;
 }
 
-/* Title desktop only */
-.top-title-right{
-  position:absolute;
-  top:20px; right:20px;
-  font-weight:900;
-  font-size:clamp(28px,4vw,58px);
-  color:#fff;
-  text-transform:uppercase;
-  z-index:3;
-  white-space:nowrap;
-  text-align:right;
-  letter-spacing:2px;
-}
-@media(max-width:768px){
-  .top-title-right{display:none;}
-}
-
 /* Carousel wrapper */
 .carousel-container{
   display:flex;
@@ -103,8 +86,6 @@ html,body{
 </style>
 </head>
 <body>
-
-<div class="top-title-right">NOIZE SECRET DOCTRINE</div>
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
   <!-- Slide principal: Logo -->
