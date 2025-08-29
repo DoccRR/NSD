@@ -316,14 +316,14 @@ const playAgainBtn=document.getElementById('playAgainBtn');
 const GRID=20,SPEED=140;
 const W=canvasEl.width,H=canvasEl.height;
 const CELL=W/GRID;
-let snake,dir,food,score,pendingDir,gameLoop,lives=2;
+let snake,dir,food,score,pendingDir,gameLoop,lives=1;
 
 function resetSnake(){
   snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
   dir={x:1,y:0};
   pendingDir=null;
   score=0;
-  lives=2;   // 👈 reinicia las vidas aquí
+  lives=1;   // 👈 reinicia las vidas aquí
   placeFood();
   overlay.style.display="none";
   if(gameLoop) clearInterval(gameLoop);
@@ -528,6 +528,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
