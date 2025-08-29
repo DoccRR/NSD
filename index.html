@@ -21,7 +21,7 @@ html,body{height:100%; margin:0; font-family: var(--font-futuristic); background
 body{
   position:relative;
   min-height:100vh;
-  background:#000 url('NSD.jpg') center/cover no-repeat;
+  background:#000;
   overflow:hidden;
 }
 
@@ -72,6 +72,7 @@ body{
   text-transform:uppercase;
 }
 
+/* Footer texts */
 .footer-genres{
   position:absolute;
   bottom:25px;
@@ -93,6 +94,13 @@ body{
 /* Hide scroll bar */
 .carousel-container::-webkit-scrollbar {display:none;}
 .carousel-container {-ms-overflow-style:none; scrollbar-width:none;}
+
+/* Ocultar título en móviles */
+@media(max-width:768px){
+  .top-title-right{
+    display:none;
+  }
+}
 </style>
 </head>
 <body>
@@ -102,6 +110,11 @@ body{
 </div>
 
 <main class="carousel-container" role="navigation" aria-label="Social & music links">
+  <!-- Pantalla principal con el logo -->
+  <div class="slide" style="background-image:url('NSD.jpg')">
+  </div>
+
+  <!-- Enlaces -->
   <div class="slide" style="background-image:url('bandcamp.png')">
     <span>BUY MUSIC</span>
   </div>
