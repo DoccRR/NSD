@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -138,18 +138,21 @@
       border-radius: 8px;
     }
 
-    /* ===== Subtítulos generales ===== */
+    /* ===== Subtítulos generales (arriba ahora) ===== */
     .subtitles {
       position: absolute;
-      bottom: 80px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
-      font-size: 0.8em;
+      font-size: 0.9em;
       color: #fff;
       opacity: 0.9;
       z-index: 20;
       line-height: 1.4;
+      background: rgba(0,0,0,0.5);
+      padding: 5px 10px;
+      border-radius: 8px;
     }
 
     /* ===== Controles de música ===== */
@@ -186,7 +189,7 @@
       }
       #gameOverOverlay { font-size: 1.5em; }
       #snakeControls { display: flex; flex-direction: column; align-items: center; }
-      .subtitles { font-size: 0.7em; bottom: 70px; }
+      .subtitles { font-size: 0.8em; top: 5px; }
     }
   </style>
 </head>
@@ -231,6 +234,7 @@
       </div>
     </div>
   </div> <!-- cierre carousel -->
+  
   <!-- Subtítulos -->
   <div class="subtitles">
     <p>Noize Secret Doctrine</p>
@@ -273,14 +277,13 @@
       const width = window.innerWidth;
       carousel.scrollBy({ left: dir * width, behavior: "smooth" });
     }
-    // scroll con rueda
     carousel.addEventListener("wheel", e => {
       e.preventDefault();
       if (e.deltaY > 0) scrollCarousel(1);
       else scrollCarousel(-1);
     });
 
-    /* ===== Música (playlist SoundCloud) ===== */
+    /* ===== Música ===== */
     const playlist = [
       "https://api.soundcloud.com/tracks/123456789/stream?client_id=YOUR_CLIENT_ID",
       "https://api.soundcloud.com/tracks/987654321/stream?client_id=YOUR_CLIENT_ID"
@@ -377,7 +380,8 @@
 
     function restartGame() {
       let nickname = document.getElementById("nicknameInput").value || "Anon";
-      db.ref("scores").push({ name: nickname, score: score });
+      db.ref("scores").push({ nickname: nickname, score: score });
+      document.getElementById("nicknameInput").value = "";
       document.getElementById("gameOverOverlay").style.display = "none";
       initGame();
     }
@@ -390,7 +394,7 @@
           scores.push(child.val());
         });
         scores.reverse();
-        rankingDiv.innerHTML = "<h3>Top 5</h3>" + scores.map(s => `${s.name}: ${s.score}`).join("<br>");
+        rankingDiv.innerHTML = "<h3>Top 5</h3>" + scores.map(s => `${s.nickname}: ${s.score}`).join("<br>");
       });
     }
 
