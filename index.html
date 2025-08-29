@@ -43,7 +43,8 @@
     color:rgba(255,255,255,0.1);
     font-size:clamp(24px, 4vw, 48px);
     line-height:1.5;
-    white-space:pre;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
   }
 
   .side-text-left{ left:10px; text-align:left; }
@@ -117,11 +118,11 @@
 <body>
 
 <div class="side-text-left">
-NSD\n\nNSD\n\nNSD\n\nNSD\n\nNSD
+NSD
 </div>
 
 <div class="side-text-right">
-NOIZE\nSECRET\nDOCTRINE
+NOIZE SECRET DOCTRINE
 </div>
 
 <main class="wrap">
@@ -164,3 +165,5 @@ document.getElementById('y').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
+
+
