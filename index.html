@@ -186,7 +186,7 @@
       }
       #gameOverOverlay { font-size: 1.5em; }
       #snakeControls { display: flex; flex-direction: column; align-items: center; }
-      .subtitles { font-size: 0.7em; top: 10px; bottom: auto; } /* En móviles arriba */
+      .subtitles { font-size: 0.7em; top: 10px; bottom: auto; }
     }
   </style>
 </head>
@@ -216,7 +216,7 @@
         <div id="gameOverOverlay">
           <p>GAME OVER</p>
           <input type="text" id="nicknameInput" placeholder="Enter your nickname">
-          <button onclick="restartGame()">Save & Play Again</button>
+          <button onclick="saveAndRestart()">Play Again</button>
           <div id="ranking"></div>
         </div>
         <div id="snakeControls">
@@ -374,9 +374,10 @@
       return array.some(segment => head.x === segment.x && head.y === segment.y);
     }
 
-    function restartGame() {
+    function saveAndRestart() {
       let nickname = document.getElementById("nicknameInput").value || "Anon";
       db.ref("scores").push({ nickname: nickname, score: score });
+      document.getElementById("nicknameInput").value = "";
       document.getElementById("gameOverOverlay").style.display = "none";
       initGame();
     }
@@ -412,3 +413,4 @@
   </script>
 </body>
 </html>
+
