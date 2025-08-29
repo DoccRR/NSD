@@ -461,6 +461,149 @@ volumeSlider.addEventListener('input', function(e){
 
 
 
+/* ============================
+   SNAKE GAME - NSD Edition
+   ============================ */
+
+const canvas = document.getElementById("snake"),
+      ctx = canvas.getContext("2d");
+
+let snake, dir, pendingDir, food, score, lives, gameLoop, ranking = [];
+
+/* --- Reinicio del juego --- */
+function resetSnake() {
+  snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir = {x:1,y:0};
+  pendingDir = null;
+  score = 0;
+  lives = 2;
+  placeFood();
+  document.getElementById("overlay").style.display = "none";
+  if (gameLoop) clearInterval(gameLoop);
+  gameLoop = setInterval(step, 120);
+  drawSnake();
+}
+
+/* --- Nueva comida --- */
+function placeFood() {
+  food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)};
+}
+
+/* --- Lógica por frame --- */
+function step() {
+  // Cambiar dirección si hay pendiente
+  if (pendingDir) {
+    if (!(pendingDir.x === -dir.x && pendingDir.y === -dir.y)) {
+      dir = pendingDir;
+    }
+    pendingDir = null;
+  }
+
+  // Nueva cabeza
+  const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+  // Colisión
+  if (head.x < 0 || head.y < 0 || head.x >= 20 || head.y >= 20 || snake.some(p => p.x === head.x && p.y === head.y)) {
+    lives--;
+    if (lives < 0) {
+      clearInterval(gameLoop);
+      document.getElementById("overlay").style.display = "flex";
+      return;
+    }
+    snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+    dir = {x:1,y:0};
+    return;
+  }
+
+  // Comer NSD
+  snake.unshift(head);
+  if (head.x === food.x && head.y === food.y) {
+    score++;
+    placeFood();
+  } else {
+    snake.pop();
+  }
+
+  drawSnake();
+}
+
+/* --- Dibujar juego --- */
+function drawSnake() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Comida como texto "NSD"
+  ctx.fillStyle = "cyan";
+  ctx.font = "12px Arial Black";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("NSD", food.x * 20 + 10, food.y * 20 + 10);
+
+  // Serpiente
+  ctx.fillStyle = "lime";
+  snake.forEach(p => ctx.fillRect(p.x * 20, p.y * 20, 20, 20));
+
+  // HUD: score y vidas
+  ctx.fillStyle = "white";
+  ctx.font = "16px Arial";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText(`Score: ${score}`, 10, 20);
+  ctx.fillText(`Lives: ${lives}`, 320, 20);
+}
+
+/* --- Ranking --- */
+function loadRanking(){
+  const saved = JSON.parse(localStorage.getItem("nsdRanking")||"[]");
+  ranking = saved;
+  renderRanking();
+}
+function saveRanking(){
+  localStorage.setItem("nsdRanking", JSON.stringify(ranking));
+}
+function renderRanking(){
+  document.getElementById("ranking").innerHTML = ranking.map(r=>`<div>${r.name}: ${r.score}</div>`).join("");
+}
+document.getElementById("submitScoreBtn").addEventListener('click',()=>{
+  const name = (document.getElementById("nicknameInput").value||"Anon").slice(0,12);
+  ranking.push({name, score});
+  ranking.sort((a,b)=>b.score-a.score);
+  saveRanking();
+  renderRanking();
+  document.getElementById("nicknameInput").value="";
+  resetSnake();
+});
+
+/* --- Controles teclado --- */
+document.addEventListener("keydown", e=>{
+  switch(e.key){
+    case "ArrowUp": case "w": pendingDir={x:0,y:-1}; break;
+    case "ArrowDown": case "s": pendingDir={x:0,y:1}; break;
+    case "ArrowLeft": case "a": pendingDir={x:-1,y:0}; break;
+    case "ArrowRight": case "d": pendingDir={x:1,y:0}; break;
+  }
+});
+
+/* --- Bloquear scroll en móvil --- */
+canvas.addEventListener("touchstart", e => e.preventDefault(), { passive: false });
+canvas.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+
+/* --- Inicializar --- */
+loadRanking();
+resetSnake();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const volSlider = document.getElementById("volumeSlider");
 volSlider.value = localStorage.getItem("nsdVolume") || 50;
@@ -472,3 +615,4 @@ volSlider.addEventListener("input", e => {
   localStorage.setItem("nsdVolume", v);
   volumeTimeout = setTimeout(() => scWidget.setVolume(v), 100);
 });
+
