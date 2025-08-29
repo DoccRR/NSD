@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html> 
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -138,27 +138,24 @@
       border-radius: 8px;
     }
 
-    /* ===== Subtítulos generales (arriba ahora) ===== */
+    /* ===== Subtítulos generales ===== */
     .subtitles {
       position: absolute;
-      top: 10px;
+      top: 15px; /* SUBTÍTULOS ARRIBA */
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
-      font-size: 0.9em;
+      font-size: 0.8em;
       color: #fff;
       opacity: 0.9;
       z-index: 20;
       line-height: 1.4;
-      background: rgba(0,0,0,0.5);
-      padding: 5px 10px;
-      border-radius: 8px;
     }
 
     /* ===== Controles de música ===== */
     #controls {
       position: absolute;
-      bottom: 20px;
+      bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -189,7 +186,7 @@
       }
       #gameOverOverlay { font-size: 1.5em; }
       #snakeControls { display: flex; flex-direction: column; align-items: center; }
-      .subtitles { font-size: 0.8em; top: 5px; }
+      .subtitles { font-size: 0.7em; top: 10px; bottom: auto; } /* En móviles arriba */
     }
   </style>
 </head>
@@ -200,7 +197,6 @@
 
   <!-- Carrusel -->
   <div id="carousel" class="carousel-container">
-    <!-- Slides -->
     <div class="slide">
       <div id="welcomeSlide" class="slide-content" style="background-image:url('NSD.jpg')">
         WELCOME
@@ -233,12 +229,13 @@
         </div>
       </div>
     </div>
-  </div> <!-- cierre carousel -->
-  
+  </div>
+
   <!-- Subtítulos -->
   <div class="subtitles">
     <p>Noize Secret Doctrine</p>
     <p>Underground Crew</p>
+    <p>Hardcore | Speedcore | Terrorcore | Uptempo Hardcore</p>
   </div>
 
   <!-- Controles de Música -->
@@ -249,7 +246,6 @@
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
   </div>
 
-  <!-- Audio oculto -->
   <audio id="audioPlayer" style="display:none;"></audio>
 
   <!-- Firebase -->
@@ -269,9 +265,9 @@
     const db = firebase.database();
   </script>
 
-  <!-- Scripts generales -->
+  <!-- Scripts -->
   <script>
-    /* ===== Carrusel ===== */
+    /* Carrusel */
     const carousel = document.getElementById("carousel");
     function scrollCarousel(dir) {
       const width = window.innerWidth;
@@ -283,7 +279,7 @@
       else scrollCarousel(-1);
     });
 
-    /* ===== Música ===== */
+    /* Música */
     const playlist = [
       "https://api.soundcloud.com/tracks/123456789/stream?client_id=YOUR_CLIENT_ID",
       "https://api.soundcloud.com/tracks/987654321/stream?client_id=YOUR_CLIENT_ID"
@@ -303,7 +299,7 @@
     }
     function setVolume(v) { audioPlayer.volume = v; }
 
-    /* ===== Snake ===== */
+    /* Snake */
     const canvas = document.getElementById("snakeCanvas");
     const ctx = canvas.getContext("2d");
     let box = 20;
@@ -381,7 +377,6 @@
     function restartGame() {
       let nickname = document.getElementById("nicknameInput").value || "Anon";
       db.ref("scores").push({ nickname: nickname, score: score });
-      document.getElementById("nicknameInput").value = "";
       document.getElementById("gameOverOverlay").style.display = "none";
       initGame();
     }
@@ -400,7 +395,7 @@
 
     initGame();
 
-    /* ===== Welcome overlay ===== */
+    /* Welcome overlay */
     const welcomeSlide = document.getElementById("welcomeSlide");
     let toggled = false;
     welcomeSlide.addEventListener("click", () => {
