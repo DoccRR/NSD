@@ -1,310 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOIZE SECRET DOCTRINE</title>
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      color: white;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-      overflow-y: hidden;
-    }
-    .slider {
-      display: flex;
-      width: 100%;
-      height: 100vh;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-    }
-    .slide {
-      min-width: 100%;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    h1, h2 {
-      margin: 0;
-      padding: 10px;
-      text-align: center;
-    }
-    a, button {
-      color: white;
-      text-decoration: none;
-      border: 1px solid white;
-      padding: 10px 20px;
-      margin-top: 20px;
-      display: inline-block;
-      border-radius: 10px;
-      background: black;
-      cursor: pointer;
-    }
-    /* Player */
-    #player-controls {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: black;
-      color: white;
-      border: 2px solid white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 1000;
-    }
-    #player-controls button {
-      background: black;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    #volume {
-      width: 80px;
-    }
-    /* Snake */
-    #snakeCanvas {
-      border: 2px solid white;
-      margin-top: 20px;
-    }
-    #gameOverPanel {
-      margin-top: 20px;
-      text-align: center;
-    }
-    #gameOverPanel input {
-      padding: 5px;
-      margin: 5px;
-    }
-    #gameOverPanel button {
-      padding: 5px 15px;
-      margin-top: 10px;
-      background: black;
-      color: white;
-      border: 1px solid white;
-      cursor: pointer;
-    }
-    /* Sub-welcome */
-    #welcome-inner {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: black;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NOIZE SECRET DOCTRINE — Official</title>
+<meta name="description" content="NSD aKa Noize Secret Doctrine — Official portal. Hardcore, Terrorcore, Speedcore, Uptempo Hardcore.">
+<meta name="color-scheme" content="dark">
+<style>
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --muted: #aaa;
+  --radius: 20px;
+  --font-futuristic: "Orbitron","Rajdhani","Exo 2",sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  height: 100%; margin: 0;
+  font-family: var(--font-futuristic);
+  background: var(--bg); color: var(--fg);
+  overflow: hidden;
+}
+
+/* --- CAROUSEL --- */
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  width: 100vw; height: 100vh;
+  padding: 40px 0;
+}
+.carousel-container::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 80%;
+  max-width: 800px;
+  height: 80%;
+  margin: 0 30px;
+  border-radius: var(--radius);
+  scroll-snap-align: center;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s ease;
+  text-decoration: none;
+}
+.slide:hover { transform: scale(1.03); }
+.slide::after {
+  content: "";
+  position: absolute; bottom: 0; left: 0;
+  width: 100%; height: 60%;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+}
+.slide span {
+  position: relative; z-index: 2;
+  font-size: clamp(20px,3vw,32px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--fg);
+  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+  margin-bottom: 25px;
+}
+
+/* --- FOOTERS --- */
+.footer-genres, .footer-records {
+  position: absolute; width: 100%; text-align: center;
+  font-size: 12px; color: var(--muted);
+}
+.footer-genres { bottom: 30px; }
+.footer-records { bottom: 10px; letter-spacing: 2px; }
+
+/* --- ARROWS --- */
+.arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 40px; color: rgba(255,255,255,0.6);
+  z-index: 10; pointer-events: none;
+  animation: blink 1.5s infinite;
+  user-select: none;
+}
+.arrow.left { left: 15px; }
+.arrow.right { right: 15px; }
+@keyframes blink { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+/* --- SNAKE --- */
+#snakeCanvas {
+  width: 100%; height: 100%;
+  background: #000; display: block;
+}
+
+/* --- PLAYER --- */
+#playerControls {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #000;
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.7);
+  z-index: 9999;
+}
+#playerControls button {
+  background: #000; color: #fff;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 50%;
+  transition: .2s;
+}
+#playerControls button:hover { transform: scale(1.2); }
+#volume { width: 80px; }
+</style>
 </head>
 <body>
-  <div class="slider">
 
-    <!-- Slide 1: Welcome -->
-    <div class="slide" style="background:url('NSD.png') center/cover no-repeat;">
-      <h1>NOIZE SECRET DOCTRINE</h1>
-      <button id="enterBtn">ENTER</button>
+<!-- Flechas -->
+<div class="arrow left">❮</div>
+<div class="arrow right">❯</div>
 
-      <!-- Sub-welcome oculto -->
-      <div id="welcome-inner">
-        <h1>NOIZE SECRET DOCTRINE</h1>
-        <p style="max-width:600px; text-align:center; margin-top:20px;">
-          This is NSD aKa Noize Secret Doctrine official website.
-        </p>
-        <p style="margin-top:10px;">Underground crew.</p>
-
-        <h2>DOCTRINE RECORDS</h2>
-        <a href="https://doctrinerecords.bandcamp.com/" target="_blank">Visit</a>
-
-        <h2>HARDCORE / SPEEDCORE</h2>
-        <a href="https://soundcloud.com/noizesd" target="_blank">SoundCloud</a>
-      </div>
-    </div>
-
-    <!-- Slide 2: Buy Music -->
-    <div class="slide" style="background:url('buy.png') center/cover no-repeat;">
-      <h2>BUY MUSIC</h2>
-      <a href="https://noizesecretdoctrine.bandcamp.com/" target="_blank">Bandcamp</a>
-    </div>
-
-    <!-- Slide 3: SoundCloud -->
-    <div class="slide" style="background:url('sc.png') center/cover no-repeat;">
-      <h2>SOUNDCLOUD</h2>
-      <a href="https://soundcloud.com/noizesd" target="_blank">Listen</a>
-    </div>
-
-    <!-- Slide 4: YouTube -->
-    <div class="slide" style="background:url('yt.png') center/cover no-repeat;">
-      <h2>YOUTUBE</h2>
-      <a href="https://www.youtube.com/@noizesecretdoctrine" target="_blank">Watch</a>
-    </div>
-
-    <!-- Slide 5: Spotify -->
-    <div class="slide" style="background:url('spotify.png') center/cover no-repeat;">
-      <h2>SPOTIFY</h2>
-      <a href="https://open.spotify.com/artist/4c2oC3NnL3G6sFJzi10BG3" target="_blank">Listen</a>
-    </div>
-
-    <!-- Slide 6: Merchandising -->
-    <div class="slide" style="background:url('merch.png') center/cover no-repeat;">
-      <h2>MERCHANDISING</h2>
-      <a href="https://triple6-shop.nl/collections/nsd" target="_blank">Shop Now</a>
-    </div>
-
-    <!-- Slide 7: Snake -->
-    <div class="slide" id="snake-slide" style="background:#000; flex-direction:column;">
-      <h2>SNAKE</h2>
-      <button id="startSnake">PLAY NSDAKE</button>
-
-      <canvas id="snakeCanvas" width="400" height="400" style="display:none; background:#000;"></canvas>
-
-      <div id="gameOverPanel" style="display:none; color:#fff;">
-        <p>GAME OVER — Your Score: <span id="finalScore"></span></p>
-        <input type="text" id="nickname" placeholder="Enter Nickname">
-        <button id="saveScore">Save</button>
-        <div id="scoreboard" style="margin-top:15px;"></div>
-        <button id="restartSnake">PLAY NSDAKE</button>
-      </div>
-    </div>
+<!-- Carousel -->
+<main class="carousel-container">
+  <div class="slide" style="background-image:url('NSD.jpg')">
+    <span>WELCOME</span>
   </div>
 
-  <!-- Player Controls -->
-  <div id="player-controls">
-    <button id="prev">⏮</button>
-    <button id="play">▶</button>
-    <button id="next">⏭</button>
-    <input type="range" id="volume" min="0" max="1" step="0.01">
-  </div>
-  <iframe id="sc-player" width="0" height="0" style="display:none;"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&auto_play=false"></iframe>
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" 
+     target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')">
+    <span>MERCHANDISING</span>
+  </a>
 
-  <script src="https://w.soundcloud.com/player/api.js"></script>
-  <script>
-    /* === ENTER Welcome === */
-    const enterBtn = document.getElementById("enterBtn");
-    const welcomeInner = document.getElementById("welcome-inner");
-    enterBtn.addEventListener("click", ()=>{
-      enterBtn.style.display="none";
-      welcomeInner.style.display="flex";
-    });
+  <div class="slide"><canvas id="snakeCanvas"></canvas></div>
 
-    /* === SoundCloud Player === */
-    const iframe = document.getElementById('sc-player');
-    const widget = SC.Widget(iframe);
-    const playBtn = document.getElementById('play');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const volumeSlider = document.getElementById('volume');
-    let isPlaying = false;
+  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener noreferrer" style="background-image:url('bandcamp.png')">
+    <span>BUY MUSIC</span>
+  </a>
+  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener noreferrer" style="background-image:url('youtube.png')">
+    <span>YOUTUBE</span>
+  </a>
+  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener noreferrer" style="background-image:url('soundcloud.png')">
+    <span>SOUNDCLOUD</span>
+  </a>
+  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener noreferrer" style="background-image:url('spotify.png')">
+    <span>SPOTIFY</span>
+  </a>
+  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" rel="noopener noreferrer" style="background-image:url('instagram.png')">
+    <span>INSTAGRAM</span>
+  </a>
+  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')">
+    <span>BOOKINGS</span>
+  </a>
+</main>
 
-    playBtn.addEventListener('click', () => {
-      if (isPlaying) {
-        widget.pause();
-        playBtn.textContent = "▶";
-      } else {
-        widget.play();
-        playBtn.textContent = "⏸";
-      }
-      isPlaying = !isPlaying;
-    });
-    prevBtn.addEventListener('click', () => widget.prev());
-    nextBtn.addEventListener('click', () => widget.next());
-    volumeSlider.addEventListener('input', () => {
-      widget.setVolume(volumeSlider.value * 100);
-    });
+<!-- Footers -->
+<footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
+<div class="footer-records">DOCTRINE RECORDS</div>
 
-    /* === Snake Game === */
-    const canvas = document.getElementById("snakeCanvas");
-    const ctx = canvas.getContext("2d");
-    let snake, dx, dy, food, score, gameInterval;
+<!-- Hidden SoundCloud -->
+<iframe id="scPlayer" width="0" height="0" scrolling="no" frameborder="no" allow="autoplay"
+  src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
+</iframe>
 
-    const startBtn = document.getElementById("startSnake");
-    const restartBtn = document.getElementById("restartSnake");
-    const gameOverPanel = document.getElementById("gameOverPanel");
-    const finalScoreEl = document.getElementById("finalScore");
-    const nicknameInput = document.getElementById("nickname");
-    const saveBtn = document.getElementById("saveScore");
-    const scoreboard = document.getElementById("scoreboard");
+<!-- Player Controls -->
+<div id="playerControls">
+  <button id="prevBtn">⏮</button>
+  <button id="playBtn">▶</button>
+  <button id="nextBtn">⏭</button>
+  <input type="range" id="volume" min="0" max="100" value="50">
+</div>
 
-    function getScores(){ return JSON.parse(localStorage.getItem("snakeScores")) || []; }
-    function saveScoreToStorage(nick, sc){
-      let scores = getScores();
-      scores.push({nick, sc});
-      scores.sort((a,b)=>b.sc-a.sc);
-      scores = scores.slice(0,5);
-      localStorage.setItem("snakeScores", JSON.stringify(scores));
-    }
-    function renderScores(){
-      let scores = getScores();
-      scoreboard.innerHTML = "<h3>Top 5</h3>" + scores.map(s=>`${s.nick}: ${s.sc}`).join("<br>");
-    }
+<script>
+/* --- CAROUSEL --- */
+const container = document.querySelector('.carousel-container');
+document.querySelector('.arrow.left').addEventListener('click', ()=> {
+  container.scrollBy({left: -window.innerWidth*0.8, behavior:"smooth"});
+});
+document.querySelector('.arrow.right').addEventListener('click', ()=> {
+  container.scrollBy({left: window.innerWidth*0.8, behavior:"smooth"});
+});
+container.addEventListener('wheel', e=>{
+  e.preventDefault();
+  container.scrollBy({left: e.deltaY, behavior:"smooth"});
+}, {passive:false});
+window.addEventListener("keydown", e=>{
+  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.code)) e.preventDefault();
+}, {passive:false});
 
-    function startGame(){
-      startBtn.style.display = "none";
-      canvas.style.display = "block";
-      gameOverPanel.style.display = "none";
-      snake = [{x:200, y:200}];
-      dx = 20; dy = 0;
-      food = randomFood();
-      score = 0;
-      document.addEventListener("keydown", keyDown);
-      gameInterval = setInterval(draw, 100);
-    }
-    function gameOver(){
-      clearInterval(gameInterval);
-      canvas.style.display = "none";
-      gameOverPanel.style.display = "block";
-      finalScoreEl.textContent = score;
-    }
-    function randomFood(){
-      return { x: Math.floor(Math.random()*20)*20, y: Math.floor(Math.random()*20)*20 };
-    }
-    function draw(){
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0,0,400,400);
-      ctx.fillStyle = "white";
-      snake.forEach(part=> ctx.fillRect(part.x, part.y, 18, 18));
-      ctx.fillStyle = "white";
-      ctx.fillRect(food.x, food.y, 18, 18);
+/* --- SNAKE GAME --- */
+const canvas = document.getElementById('snakeCanvas');
+const ctx = canvas.getContext('2d');
+let box = 20, snake, dir, food, game;
 
-      let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-      snake.unshift(head);
-      if(head.x === food.x && head.y === food.y){
-        score++;
-        food = randomFood();
-      } else {
-        snake.pop();
-      }
-      if(head.x<0 || head.y<0 || head.x>=400 || head.y>=400){ gameOver(); }
-      for(let i=1; i<snake.length; i++){
-        if(head.x===snake[i].x && head.y===snake[i].y){ gameOver(); }
-      }
-    }
-    function keyDown(e){
-      if(e.key==="ArrowUp" && dy===0){dx=0;dy=-20;}
-      if(e.key==="ArrowDown" && dy===0){dx=0;dy=20;}
-      if(e.key==="ArrowLeft" && dx===0){dx=-20;dy=0;}
-      if(e.key==="ArrowRight" && dx===0){dx=20;dy=0;}
-    }
+function init() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  snake = [{x:9*box,y:10*box}];
+  dir = null;
+  food = {
+    x: Math.floor(Math.random()*(canvas.width/box))*box,
+    y: Math.floor(Math.random()*(canvas.height/box))*box
+  };
+  clearInterval(game);
+  game = setInterval(draw,150);
+}
 
-    startBtn.addEventListener("click", startGame);
-    restartBtn.addEventListener("click", startGame);
-    saveBtn.addEventListener("click", ()=>{
-      const nick = nicknameInput.value || "Anon";
-      saveScoreToStorage(nick, score);
-      renderScores();
-    });
-  </script>
+function draw() {
+  ctx.fillStyle="#000";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  for(let i=0;i<snake.length;i++) {
+    ctx.fillStyle="#f00";
+    ctx.fillRect(snake[i].x,snake[i].y,box-2,box-2);
+  }
+
+  // comida (mini NSD en rojo)
+  ctx.fillStyle="#f00";
+  ctx.beginPath();
+  ctx.arc(food.x+box/2, food.y+box/2, box/2.5, 0, 2*Math.PI);
+  ctx.fill();
+
+  let headX=snake[0].x, headY=snake[0].y;
+  if(dir=="LEFT") headX-=box;
+  if(dir=="UP") headY-=box;
+  if(dir=="RIGHT") headX+=box;
+  if(dir=="DOWN") headY+=box;
+
+  if(headX==food.x && headY==food.y) {
+    food={
+      x: Math.floor(Math.random()*(canvas.width/box))*box,
+      y: Math.floor(Math.random()*(canvas.height/box))*box
+    };
+  } else {
+    snake.pop();
+  }
+
+  let newHead={x:headX,y:headY};
+  if(headX<0 || headY<0 || headX>=canvas.width || headY>=canvas.height || collision(newHead,snake)) {
+    init(); return;
+  }
+  snake.unshift(newHead);
+}
+
+function collision(h,array) {
+  for(let i=0;i<array.length;i++) {
+    if(h.x==array[i].x && h.y==array[i].y) return true;
+  }
+  return false;
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.code=="ArrowLeft" && dir!="RIGHT") dir="LEFT";
+  if(e.code=="ArrowUp" && dir!="DOWN") dir="UP";
+  if(e.code=="ArrowRight" && dir!="LEFT") dir="RIGHT";
+  if(e.code=="ArrowDown" && dir!="UP") dir="DOWN";
+});
+canvas.addEventListener("click",()=>{
+  const d=["LEFT","UP","RIGHT","DOWN"];
+  dir=d[(d.indexOf(dir)+1)%4]||"RIGHT";
+});
+window.addEventListener('resize',init);
+init();
+
+/* --- SOUNDPLAYER --- */
+const scPlayer = document.getElementById('scPlayer');
+let isPlaying = false;
+function post(action,value){
+  scPlayer.contentWindow.postMessage(JSON.stringify(
+    value ? {method:action,value} : {method:action}
+  ), '*');
+}
+document.getElementById('playBtn').addEventListener('click',()=>{
+  if(!isPlaying){
+    post('play');
+    isPlaying=true;
+    playBtn.textContent="⏸";
+  } else {
+    post('pause');
+    isPlaying=false;
+    playBtn.textContent="▶";
+  }
+});
+document.getElementById('nextBtn').addEventListener('click',()=>post('next'));
+document.getElementById('prevBtn').addEventListener('click',()=>post('prev'));
+document.getElementById('volume').addEventListener('input',e=>{
+  post('setVolume', parseInt(e.target.value));
+});
+</script>
 </body>
 </html>
