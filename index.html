@@ -48,6 +48,7 @@
       text-shadow: 0 0 10px black;
       cursor: pointer;
       text-align: center;
+      padding: 20px;
     }
 
     /* Flechas */
@@ -119,39 +120,6 @@
       border: none;
       cursor: pointer;
     }
-
-    /* ===== Responsive (móvil) ===== */
-    @media (max-width: 768px) {
-      .slide-content {
-        width: 90%;
-        height: auto;
-        font-size: 1.8em;
-        padding: 20px;
-        background-size: contain;
-      }
-
-      .arrow {
-        font-size: 1.5em;
-        padding: 6px;
-      }
-
-      #snakeCanvas {
-        width: 90vw;
-        height: 90vw;
-      }
-
-      #controls {
-        bottom: 10px;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      #controls button,
-      #controls input[type=range] {
-        font-size: 0.9em;
-        padding: 5px 8px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -161,7 +129,12 @@
 
   <!-- Carrusel -->
   <div id="carousel" class="carousel-container">
-    <div class="slide"><div class="slide-content" style="background-image:url('NSD.jpg')">WELCOME</div></div>
+    <!-- Slide con doble estado -->
+    <div class="slide">
+      <div id="welcomeSlide" class="slide-content" style="background-image:url('NSD.jpg')">
+        WELCOME
+      </div>
+    </div>
     <div class="slide"><div class="slide-content" style="background-image:url('bandcamp.png')" onclick="window.open('https://noizesecretdoctrine.bandcamp.com/','_blank')">BUY MUSIC</div></div>
     <div class="slide"><div class="slide-content" style="background-image:url('youtube.png')" onclick="window.open('https://www.youtube.com/@noizesecretdoctrine','_blank')">YOUTUBE</div></div>
     <div class="slide"><div class="slide-content" style="background-image:url('spotify.png')" onclick="window.open('https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX','_blank')">SPOTIFY</div></div>
@@ -245,6 +218,25 @@
     window.addEventListener("keydown", (e) => {
       if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
         e.preventDefault();
+      }
+    });
+
+    /* ===== Welcome Slide Toggle ===== */
+    const welcome = document.getElementById("welcomeSlide");
+    let welcomeAlt = false;
+    welcome.addEventListener("click", () => {
+      if (!welcomeAlt) {
+        welcome.style.backgroundImage = "none";
+        welcome.style.background = "black";
+        welcome.textContent = "This is NSD official website. Underground crew.";
+        welcome.style.fontSize = "2em";
+        welcomeAlt = true;
+      } else {
+        welcome.style.background = "none";
+        welcome.style.backgroundImage = "url('NSD.jpg')";
+        welcome.textContent = "WELCOME";
+        welcome.style.fontSize = "3em";
+        welcomeAlt = false;
       }
     });
 
@@ -355,9 +347,8 @@
     }
 
     init();
-  </script>
-  <script src="https://w.soundcloud.com/player/api.js"></script>
-  <script>
+
+    /* ===== Reproductor ===== */
     let widget;
     window.addEventListener("load", () => {
       const iframe = document.getElementById("scPlayer");
@@ -367,8 +358,8 @@
     function togglePlay() { widget.toggle(); }
     function nextTrack() { widget.next(); }
     function prevTrack() { widget.prev(); }
-    function setVolume(val) { widget.setVolume(val * 100); }
+    function setVolume(val) { widget.setVolume(val*100); }
   </script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
 </body>
 </html>
-
