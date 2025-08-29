@@ -458,3 +458,17 @@ volumeSlider.addEventListener('input', function(e){
 
 </body>
 </html>
+
+
+
+
+const volSlider = document.getElementById("volumeSlider");
+volSlider.value = localStorage.getItem("nsdVolume") || 50;
+
+volSlider.addEventListener("input", e => {
+  if (!widgetReady) return;
+  clearTimeout(volumeTimeout);
+  const v = Math.max(0, Math.min(100, parseInt(e.target.value, 10)));
+  localStorage.setItem("nsdVolume", v);
+  volumeTimeout = setTimeout(() => scWidget.setVolume(v), 100);
+});
