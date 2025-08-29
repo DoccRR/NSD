@@ -1,245 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NOIZE SECRET DOCTRINE — Official</title>
-<meta name="description" content="NSD aKa Noize Secret Doctrine — Official portal. Hardcore, Terrorcore, Speedcore, Uptempo Hardcore.">
-<meta name="color-scheme" content="dark">
-<style>
-:root{
-  --bg:#000;
-  --fg:#fff;
-  --muted:#aaa;
-  --radius:20px;
-  --font-futuristic:"Orbitron","Rajdhani","Exo 2",sans-serif;
-  --accent:#e60000;
-}
+  <meta charset="UTF-8">
+  <title>NSD Snake + Carrusel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-*{box-sizing:border-box;}
-html,body{
-  height:100%; margin:0; font-family:var(--font-futuristic);
-  background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
-  color:var(--fg); overflow-x:hidden;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Carousel */
-.carousel-container{
-  display:flex;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  width:100vw; height:100vh;
-  padding:40px 0;
-}
-.carousel-container::-webkit-scrollbar{display:none;}
-.carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
+    body {
+      background: black;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
 
-/* Slides */
-.slide{
-  flex:0 0 80%;
-  max-width:800px;
-  height:80%;
-  margin:0 30px;
-  border-radius:var(--radius);
-  scroll-snap-align:center;
-  background-size:cover;
-  background-position:center;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
-  box-shadow:0 10px 30px rgba(0,0,0,0.6);
-  position:relative;
-  overflow:hidden;
-  transition:transform .3s ease;
-  text-decoration:none;
-}
-.slide:hover{transform:scale(1.03);}
-.slide::after{
-  content:"";
-  position:absolute;
-  bottom:0; left:0;
-  width:100%; height:60%;
-  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
-}
-.slide span{
-  position:relative;
-  z-index:2;
-  font-size:clamp(20px,3vw,32px);
-  font-weight:900;
-  text-transform:uppercase;
-  color:var(--fg);
-  text-shadow:0 0 10px rgba(0,0,0,0.8);
-  margin-bottom:25px;
-}
-.slide.welcome::after{content:none;}
+    /* ======================= Carrusel ======================= */
+    .carousel-container {
+      display: flex;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      width: 100%;
+      height: 100vh;
+    }
+    .slide {
+      min-width: 100%;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
 
-/* Snake slide */
-.slide.snake-slide{
-  flex:0 0 95%;
-  max-width:1200px;
-  height:90%;
-  align-items:center;
-  justify-content:center;
-}
-.slide.snake-slide::after{content:none;}
-.slide.snake-slide span{display:none;}
+    /* ======================= Flechas carrusel ======================= */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      z-index: 10;
+      user-select: none;
+    }
+    .arrow.left { left: 10px; }
+    .arrow.right { right: 10px; }
 
-/* Snake contenido */
-.play-inner{
-  position:relative;
-  z-index:2; width:100%;
-  display:flex; flex-direction:column;
-  align-items:center; gap:12px;
-  height:100%;
-}
-#snakeWrap{
-  flex:1;
-  display:flex; justify-content:center; align-items:center;
-  background:#000;
-  border:4px solid #fff; 
-  border-radius:12px; padding:8px;
-  width:100%;
-  position:relative;
-}
-#snakeCanvas{
-  display:block;
-  width:100%; max-width:1000px;
-  height:auto; background:#000;
-  border:2px solid var(--accent);
-  border-radius:10px;
-}
-.score{
-  position:absolute; top:10px; left:10px;
-  font-size:14px; color:#bbb;
-  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
-}
-#gameOverOverlay{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  color:#fff;
-  text-align:center;
-  z-index:10;
-}
-#gameOverOverlay h2{font-size:2rem; margin-bottom:15px;}
-#playAgainBtn{
-  padding:8px 16px; 
-  background:var(--accent); 
-  border:none; 
-  color:#fff; 
-  font-weight:bold; 
-  border-radius:6px; 
-  cursor:pointer;
-  margin-top:5px;
-}
+    /* ======================= Snake ======================= */
+    #snakeWrap {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    #snakeCanvas {
+      background: black;
+      border: 2px solid white;
+      display: block;
+    }
+    #score {
+      margin-top: 10px;
+      font-size: 20px;
+    }
 
-/* Footer */
-.footer-genres, .footer-records{
-  position:absolute;
-  width:100%; text-align:center;
-  font-size:12px; color:var(--muted);
-}
-.footer-genres{bottom:110px;}
-.footer-records{bottom:90px; letter-spacing:2px;}
+    /* ======================= Overlay Game Over ======================= */
+    #gameOverOverlay {
+      display: none;
+      position: absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.8);
+      z-index: 30;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #gameOverOverlay input {
+      margin-top: 10px;
+      padding: 5px;
+      font-size: 16px;
+      font-family: Orbitron;
+      text-align: center;
+    }
+    #gameOverOverlay button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-/* Arrows */
-.arrow{
-  position:absolute;
-  top:50%; transform:translateY(-50%);
-  font-size:40px; color:rgba(255,255,255,0.6);
-  z-index:10; cursor:pointer;
-  animation:blink 1.5s infinite;
-}
-.arrow.left{left:15px;} .arrow.right{right:15px;}
-@keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
-
-/* Responsive Snake */
-@media(max-width:768px){
-  .slide.snake-slide{
-    flex:0 0 100%;
-    max-width:100%;
-    height:100vh;
-    border-radius:0;
-  }
-  #snakeWrap{border-radius:0; border:none; padding:0;}
-  #snakeCanvas{width:90vw; height:90vw; max-width:400px; max-height:400px;}
-}
-@media(min-width:768px){
-  #snakeCanvas{
-    width:80vw;
-    height:45vw;
-    max-width:800px;
-    max-height:450px;
-  }
-}
-</style>
+    /* ======================= Controles de música ======================= */
+    #musicControls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 50;
+      background: rgba(0,0,0,0.5);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    #musicControls button {
+      font-size: 20px;
+      padding: 5px 10px;
+      cursor: pointer;
+      background: none;
+      border: 1px solid white;
+      color: white;
+      border-radius: 4px;
+    }
+    #musicControls input[type=range] {
+      width: 100px;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Flechas -->
-<div class="arrow left" onclick="scrollCarousel(-1)" aria-label="Previous slide">❮</div>
-<div class="arrow right" onclick="scrollCarousel(1)" aria-label="Next slide">❯</div>
-
-<main class="carousel-container">
-  <!-- WELCOME -->
-  <div class="slide welcome" style="background-image:url('NSD.jpg')">
-    <span>WELCOME</span>
+  <!-- ======================= Carrusel con imágenes ======================= -->
+  <div class="carousel-container">
+    <div class="slide" style="background-image:url('instagram.png')"></div>
+    <div class="slide" style="background-image:url('bookings.png')"></div>
+    <div class="slide" style="background-image:url('spotify.png')"></div>
+    <div class="slide" style="background-image:url('soundcloud.png')"></div>
+    <div class="slide" style="background-image:url('merch.png')"></div>
+    <div class="slide" style="background-image:url('youtube.png')"></div>
+    <div class="slide" style="background-image:url('bandcamp.png')"></div>
   </div>
 
-  <!-- Enlaces -->
-  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" aria-label="Bandcamp"><span>BUY MUSIC</span></a>
-  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" aria-label="YouTube"><span>YOUTUBE</span></a>
-  <a class="slide" href="https://open.spotify.com/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" aria-label="Spotify"><span>SPOTIFY</span></a>
-  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" aria-label="Instagram"><span>INSTAGRAM</span></a>
-  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" aria-label="Bookings"><span>BOOKINGS</span></a>
-  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" aria-label="Merchandising"><span>MERCH</span></a>
+  <!-- Flechas -->
+  <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
+  <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
 
-  <!-- Snake -->
-  <div class="slide snake-slide">
-    <div class="play-inner" id="snake">
-      <div id="snakeWrap">
-        <div class="score" id="score">SCORE: 0</div>
-        <canvas id="snakeCanvas"></canvas>
-        <div id="gameOverOverlay">
-          <h2>GAME OVER</h2>
-          <input type="text" id="nicknameInput" placeholder="Enter your name" style="padding:6px;margin:6px;">
-          <button id="playAgainBtn">Play Again</button>
-        </div>
-      </div>
-      <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
-    </div>
+  <!-- ======================= Snake ======================= -->
+  <div id="snakeWrap">
+    <canvas id="snakeCanvas"></canvas>
+    <div id="score">SCORE: 0</div>
   </div>
-</main>
 
-<!-- Footer -->
-<div class="footer-genres">Hardcore • Terrorcore • Speedcore • Uptempo Hardcore</div>
-<div class="footer-records">NSD RECORDS</div>
+  <!-- ======================= Overlay Game Over ======================= -->
+  <div id="gameOverOverlay">
+    <h2>GAME OVER</h2>
+    <input id="nicknameInput" type="text" placeholder="Tu nombre...">
+    <button id="playAgainBtn">JUGAR DE NUEVO</button>
+  </div>
 
-<!-- Controles de SoundCloud personalizados -->
-<div id="scControls" style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:320px;z-index:20;text-align:center;">
-  <!-- iframe oculto -->
+  <!-- ======================= Controles SoundCloud ======================= -->
+  <div id="musicControls">
+    <button id="prevBtn">⏮</button>
+    <button id="playPauseBtn">▶</button>
+    <button id="nextBtn">⏭</button>
+    <input type="range" id="volumeSlider" min="0" max="100" value="50">
+  </div>
+
+  <!-- Reproductor SoundCloud oculto -->
   <iframe 
     id="scPlayer"
     style="display:none;"
     width="0" height="0"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nsd-aka-noize-secret-doctrine/sets/nsd-official&auto_play=false&show_comments=false&visual=false">
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/yourplaylist&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
   </iframe>
-  <!-- Controles visibles -->
-  <div style="margin-top:6px;">
-    <button id="prevBtn" aria-label="Previous track">⏮</button>
-    <button id="playPauseBtn" aria-label="Play/Pause">▶</button>
-    <button id="nextBtn" aria-label="Next track">⏭</button>
-    <input id="volumeSlider" type="range" min="0" max="100" value="80" style="width:100px;vertical-align:middle;" aria-label="Volume">
-  </div>
-</div>
-<!-- SDKs necesarios -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
-<script src="https://w.soundcloud.com/player/api.js"></script>
+
+  <!-- Scripts externos -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
 
 <script>
 /* ======================= Firebase ======================= */
@@ -534,3 +466,4 @@ volumeSlider.addEventListener("input", (e)=>{
 });
 
 </script>
+
