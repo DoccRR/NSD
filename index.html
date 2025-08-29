@@ -1,180 +1,238 @@
-<!DOCTYPE html>
-<html lang="es">
+mitad de arriba: <!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NSD Snake + Carrusel</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NOIZE SECRET DOCTRINE — Official</title>
+<meta name="description" content="NSD aKa Noize Secret Doctrine — Official portal. Hardcore, Terrorcore, Speedcore, Uptempo Hardcore.">
+<meta name="color-scheme" content="dark">
+<style>
+:root{
+  --bg:#000;
+  --fg:#fff;
+  --muted:#aaa;
+  --radius:20px;
+  --font-futuristic:"Orbitron","Rajdhani","Exo 2",sans-serif;
+  --accent:#e60000;
+}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+*{box-sizing:border-box;}
+html,body{
+  height:100%; margin:0; font-family:var(--font-futuristic);
+  background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
+  color:var(--fg); overflow-x:hidden; overflow-y:hidden;
+}
 
-    body {
-      background: black;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-      overflow: hidden;
-    }
+/* Carousel */
+.carousel-container{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  width:100vw; height:100vh;
+  padding:40px 0;
+}
+.carousel-container::-webkit-scrollbar{display:none;}
+.carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
 
-    /* ======================= Carrusel ======================= */
-    .carousel-container {
-      display: flex;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      width: 100%;
-      height: 100vh;
-    }
-    .slide {
-      min-width: 100%;
-      height: 100vh;
-      background-size: cover;
-      background-position: center;
-      flex-shrink: 0;
-    }
+/* Slides */
+.slide{
+  flex:0 0 80%;
+  max-width:800px;
+  height:80%;
+  margin:0 30px;
+  border-radius:var(--radius);
+  scroll-snap-align:center;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+  position:relative;
+  overflow:hidden;
+  transition:transform .3s ease;
+  text-decoration:none;
+}
+.slide:hover{transform:scale(1.03);}
+.slide::after{
+  content:"";
+  position:absolute;
+  bottom:0; left:0;
+  width:100%; height:60%;
+  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+}
+.slide span{
+  position:relative;
+  z-index:2;
+  font-size:clamp(20px,3vw,32px);
+  font-weight:900;
+  text-transform:uppercase;
+  color:var(--fg);
+  text-shadow:0 0 10px rgba(0,0,0,0.8);
+  margin-bottom:25px;
+}
+.slide.welcome::after{content:none;}
 
-    /* ======================= Flechas carrusel ======================= */
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 3rem;
-      color: white;
-      background: rgba(0,0,0,0.5);
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      z-index: 10;
-      user-select: none;
-    }
-    .arrow.left { left: 10px; }
-    .arrow.right { right: 10px; }
+/* Snake slide */
+.slide.snake-slide{
+  flex:0 0 95%;
+  max-width:1200px;
+  height:90%;
+  align-items:center;
+  justify-content:center;
+}
+.slide.snake-slide::after{content:none;}
+.slide.snake-slide span{display:none;}
 
-    /* ======================= Snake ======================= */
-    #snakeWrap {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-    }
-    #snakeCanvas {
-      background: black;
-      border: 2px solid white;
-      display: block;
-    }
-    #score {
-      margin-top: 10px;
-      font-size: 20px;
-    }
+/* Snake contenido */
+.play-inner{
+  position:relative;
+  z-index:2; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; gap:12px;
+  height:100%;
+}
+#snakeWrap{
+  flex:1;
+  display:flex; justify-content:center; align-items:center;
+  background:#000;
+  border:4px solid #fff; 
+  border-radius:12px; padding:8px;
+  width:100%;
+  position:relative;
+}
+#snakeCanvas{
+  display:block;
+  width:100%; max-width:1000px;
+  height:auto; background:#000;
+  border:2px solid var(--accent);
+  border-radius:10px;
+}
+.score{
+  position:absolute; top:10px; left:10px;
+  font-size:14px; color:#bbb;
+  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
+}
+#gameOverOverlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  z-index:10;
+}
+#gameOverOverlay h2{font-size:2rem; margin-bottom:15px;}
+#playAgainBtn{
+  padding:8px 16px; 
+  background:var(--accent); 
+  border:none; 
+  color:#fff; 
+  font-weight:bold; 
+  border-radius:6px; 
+  cursor:pointer;
+  margin-top:5px;
+}
 
-    /* ======================= Overlay Game Over ======================= */
-    #gameOverOverlay {
-      display: none;
-      position: absolute;
-      top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.8);
-      z-index: 30;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    #gameOverOverlay input {
-      margin-top: 10px;
-      padding: 5px;
-      font-size: 16px;
-      font-family: Orbitron;
-      text-align: center;
-    }
-    #gameOverOverlay button {
-      margin-top: 10px;
-      padding: 5px 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+/* Footer */
+.footer-genres, .footer-records{
+  position:absolute;
+  width:100%; text-align:center;
+  font-size:12px; color:var(--muted);
+}
+.footer-genres{bottom:110px;}
+.footer-records{bottom:90px; letter-spacing:2px;}
 
-    /* ======================= Controles de música ======================= */
-    #musicControls {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 50;
-      background: rgba(0,0,0,0.5);
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
-    #musicControls button {
-      font-size: 20px;
-      padding: 5px 10px;
-      cursor: pointer;
-      background: none;
-      border: 1px solid white;
-      color: white;
-      border-radius: 4px;
-    }
-    #musicControls input[type=range] {
-      width: 100px;
-    }
-  </style>
+/* Arrows */
+.arrow{
+  position:absolute;
+  top:50%; transform:translateY(-50%);
+  font-size:40px; color:rgba(255,255,255,0.6);
+  z-index:10; cursor:pointer;
+  animation:blink 1.5s infinite;
+}
+.arrow.left{left:15px;} .arrow.right{right:15px;}
+@keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
+
+/* Responsive Snake */
+@media(max-width:768px){
+  .slide.snake-slide{
+    flex:0 0 100%;
+    max-width:100%;
+    height:100vh;
+    border-radius:0;
+  }
+  #snakeWrap{border-radius:0; border:none; padding:0;}
+  #snakeCanvas{width:90vw; height:90vw; max-width:400px; max-height:400px;}
+}
+@media(min-width:768px){
+  #snakeCanvas{
+    width:80vw;
+    height:45vw;
+    max-width:800px;
+    max-height:450px;
+  }
+}
+</style>
 </head>
 <body>
 
-  <!-- ======================= Carrusel con imágenes ======================= -->
-  <div class="carousel-container">
-    <div class="slide" style="background-image:url('instagram.png')"></div>
-    <div class="slide" style="background-image:url('bookings.png')"></div>
-    <div class="slide" style="background-image:url('spotify.png')"></div>
-    <div class="slide" style="background-image:url('soundcloud.png')"></div>
-    <div class="slide" style="background-image:url('merch.png')"></div>
-    <div class="slide" style="background-image:url('youtube.png')"></div>
-    <div class="slide" style="background-image:url('bandcamp.png')"></div>
+<!-- Flechas -->
+<div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
+<div class="arrow right" onclick="scrollCarousel(1)">❯</div>
+
+<main class="carousel-container">
+  <!-- WELCOME -->
+  <div class="slide welcome" style="background-image:url('NSD.jpg')">
+    <span>WELCOME</span>
   </div>
 
-  <!-- Flechas -->
-  <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
-  <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
+  <!-- Enlaces -->
+  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
+  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
+  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
+  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
+  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
-  <!-- ======================= Snake ======================= -->
-  <div id="snakeWrap">
-    <canvas id="snakeCanvas"></canvas>
-    <div id="score">SCORE: 0</div>
+  <!-- Snake -->
+  <div class="slide snake-slide">
+    <div class="play-inner" id="snake">
+      <div id="snakeWrap">
+        <div class="score" id="score">SCORE: 0</div>
+        <canvas id="snakeCanvas" width="400" height="400"></canvas>
+        <div id="gameOverOverlay">
+          <h2>GAME OVER</h2>
+          <button id="playAgainBtn">Play Again</button>
+        </div>
+      </div>
+      <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
+    </div>
   </div>
+</main>
 
-  <!-- ======================= Overlay Game Over ======================= -->
-  <div id="gameOverOverlay">
-    <h2>GAME OVER</h2>
-    <input id="nicknameInput" type="text" placeholder="Tu nombre...">
-    <button id="playAgainBtn">JUGAR DE NUEVO</button>
+<!-- Footer -->
+<div class="footer-genres">Hardcore • Terrorcore • Speedcore • Uptempo Hardcore</div>
+<div class="footer-records">NSD RECORDS</div>
+
+<!-- SoundCloud Player -->
+<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:300px;z-index:20;text-align:center;">
+  <iframe id="scPlayer" width="100%" height="100" scrolling="no" frameborder="no"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nsd-aka-noize-secret-doctrine/sets/nsd-official&color=%23ff5500&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=false"></iframe>
+  <div style="margin-top:6px;">
+    <button onclick="scWidget.play()">Play</button>
+    <button onclick="scWidget.pause()">Pause</button>
   </div>
+</div>
 
-  <!-- ======================= Controles SoundCloud ======================= -->
-  <div id="musicControls">
-    <button id="prevBtn">⏮</button>
-    <button id="playPauseBtn">▶</button>
-    <button id="nextBtn">⏭</button>
-    <input type="range" id="volumeSlider" min="0" max="100" value="50">
-  </div>
-
-  <!-- Reproductor SoundCloud oculto -->
-  <iframe 
-    id="scPlayer"
-    style="display:none;"
-    width="0" height="0"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/yourplaylist&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
-  </iframe>
-
-  <!-- Scripts externos -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://w.soundcloud.com/player/api.js"></script>
-
-<script>
-/* ======================= Firebase ======================= */
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
+mitad de abajo: <script>
+/* ---------------- Firebase Setup ---------------- */
 const firebaseConfig = {
   apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
   authDomain: "nsdsnake.firebaseapp.com",
@@ -187,259 +245,147 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ======================= Snake ======================= */
-const canvas = document.getElementById("snakeCanvas");
-const ctx = canvas.getContext("2d");
-const overlay = document.getElementById("gameOverOverlay");
-const scoreEl = document.getElementById("score");
-const nicknameInput = document.getElementById("nicknameInput");
-const playAgainBtn = document.getElementById("playAgainBtn");
-
-let GRID = 20;        // celdas por lado (20x20)
-let box = 20;         // tamaño de celda en CSS px (se recalcula)
-let snake = [];
-let direction = null;
-let food = null;
-let score = 0;
-let loop = null;
-let lastSaveAt = 0;
-
-function sanitize(str){
-  return String(str).replace(/[<>]/g,"").trim().slice(0, 20) || "Anon";
-}
-
-function setCanvasSquareToContainer(){
-  // Calcula el tamaño cuadrado máximo disponible dentro del #snakeWrap
-  const wrap = document.getElementById("snakeWrap");
-  const rect = wrap.getBoundingClientRect();
-  const sizeCSS = Math.min(rect.width - 16, rect.height - 16); // padding aprox
-  // box = tamaño por celda en CSS px para que cuadre con GRID
-  box = Math.max(10, Math.floor(sizeCSS / GRID));
-  const cssSize = box * GRID;
-
-  const dpr = window.devicePixelRatio || 1;
-  canvas.style.width = cssSize + "px";
-  canvas.style.height = cssSize + "px";
-  canvas.width = Math.floor(cssSize * dpr);
-  canvas.height = Math.floor(cssSize * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
+/* ---------------- Snake Game ---------------- */
+const canvas=document.getElementById("snakeCanvas");
+const ctx=canvas.getContext("2d");
+let box=20;
+let snake=[{x:9*box,y:10*box}];
+let direction;
+let food=generateFood();
+let score=0;
+let gameInterval;
+let overlay=document.getElementById("gameOverOverlay");
+let scoreElement=document.getElementById("score");
 
 function generateFood(){
-  const letters = ["N","S","D"];
-  return {
-    x: Math.floor(Math.random() * GRID) * box,
-    y: Math.floor(Math.random() * GRID) * box,
-    letter: letters[Math.floor(Math.random() * letters.length)]
+  let letters=["N","S","D"];
+  return{
+    x:Math.floor(Math.random()*19+1)*box,
+    y:Math.floor(Math.random()*19+1)*box,
+    letter:letters[Math.floor(Math.random()*letters.length)]
   };
 }
-
-function resetSnake(){
-  // centra la serpiente
-  const cx = Math.floor(GRID/2) * box;
-  const cy = Math.floor(GRID/2) * box;
-  snake = [{ x: cx, y: cy }];
-  direction = null;
+document.addEventListener("keydown",function(e){
+  if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key)) e.preventDefault();
+  if(e.key=="ArrowLeft" && direction!="RIGHT") direction="LEFT";
+  else if(e.key=="ArrowUp" && direction!="DOWN") direction="UP";
+  else if(e.key=="ArrowRight" && direction!="LEFT") direction="RIGHT";
+  else if(e.key=="ArrowDown" && direction!="UP") direction="DOWN";
+});
+function collision(head,array){
+  return array.some(p=>head.x===p.x && head.y===p.y);
 }
-
 function draw(){
-  // fondo
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, box*GRID, box*GRID);
-
-  // serpiente
+  ctx.fillStyle="black";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<snake.length;i++){
-    ctx.fillStyle = (i===0) ? "lime" : "white";
-    ctx.fillRect(snake[i].x, snake[i].y, box, box);
+    ctx.fillStyle=(i==0)?"lime":"white";
+    ctx.fillRect(snake[i].x,snake[i].y,box,box);
   }
-  // comida
-  ctx.fillStyle = "white";
-  ctx.font = Math.floor(box*0.9) + "px Orbitron";
-  ctx.fillText(food.letter, food.x + Math.floor(box*0.2), food.y + Math.floor(box*0.8));
+  ctx.fillStyle="white";
+  ctx.font="20px Orbitron";
+  ctx.fillText(food.letter,food.x+5,food.y+15);
 
-  // siguiente cabeza
-  let head = { x: snake[0].x, y: snake[0].y };
-  if(direction === "LEFT")  head.x -= box;
-  if(direction === "UP")    head.y -= box;
-  if(direction === "RIGHT") head.x += box;
-  if(direction === "DOWN")  head.y += box;
+  let head={x:snake[0].x,y:snake[0].y};
+  if(direction=="LEFT") head.x-=box;
+  if(direction=="UP") head.y-=box;
+  if(direction=="RIGHT") head.x+=box;
+  if(direction=="DOWN") head.y+=box;
 
-  // comer
-  if(head.x === food.x && head.y === food.y){
+  if(head.x==food.x && head.y==food.y){
     score++;
-    scoreEl.textContent = "SCORE: " + score;
-    food = generateFood();
-  } else {
-    snake.pop();
-  }
+    scoreElement.innerText="SCORE: "+score;
+    food=generateFood();
+  }else snake.pop();
 
-  // colisiones
-  const hitWall = head.x < 0 || head.x >= box*GRID || head.y < 0 || head.y >= box*GRID;
-  const hitSelf = snake.some(p => p.x === head.x && p.y === head.y);
-  if(hitWall || hitSelf){
-    clearInterval(loop);
-    overlay.style.display = "flex";
+  if(head.x<0||head.x>=canvas.width||head.y<0||head.y>=canvas.height||collision(head,snake)){
+    clearInterval(gameInterval);
+    overlay.style.display="flex";
+    saveScore(score);
     return;
   }
   snake.unshift(head);
 }
-
 function startGame(){
-  setCanvasSquareToContainer();
-  resetSnake();
-  food = generateFood();
-  score = 0;
-  scoreEl.textContent = "SCORE: 0";
-  overlay.style.display = "none";
-  if(loop) clearInterval(loop);
-  loop = setInterval(draw, 100);
+  snake=[{x:9*box,y:10*box}];
+  direction=null; score=0; scoreElement.innerText="SCORE: 0";
+  food=generateFood(); overlay.style.display="none";
+  clearInterval(gameInterval);
+  gameInterval=setInterval(draw,100);
 }
-
-window.addEventListener("resize", ()=>{
-  const wasRunning = !!loop && overlay.style.display === "none";
-  // al redimensionar, reiniciamos para no distorsionar posiciones
-  if(loop) clearInterval(loop);
-  startGame();
-  if(!wasRunning) { clearInterval(loop); }
-});
-
-document.addEventListener("keydown",(e)=>{
-  // Evita scroll de la página con flechas/espacio
-  if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key)) e.preventDefault();
-  if(e.key === "ArrowLeft"  && direction !== "RIGHT") direction = "LEFT";
-  else if(e.key === "ArrowUp"    && direction !== "DOWN")  direction = "UP";
-  else if(e.key === "ArrowRight" && direction !== "LEFT")  direction = "RIGHT";
-  else if(e.key === "ArrowDown"  && direction !== "UP")    direction = "DOWN";
-});
-
-playAgainBtn.addEventListener("click", async ()=>{
-  // guarda si hay puntuación y nickname válido
-  if(score > 0){
-    const now = Date.now();
-    if(now - lastSaveAt > 2000){ // antispam básico
-      lastSaveAt = now;
-      const nick = sanitize(nicknameInput.value);
-      const safeScore = Math.min(Math.max(score, 0), 9999);
-      try{
-        await db.ref("scores").push({
-          nickname: nick,
-          score: safeScore,
-          timestamp: now
-        });
-      }catch(e){ console.warn("Firebase write error:", e); }
-    }
-  }
-  nicknameInput.value = "";
-  startGame();
-});
-
+document.getElementById("playAgainBtn").addEventListener("click",startGame);
 startGame();
 
-/* ======================= Ranking global ======================= */
-const rankingDiv = document.createElement("div");
-rankingDiv.id = "ranking";
-rankingDiv.style.position = "absolute";
-rankingDiv.style.bottom = "160px";
-rankingDiv.style.left = "50%";
-rankingDiv.style.transform = "translateX(-50%)";
-rankingDiv.style.color = "white";
-rankingDiv.style.fontSize = "14px";
-rankingDiv.style.textAlign = "center";
-rankingDiv.style.background = "rgba(0,0,0,0.6)";
-rankingDiv.style.padding = "6px 12px";
-rankingDiv.style.borderRadius = "8px";
-rankingDiv.style.maxWidth = "90%";
-document.body.appendChild(rankingDiv);
-
-function escapeHTML(s){
-  return s.replace(/[&<>"']/g, (c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-}
-
-function loadRanking(){
-  db.ref("scores").orderByChild("score").limitToLast(5).on("value", snap=>{
-    const arr = [];
-    snap.forEach(ch => arr.push(ch.val()));
-    arr.sort((a,b)=>b.score - a.score);
-    rankingDiv.innerHTML = "<b>TOP 5 PLAYERS</b><br>" + arr
-      .map(s => `${escapeHTML(s.nickname||"Anon")}: ${Number(s.score)||0}`)
-      .join("<br>");
+/* ---------------- Save Score in Firebase ---------------- */
+function saveScore(score){
+  let nickname=prompt("Introduce tu nombre:");
+  if(!nickname) nickname="Anon";
+  firebase.database().ref("scores").push({
+    nickname:nickname,
+    score:score,
+    timestamp:Date.now()
   });
 }
-loadRanking();
 
-/* ======================= Carrusel (flechas + rueda + swipe) ======================= */
-const container = document.querySelector(".carousel-container");
+/* ---------------- Carousel ---------------- */
+const container=document.querySelector(".carousel-container");
 let currentIndex = 0;
 
-function getSlideWidth(){
-  const slides = document.querySelectorAll(".slide");
-  if(!slides.length) return 0;
-  const s0 = slides[0];
-  const rect = s0.getBoundingClientRect();
-  const cs = getComputedStyle(s0);
-  const margin = parseFloat(cs.marginLeft) + parseFloat(cs.marginRight);
-  return rect.width + margin;
-}
-
-function clampIndex(i){
-  const slides = document.querySelectorAll(".slide");
-  return Math.max(0, Math.min(i, slides.length - 1));
-}
-
 function scrollCarousel(dir){
-  const slideW = getSlideWidth();
-  if(!slideW) return;
-  currentIndex = clampIndex(currentIndex + dir);
-  container.scrollTo({ left: Math.round(currentIndex * slideW), behavior: "smooth" });
+  const slides = document.querySelectorAll(".slide");
+  const slideWidth = slides[0].offsetWidth + 60;
+  currentIndex += dir;
+  if(currentIndex < 0) currentIndex = 0;
+  if(currentIndex >= slides.length) currentIndex = slides.length - 1;
+  container.scrollTo({
+    left: currentIndex * slideWidth,
+    behavior: "smooth"
+  });
 }
-window.scrollCarousel = scrollCarousel; // para las flechas onclick del HTML
-
-let touchStartX = 0;
-container.addEventListener("touchstart", e => { touchStartX = e.changedTouches[0].screenX; }, { passive:true });
-container.addEventListener("touchend", e => {
-  const dx = e.changedTouches[0].screenX - touchStartX;
-  if(dx > 50) scrollCarousel(-1);
-  else if(dx < -50) scrollCarousel(1);
-}, { passive:true });
-
-// Rueda del ratón para navegar slides
-container.addEventListener("wheel", (e)=>{
-  e.preventDefault();
-  if(e.deltaY > 0) scrollCarousel(1); else scrollCarousel(-1);
-}, { passive:false });
-
-// Recalcular índice relativo al desplazamiento tras resize
-window.addEventListener("resize", ()=>{
-  const slideW = getSlideWidth();
-  if(!slideW) return;
-  currentIndex = Math.round(container.scrollLeft / slideW);
+let touchStartX=0;
+container.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0].screenX;},{passive:true});
+container.addEventListener("touchend",e=>{
+  let dx=e.changedTouches[0].screenX-touchStartX;
+  if(dx>50) scrollCarousel(-1); else if(dx<-50) scrollCarousel(1);
 });
+</script>
 
-/* ======================= SoundCloud (iframe oculto + controles) ======================= */
-const scIframe = document.getElementById("scPlayer"); // oculto (display:none; width/height 0)
+<!-- ---------------- SoundCloud Player ---------------- -->
+<div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:320px;z-index:20;text-align:center;">
+  <iframe 
+    id="scPlayer"
+    width="100%"
+    height="120"
+    scrolling="no"
+    frameborder="no"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23ff5500&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&visual=false">
+  </iframe>
+  <div style="margin-top:6px;">
+    <button id="prevBtn">⏮</button>
+    <button id="playPauseBtn">▶</button>
+    <button id="nextBtn">⏭</button>
+    <input id="volumeSlider" type="range" min="0" max="100" value="80" style="width:100px;vertical-align:middle;">
+  </div>
+</div>
+
+<script src="https://w.soundcloud.com/player/api.js"></script>
+<script>
+const scIframe = document.getElementById('scPlayer');
 const scWidget = SC.Widget(scIframe);
 
 let widgetReady = false;
 let isPlaying = false;
 
-const playPauseBtn = document.getElementById("playPauseBtn");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const volumeSlider = document.getElementById("volumeSlider");
-
-playPauseBtn.disabled = true;
-prevBtn.disabled = true;
-nextBtn.disabled = true;
-volumeSlider.disabled = true;
+const playPauseBtn = document.getElementById('playPauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const volumeSlider = document.getElementById('volumeSlider');
 
 scWidget.bind(SC.Widget.Events.READY, function(){
   widgetReady = true;
-  // habilitar controles
-  playPauseBtn.disabled = false;
-  prevBtn.disabled = false;
-  nextBtn.disabled = false;
-  volumeSlider.disabled = false;
   scWidget.setVolume(parseInt(volumeSlider.value,10));
+  playPauseBtn.disabled = false;
+  volumeSlider.disabled = false;
 });
 
 scWidget.bind(SC.Widget.Events.PLAY, function(){
@@ -461,9 +407,7 @@ playPauseBtn.addEventListener("click", ()=>{
 });
 prevBtn.addEventListener("click", ()=>{ if(widgetReady) scWidget.prev(); });
 nextBtn.addEventListener("click", ()=>{ if(widgetReady) scWidget.next(); });
-volumeSlider.addEventListener("input", (e)=>{
+volumeSlider.addEventListener("input", e=>{
   if(widgetReady) scWidget.setVolume(parseInt(e.target.value,10));
 });
-
 </script>
-
