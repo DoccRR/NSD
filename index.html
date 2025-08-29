@@ -1,389 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NOIZE SECRET DOCTRINE — Official</title>
-<meta name="description" content="NSD aKa Noize Secret Doctrine — Official portal. Hardcore, Terrorcore, Speedcore, Uptempo Hardcore.">
-<meta name="color-scheme" content="dark">
-<style>
-:root{
-  --bg:#000;
-  --fg:#fff;
-  --muted:#aaa;
-  --radius:20px;
-  --font-futuristic:"Orbitron","Rajdhani","Exo 2",sans-serif;
-}
-
-/* Reset */
-*{box-sizing:border-box;}
-html,body{
-  height:100%; margin:0; font-family:var(--font-futuristic);
-  background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
-  color:var(--fg); overflow:hidden;
-}
-
-/* Carousel */
-.carousel-container{
-  display:flex;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  width:100vw; height:100vh;
-  padding:40px 0;
-}
-.carousel-container::-webkit-scrollbar{display:none;}
-.carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
-
-/* Slides */
-.slide{
-  flex:0 0 80%;
-  max-width:800px;
-  height:80%;
-  margin:0 30px;
-  border-radius:var(--radius);
-  scroll-snap-align:center;
-  background-size:cover;
-  background-position:center;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
-  box-shadow:0 10px 30px rgba(0,0,0,0.6);
-  position:relative;
-  overflow:hidden;
-  transition:transform .3s ease;
-  text-decoration:none;
-}
-.slide:hover{transform:scale(1.03);}
-.slide::after{
-  content:"";
-  position:absolute; bottom:0; left:0;
-  width:100%; height:60%;
-  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
-}
-.slide span{
-  position:relative; z-index:2;
-  font-size:clamp(20px,3vw,32px);
-  font-weight:900;
-  text-transform:uppercase;
-  color:var(--fg);
-  text-shadow:0 0 10px rgba(0,0,0,0.8);
-  margin-bottom:25px;
-}
-
-/* Footer */
-.footer-genres,.footer-records{
-  position:absolute; width:100%; text-align:center;
-  font-size:12px; color:var(--muted);
-}
-.footer-genres{bottom:30px;}
-.footer-records{bottom:10px; letter-spacing:2px;}
-
-/* Arrows */
-.arrow{
-  position:absolute; top:50%; transform:translateY(-50%);
-  font-size:40px; color:rgba(255,255,255,0.6);
-  z-index:10; pointer-events:auto; cursor:pointer;
-  animation:blink 1.5s infinite; user-select:none;
-}
-.arrow.left{left:15px;} .arrow.right{right:15px;}
-@keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
-
-/* Player fijo */
-#playerControls{
-  position:fixed; bottom:60px; left:50%; transform:translateX(-50%);
-  background:#000; color:#fff; padding:8px 16px; border-radius:30px;
-  font-size:14px; display:flex; align-items:center; gap:12px;
-  box-shadow:0 0 10px rgba(0,0,0,0.8); z-index:1000;
-}
-#playerControls button{
-  background:none; border:none; color:#fff; font-size:18px; cursor:pointer;
-}
-#playerControls input[type=range]{width:80px;}
-
-/* WELCOME inner page */
-.welcome-slide{cursor:pointer;}
-.welcome-slide span{transition:opacity .25s ease;}
-.welcome-slide.active span{opacity:0;}
-.welcome-info{
-  position:absolute; inset:0; background:#000;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:12px; padding:24px; text-align:center;
-  opacity:0; pointer-events:none; transition:opacity .25s ease;
-}
-.welcome-slide.active .welcome-info{opacity:1; pointer-events:auto;}
-.welcome-info h2{color:#fff; font-size:clamp(18px,3vw,28px); margin:0;}
-.welcome-info p{color:#fff; opacity:.85; margin:0; letter-spacing:.5px;}
-
-/* Snake slide */
-#snakeSlide{background:#000; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px;}
-#snakeCanvas{background:#000; border:1px solid #fff; display:none;}
-#scoreDisplay{color:#fff; font-family:monospace; font-size:14px; margin-top:10px; display:none;}
-#startPanel{display:flex; flex-direction:column; align-items:center; gap:10px;}
-#startBtn{
-  background:#000; color:#fff; border:1px solid #fff; padding:10px 18px;
-  border-radius:999px; cursor:pointer; font-weight:800; letter-spacing:1px;
-}
-#gameOverPanel{display:none; flex-direction:column; align-items:center; gap:10px; margin-top:12px; color:#fff;}
-#gameOverPanel input{
-  background:#000; color:#fff; border:1px solid #fff; padding:8px 10px; border-radius:8px;
-}
-#saveScoreBtn{
-  background:#000; color:#fff; border:1px solid #fff; padding:8px 14px; border-radius:999px; cursor:pointer;
-}
-#leaderboard{display:none; color:#fff; font-family:monospace; font-size:14px; margin-top:6px; text-align:center;}
-#leaderboard ol{margin:6px 0 0; padding-left:18px; text-align:left;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOIZE SECRET DOCTRINE</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+    .slider {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .slide {
+      min-width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      text-align: center;
+    }
+    h1, h2 {
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+    }
+    a {
+      color: white;
+      text-decoration: none;
+      border: 1px solid white;
+      padding: 10px 20px;
+      margin-top: 20px;
+      display: inline-block;
+      border-radius: 10px;
+    }
+    /* Player */
+    #player-controls {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: black;
+      color: white;
+      border: 2px solid white;
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+    }
+    #player-controls button {
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    #volume {
+      width: 80px;
+    }
+    /* Snake Slide */
+    #snakeCanvas {
+      border: 2px solid white;
+      margin-top: 20px;
+    }
+    #gameOverPanel {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #gameOverPanel input {
+      padding: 5px;
+      margin: 5px;
+    }
+    #gameOverPanel button {
+      padding: 5px 15px;
+      margin-top: 10px;
+      background: black;
+      color: white;
+      border: 1px solid white;
+      cursor: pointer;
+    }
+    /* Fondo oscuro detrás del texto en la portada */
+    .overlay-text {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 12px;
+    }
+  </style>
 </head>
 <body>
+  <div class="slider">
 
-<!-- Flechas -->
-<div class="arrow left">❮</div>
-<div class="arrow right">❯</div>
-
-<main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- WELCOME con segunda página interna -->
-  <div class="slide welcome-slide" style="background-image:url('NSD.png')">
-    <span>WELCOME</span>
-    <div class="welcome-info" aria-hidden="true">
-      <h2>This is NSD aKa Noize Secret Doctrine official website.</h2>
-      <p>Underground crew.</p>
+    <!-- Slide 1: Welcome -->
+    <div class="slide" style="background:url('NSD.png') center/cover no-repeat;">
+      <div class="overlay-text">
+        <h1>NOIZE SECRET DOCTRINE</h1>
+        <p style="max-width:600px; text-align:center; margin-top:20px;">
+          This is NSD aKa Noize Secret Doctrine official website.
+        </p>
+        <p style="margin-top:10px;">Underground crew.</p>
+      </div>
     </div>
-  </div>
 
-  <!-- LINKS (orden igual) -->
-  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener noreferrer" style="background-image:url('bandcamp.png')">
-    <span>BUY MUSIC</span>
-  </a>
-  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener noreferrer" style="background-image:url('youtube.png')">
-    <span>YOUTUBE</span>
-  </a>
-  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener noreferrer" style="background-image:url('soundcloud.png')">
-    <span>SOUNDCLOUD</span>
-  </a>
-  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener noreferrer" style="background-image:url('spotify.png')">
-    <span>SPOTIFY</span>
-  </a>
-  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" rel="noopener noreferrer" style="background-image:url('instagram.png')">
-    <span>INSTAGRAM</span>
-  </a>
-  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')">
-    <span>BOOKINGS</span>
-  </a>
-
-  <!-- Penúltimo: MERCHANDISING -->
-  <a class="slide" href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g"
-     target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')">
-    <span>MERCHANDISING</span>
-  </a>
-
-  <!-- Último: SNAKE -->
-  <div class="slide" id="snakeSlide">
-    <!-- Panel inicio -->
-    <div id="startPanel">
-      <button id="startBtn">PLAY NSDAKE</button>
+    <!-- Slide 2: Doctrine Records -->
+    <div class="slide" style="background:url('doctrine.png') center/cover no-repeat;">
+      <h2>DOCTRINE RECORDS</h2>
+      <a href="https://doctrinerecords.bandcamp.com/" target="_blank">Visit</a>
     </div>
-    <!-- Canvas + score -->
-    <canvas id="snakeCanvas" width="400" height="400"></canvas>
-    <div id="scoreDisplay">SCORE: 0</div>
-    <!-- Game Over + nickname + top 5 -->
-    <div id="gameOverPanel">
-      <div>GAME OVER — pon tu nickname:</div>
-      <input id="nicknameInput" type="text" maxlength="16" placeholder="tu nick">
-      <button id="saveScoreBtn">Guardar score</button>
+
+    <!-- Slide 3: Hardcore / Speedcore -->
+    <div class="slide" style="background:url('hardcore.png') center/cover no-repeat;">
+      <h2>HARDCORE / SPEEDCORE</h2>
+      <a href="https://soundcloud.com/noizesd" target="_blank">SoundCloud</a>
     </div>
-    <div id="leaderboard">
-      <b>TOP 5</b>
-      <ol id="scoreList"></ol>
-      <div style="margin-top:8px;">
-        <button id="restartBtn" style="background:#000;color:#fff;border:1px solid #fff;padding:8px 14px;border-radius:999px;cursor:pointer;">VOLVER A JUGAR</button>
+
+    <!-- Slide 4: Merchandising -->
+    <div class="slide" style="background:url('merch.png') center/cover no-repeat;">
+      <h2>MERCHANDISING</h2>
+      <a href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" target="_blank">Shop Now</a>
+    </div>
+
+    <!-- Slide 5: Snake -->
+    <div class="slide" id="snake-slide" style="background:#000; flex-direction:column;">
+      <h2>SNAKE</h2>
+      <button id="startSnake" style="padding:15px 30px; background:#000; color:#fff; border:2px solid #fff; border-radius:10px; cursor:pointer; font-size:18px;">
+        PLAY NSDAKE
+      </button>
+
+      <canvas id="snakeCanvas" width="400" height="400" style="display:none; background:#000;"></canvas>
+
+      <div id="gameOverPanel" style="display:none; color:#fff;">
+        <p>GAME OVER — Your Score: <span id="finalScore"></span></p>
+        <input type="text" id="nickname" placeholder="Enter Nickname">
+        <button id="saveScore">Save</button>
+        <div id="scoreboard" style="margin-top:15px;"></div>
+        <button id="restartSnake" style="margin-top:15px; padding:10px 20px; background:#000; color:#fff; border:2px solid #fff; cursor:pointer;">PLAY NSDAKE</button>
       </div>
     </div>
   </div>
-</main>
 
-<footer class="footer-genres">HARDCORE, TERRORCORE, SPEEDCORE, UPTEMPO HARDCORE</footer>
-<div class="footer-records">DOCTRINE RECORDS</div>
+  <!-- Player Controls -->
+  <div id="player-controls">
+    <button id="prev">⏮</button>
+    <button id="play">▶</button>
+    <button id="next">⏭</button>
+    <input type="range" id="volume" min="0" max="1" step="0.01">
+  </div>
+  <iframe id="sc-player" width="0" height="0" style="display:none;"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&auto_play=false"></iframe>
 
-<!-- Player (pon tus URLs de audio reales si quieres) -->
-<div id="playerControls">
-  <button id="prevBtn">⏮</button>
-  <button id="playBtn">▶ PLAY NSD</button>
-  <button id="nextBtn">⏭</button>
-  <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
-</div>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
+  <script>
+    /* === SoundCloud Player === */
+    const iframe = document.getElementById('sc-player');
+    const widget = SC.Widget(iframe);
+    const playBtn = document.getElementById('play');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const volumeSlider = document.getElementById('volume');
+    let isPlaying = false;
 
-<script>
-/* --- CAROUSEL & SCROLL --- */
-const container=document.querySelector(".carousel-container");
-document.querySelector(".arrow.left").addEventListener("click",()=>container.scrollBy({left:-window.innerWidth*0.8,behavior:"smooth"}));
-document.querySelector(".arrow.right").addEventListener("click",()=>container.scrollBy({left:window.innerWidth*0.8,behavior:"smooth"}));
-container.addEventListener("wheel",(e)=>{e.preventDefault();container.scrollBy({left:e.deltaY,behavior:"smooth"});},{passive:false});
-document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();});
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        widget.pause();
+        playBtn.textContent = "▶";
+      } else {
+        widget.play();
+        playBtn.textContent = "⏸";
+      }
+      isPlaying = !isPlaying;
+    });
+    prevBtn.addEventListener('click', () => widget.prev());
+    nextBtn.addEventListener('click', () => widget.next());
+    volumeSlider.addEventListener('input', () => {
+      widget.setVolume(volumeSlider.value * 100);
+    });
 
-/* --- WELCOME toggle --- */
-const welcomeSlide=document.querySelector(".welcome-slide");
-welcomeSlide.addEventListener("click",()=>welcomeSlide.classList.toggle("active"));
+    /* === Snake Game === */
+    const canvas = document.getElementById("snakeCanvas");
+    const ctx = canvas.getContext("2d");
+    let snake, dx, dy, food, score, gameInterval;
 
-/* --- PLAYER (demo con Audio: reemplaza tracks por URLs válidas) --- */
-const tracks=["track1.mp3","track2.mp3","track3.mp3"];
-let currentTrack=0;
-const audio=new Audio(tracks[currentTrack]); audio.volume=0.5;
-const playBtn=document.getElementById("playBtn");
-const prevBtn=document.getElementById("prevBtn");
-const nextBtn=document.getElementById("nextBtn");
-const volume=document.getElementById("volume");
-playBtn.addEventListener("click",()=>{if(audio.paused){audio.play();playBtn.textContent="⏸ STOP NSD";}else{audio.pause();playBtn.textContent="▶ PLAY NSD";}});
-prevBtn.addEventListener("click",()=>{currentTrack=(currentTrack-1+tracks.length)%tracks.length;audio.src=tracks[currentTrack];audio.play();playBtn.textContent="⏸ STOP NSD";});
-nextBtn.addEventListener("click",()=>{currentTrack=(currentTrack+1)%tracks.length;audio.src=tracks[currentTrack];audio.play();playBtn.textContent="⏸ STOP NSD";});
-volume.addEventListener("input",()=>audio.volume=parseFloat(volume.value));
+    const startBtn = document.getElementById("startSnake");
+    const restartBtn = document.getElementById("restartSnake");
+    const gameOverPanel = document.getElementById("gameOverPanel");
+    const finalScoreEl = document.getElementById("finalScore");
+    const nicknameInput = document.getElementById("nickname");
+    const saveBtn = document.getElementById("saveScore");
+    const scoreboard = document.getElementById("scoreboard");
 
-/* --- SNAKE GAME --- */
-const snakeSlide=document.getElementById('snakeSlide');
-const startPanel=document.getElementById('startPanel');
-const startBtn=document.getElementById('startBtn');
-const canvas=document.getElementById('snakeCanvas');
-const ctx=canvas.getContext('2d');
-const scoreDisplay=document.getElementById('scoreDisplay');
-const gameOverPanel=document.getElementById('gameOverPanel');
-const nicknameInput=document.getElementById('nicknameInput');
-const saveScoreBtn=document.getElementById('saveScoreBtn');
-const leaderboardBox=document.getElementById('leaderboard');
-const scoreList=document.getElementById('scoreList');
-const restartBtn=document.getElementById('restartBtn');
+    function getScores(){ return JSON.parse(localStorage.getItem("snakeScores")) || []; }
+    function saveScoreToStorage(nick, sc){
+      let scores = getScores();
+      scores.push({nick, sc});
+      scores.sort((a,b)=>b.sc-a.sc);
+      scores = scores.slice(0,5);
+      localStorage.setItem("snakeScores", JSON.stringify(scores));
+    }
+    function renderScores(){
+      let scores = getScores();
+      scoreboard.innerHTML = "<h3>Top 5</h3>" + scores.map(s=>`${s.nick}: ${s.sc}`).join("<br>");
+    }
 
-const BOX=20;
-let snake, dir, food, score, game, cols, rows;
+    function startGame(){
+      startBtn.style.display = "none";
+      canvas.style.display = "block";
+      gameOverPanel.style.display = "none";
+      snake = [{x:200, y:200}];
+      dx = 20; dy = 0;
+      food = randomFood();
+      score = 0;
+      document.addEventListener("keydown", keyDown);
+      gameInterval = setInterval(draw, 100);
+    }
+    function gameOver(){
+      clearInterval(gameInterval);
+      canvas.style.display = "none";
+      gameOverPanel.style.display = "block";
+      finalScoreEl.textContent = score;
+    }
+    function randomFood(){
+      return { x: Math.floor(Math.random()*20)*20, y: Math.floor(Math.random()*20)*20 };
+    }
+    function draw(){
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0,0,400,400);
+      ctx.fillStyle = "white";
+      snake.forEach(part=> ctx.fillRect(part.x, part.y, 18, 18));
+      ctx.fillStyle = "white";
+      ctx.fillRect(food.x, food.y, 18, 18);
 
-/* UI helpers */
-function show(el){el.style.display='flex';}
-function hide(el){el.style.display='none';}
+      let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      snake.unshift(head);
+      if(head.x === food.x && head.y === food.y){
+        score++;
+        food = randomFood();
+      } else {
+        snake.pop();
+      }
+      if(head.x<0 || head.y<0 || head.x>=400 || head.y>=400){ gameOver(); }
+      for(let i=1; i<snake.length; i++){
+        if(head.x===snake[i].x && head.y===snake[i].y){ gameOver(); }
+      }
+    }
+    function keyDown(e){
+      if(e.key==="ArrowUp" && dy===0){dx=0;dy=-20;}
+      if(e.key==="ArrowDown" && dy===0){dx=0;dy=20;}
+      if(e.key==="ArrowLeft" && dx===0){dx=-20;dy=0;}
+      if(e.key==="ArrowRight" && dx===0){dx=20;dy=0;}
+    }
 
-/* Responsive canvas to slide size (multiples of BOX) */
-function sizeCanvas(){
-  const maxW=Math.min(420, snakeSlide.clientWidth*0.9);
-  const maxH=Math.min(420, snakeSlide.clientHeight*0.65);
-  const size=Math.floor(Math.min(maxW,maxH)/BOX)*BOX || 200;
-  canvas.width=size; canvas.height=size;
-  cols=canvas.width/BOX; rows=canvas.height/BOX;
-}
-
-/* Game essentials */
-function spawnFood(){
-  return {
-    x: Math.floor(Math.random()*cols)*BOX,
-    y: Math.floor(Math.random()*rows)*BOX
-  };
-}
-function collision(head,body){return body.some(p=>p.x===head.x && p.y===head.y);}
-function reset(){
-  sizeCanvas();
-  snake=[{x:Math.floor(cols/2)*BOX, y:Math.floor(rows/2)*BOX}];
-  dir=null; score=0; food=spawnFood();
-}
-function tick(){
-  // bg
-  ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // snake (blanca)
-  for(let i=0;i<snake.length;i++){
-    ctx.fillStyle='#fff';
-    ctx.fillRect(snake[i].x, snake[i].y, BOX-2, BOX-2);
-  }
-  // comida: "NSD" en blanco
-  ctx.fillStyle='#fff';
-  ctx.font='16px monospace';
-  ctx.fillText('NSD', food.x+3, food.y+15);
-
-  // movement
-  let hx=snake[0].x, hy=snake[0].y;
-  if(dir==='LEFT') hx-=BOX;
-  if(dir==='UP') hy-=BOX;
-  if(dir==='RIGHT') hx+=BOX;
-  if(dir==='DOWN') hy+=BOX;
-
-  // eat
-  if(hx===food.x && hy===food.y){
-    score++; food=spawnFood();
-  }else{
-    snake.pop();
-  }
-
-  const head={x:hx,y:hy};
-  if(hx<0||hy<0||hx>=canvas.width||hy>=canvas.height||collision(head,snake)){
-    endGame(); return;
-  }
-  snake.unshift(head);
-  scoreDisplay.textContent='SCORE: '+score;
-}
-
-/* Controls */
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowLeft' && dir!=='RIGHT') dir='LEFT';
-  if(e.key==='ArrowUp' && dir!=='DOWN') dir='UP';
-  if(e.key==='ArrowRight' && dir!=='LEFT') dir='RIGHT';
-  if(e.key==='ArrowDown' && dir!=='UP') dir='DOWN';
-});
-canvas.addEventListener('click',()=>{
-  const order=['LEFT','UP','RIGHT','DOWN'];
-  const idx=order.indexOf(dir);
-  dir = idx===-1 ? 'RIGHT' : order[(idx+1)%4];
-});
-
-/* Start/End */
-function startGame(){
-  hide(startPanel);
-  hide(gameOverPanel);
-  hide(leaderboardBox);
-  show(canvas);
-  show(scoreDisplay);
-  reset();
-  clearInterval(game);
-  game=setInterval(tick,100);
-}
-function endGame(){
-  clearInterval(game);
-  show(gameOverPanel);   // pide nickname
-  // al mostrar GO, ocultamos canvas/score
-  hide(canvas); hide(scoreDisplay);
-}
-
-/* Leaderboard (localStorage) */
-function loadScores(){
-  try{ return JSON.parse(localStorage.getItem('nsdScores')||'[]'); }
-  catch{ return []; }
-}
-function saveScores(arr){ localStorage.setItem('nsdScores', JSON.stringify(arr)); }
-function renderScores(){
-  const scores=loadScores();
-  scoreList.innerHTML='';
-  scores.forEach(s=>{
-    const li=document.createElement('li');
-    li.textContent=`${s.name} — ${s.score}`;
-    scoreList.appendChild(li);
-  });
-}
-saveScoreBtn.addEventListener('click',()=>{
-  const name=(nicknameInput.value||'anon').slice(0,16);
-  const scores=loadScores();
-  scores.push({name,score});
-  scores.sort((a,b)=>b.score-a.score);
-  saveScores(scores.slice(0,5));
-  nicknameInput.value='';
-  hide(gameOverPanel);
-  renderScores();
-  leaderboardBox.style.display='block'; // mostrar Top 5 solo tras GO
-});
-restartBtn.addEventListener('click',()=>{
-  leaderboardBox.style.display='none';
-  startPanel.style.display='flex';
-});
-
-/* Init: inactivo hasta clic */
-startBtn.addEventListener('click', startGame);
-window.addEventListener('resize', ()=>{ if(canvas.style.display!=='none'){ sizeCanvas(); }});
-sizeCanvas(); // pre-calcula
-
-</script>
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", startGame);
+    saveBtn.addEventListener("click", ()=>{
+      const nick = nicknameInput.value || "Anon";
+      saveScoreToStorage(nick, score);
+      renderScores();
+    });
+  </script>
 </body>
 </html>
-
