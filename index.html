@@ -8,6 +8,7 @@
 <meta name="color-scheme" content="dark">
 <style>
 :root{
+  --bg:#000;
   --fg:#fff;
   --muted:#aaa;
   --radius:20px;
@@ -18,28 +19,10 @@
 *{box-sizing:border-box;}
 html,body{
   height:100%; margin:0; font-family:var(--font-futuristic);
-  color:var(--fg); overflow:hidden;
-  background: url("fondo.png") no-repeat center center fixed;
-  background-size: cover;
-}
-
-/* Overlay dark layer */
-body::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.55);
-  z-index:-2;
-}
-
-/* Static noise background */
-#noise {
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  z-index:-1;
-  opacity:0.08; /* más bajo = más sutil */
-  pointer-events:none;
+  background:var(--bg); color:var(--fg); overflow:hidden;
+  background-image:url("fondo.png");
+  background-size:cover;
+  background-position:center;
 }
 
 /* Carousel wrapper */
@@ -49,7 +32,6 @@ body::before {
   scroll-snap-type:x mandatory;
   width:100vw; height:100vh;
   padding:40px 0;
-  scroll-behavior:smooth;
 }
 .carousel-container::-webkit-scrollbar{display:none;}
 .carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
@@ -114,55 +96,53 @@ body::before {
   color:rgba(255,255,255,0.6);
   z-index:10;
   cursor:pointer;
-  animation:blink 1.5s infinite;
   user-select:none;
 }
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
 
-@keyframes blink{
-  0%,100%{opacity:0.4;}
-  50%{opacity:1;}
-}
-
-/* Glitch effect */
-#glitch {
-  position:fixed;
-  inset:0;
+/* Welcome inner page */
+.welcome-content{
+  position:absolute;
+  top:0; left:0; width:100%; height:100%;
   background:#000;
-  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
   opacity:0;
-  pointer-events:none;
+  visibility:hidden;
+  transition:opacity .4s ease;
 }
-#glitch.active {
-  animation: glitchAnim 0.35s steps(2, end);
+.welcome-content.active{
+  opacity:1;
+  visibility:visible;
 }
-@keyframes glitchAnim {
-  0% {opacity:1; clip-path: inset(20% 0 60% 0);}
-  20% {clip-path: inset(60% 0 20% 0);}
-  40% {clip-path: inset(10% 0 70% 0);}
-  60% {clip-path: inset(40% 0 40% 0);}
-  80% {clip-path: inset(30% 0 50% 0);}
-  100% {opacity:0;}
+.welcome-content h1{
+  font-size:clamp(24px,4vw,40px);
+  margin-bottom:20px;
+}
+.welcome-content p{
+  font-size:clamp(16px,2vw,22px);
 }
 </style>
 </head>
 <body>
-
-<!-- Static noise canvas -->
-<canvas id="noise"></canvas>
-
-<!-- Glitch overlay -->
-<div id="glitch"></div>
 
 <!-- Flechas -->
 <div class="arrow left">❮</div>
 <div class="arrow right">❯</div>
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- Slide principal -->
-  <div class="slide" style="background-image:url('NSD.jpg')">
+  <!-- Slide principal (WELCOME) -->
+  <div class="slide" id="welcome-slide" style="background-image:url('NSD.jpg'); cursor:pointer;">
     <span>WELCOME</span>
+    <div class="welcome-content" id="welcome-content">
+      <h1>This is NSD aKa Noize Secret Doctrine official website.</h1>
+      <p>Underground crew.</p>
+    </div>
   </div>
 
   <!-- Enlaces -->
@@ -184,6 +164,19 @@ body::before {
   <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')">
     <span>BOOKINGS</span>
   </a>
+
+  <!-- Slide con reproductor SoundCloud -->
+  <div class="slide" style="background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
+    <span>SOUNDCLOUD PLAYER</span>
+    <iframe 
+      width="100%" 
+      height="300" 
+      scrolling="no" 
+      frameborder="no" 
+      allow="autoplay" 
+      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
+    </iframe>
+  </div>
 </main>
 
 <footer class="footer-genres">
@@ -192,59 +185,34 @@ body::before {
 <div class="footer-records">DOCTRINE RECORDS</div>
 
 <script>
-/* Scroll con flechas */
+// flechas
 const container = document.querySelector('.carousel-container');
-const leftArrow = document.querySelector('.arrow.left');
-const rightArrow = document.querySelector('.arrow.right');
-const glitch = document.getElementById("glitch");
-
-function triggerGlitch() {
-  glitch.classList.add("active");
-  setTimeout(()=> glitch.classList.remove("active"), 400);
-}
-
-leftArrow.addEventListener('click', () => {
-  container.scrollBy({left: -window.innerWidth*0.8, behavior: "smooth"});
-  triggerGlitch();
+document.querySelector('.arrow.left').addEventListener('click', () => {
+  container.scrollBy({ left: -window.innerWidth * 0.8, behavior: 'smooth' });
 });
-rightArrow.addEventListener('click', () => {
-  container.scrollBy({left: window.innerWidth*0.8, behavior: "smooth"});
-  triggerGlitch();
+document.querySelector('.arrow.right').addEventListener('click', () => {
+  container.scrollBy({ left: window.innerWidth * 0.8, behavior: 'smooth' });
 });
 
-/* Glitch en clics de enlaces */
-document.querySelectorAll('.slide').forEach(slide=>{
-  slide.addEventListener("click", ()=> triggerGlitch());
-});
-
-/* Scroll con rueda del ratón */
-container.addEventListener('wheel', e=>{
+// scroll con rueda del ratón
+container.addEventListener('wheel', (e) => {
   e.preventDefault();
-  container.scrollBy({left: e.deltaY, behavior:"smooth"});
-},{passive:false});
+  container.scrollBy({ left: e.deltaY, behavior: 'smooth' });
+});
 
-/* Static noise background */
-const noiseCanvas = document.getElementById("noise");
-const ctx = noiseCanvas.getContext("2d");
-function resizeNoise() {
-  noiseCanvas.width = window.innerWidth;
-  noiseCanvas.height = window.innerHeight;
-}
-resizeNoise();
-window.addEventListener("resize", resizeNoise);
-
-function generateNoise() {
-  const imageData = ctx.createImageData(noiseCanvas.width, noiseCanvas.height);
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    const shade = Math.random() * 255;
-    imageData.data[i] = shade;
-    imageData.data[i+1] = shade;
-    imageData.data[i+2] = shade;
-    imageData.data[i+3] = 255;
+// welcome toggle
+const welcomeSlide = document.getElementById('welcome-slide');
+const welcomeContent = document.getElementById('welcome-content');
+let welcomeActive = false;
+welcomeSlide.addEventListener('click', () => {
+  welcomeActive = !welcomeActive;
+  if (welcomeActive) {
+    welcomeContent.classList.add('active');
+  } else {
+    welcomeContent.classList.remove('active');
   }
-  ctx.putImageData(imageData, 0, 0);
-}
-setInterval(generateNoise, 60); // velocidad del ruido
+});
 </script>
+
 </body>
 </html>
