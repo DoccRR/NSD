@@ -283,7 +283,7 @@ const firebaseConfig = {
   authDomain: "nsdsnake.firebaseapp.com",
   databaseURL: "https://nsdsnake-default-rtdb.firebaseio.com",
   projectId: "nsdsnake",
-  storageBucket: "nsdsnake.firebasestorage.app",
+  storageBucket: "nsdsnake.appspot.com",
   messagingSenderId: "719565977829",
   appId: "1:719565977829:web:94911f469efd29aa9c7c0c"
 };
@@ -320,7 +320,12 @@ let snake,dir,food,score,pendingDir,gameLoop,lives=2;
 
 function resetSnake(){
   snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
-  dir={x:1,y:0}; pendingDir=null; score=0; placeFood(); overlay.style.display="none"; 
+  dir={x:1,y:0};
+  pendingDir=null;
+  score=0;
+  lives=2;   // 👈 reinicia las vidas aquí
+  placeFood();
+  overlay.style.display="none";
   if(gameLoop) clearInterval(gameLoop);
   gameLoop=setInterval(step,SPEED);
   drawSnake();
@@ -523,5 +528,6 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
