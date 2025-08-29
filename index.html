@@ -1,403 +1,461 @@
-<!DOCTYPE html> 
-<html lang="es">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NSD WEBSITE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      background: url('fondo.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      font-family: "Orbitron", sans-serif;
-      overflow: hidden;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NOIZE SECRET DOCTRINE — Official</title>
+<meta name="description" content="NSD aKa Noize Secret Doctrine — Official portal. Hardcore, Terrorcore, Speedcore, Uptempo Hardcore.">
+<meta name="color-scheme" content="dark">
+<style>
+:root{
+  --bg:#000;
+  --fg:#fff;
+  --muted:#aaa;
+  --radius:20px;
+  --font-futuristic:"Orbitron","Rajdhani","Exo 2",sans-serif;
+  --accent:#e60000;
+}
 
-    /* ===== Carrusel ===== */
-    .carousel-container {
-      display: flex;
-      overflow-x: scroll;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-    }
-    .slide {
-      flex: 0 0 100%;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      scroll-snap-align: start;
-      background: rgba(0,0,0,0.4);
-    }
-    .slide-content {
-      width: 80%;
-      height: 80%;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 3em;
-      text-shadow: 0 0 10px black;
-      cursor: pointer;
-      text-align: center;
-      padding: 20px;
-    }
+*{box-sizing:border-box;}
+html,body{
+  height:100%; margin:0; font-family:var(--font-futuristic);
+  background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
+  color:var(--fg); overflow-x:hidden;
+}
 
-    /* Flechas */
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2em;
-      background: rgba(0,0,0,0.5);
-      border: none;
-      color: white;
-      cursor: pointer;
-      z-index: 10;
-      padding: 10px;
-    }
-    .arrow.left { left: 10px; }
-    .arrow.right { right: 10px; }
+/* Carousel */
+.carousel-container{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  width:100vw; height:100vh;
+  padding:40px 0;
+}
+.carousel-container::-webkit-scrollbar{display:none;}
+.carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
 
-    /* ===== Snake styles ===== */
-    #snakeWrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 80%;
-      position: relative;
-      flex-direction: column;
-    }
-    #snakeCanvas {
-      background: black;
-      display: block;
-      border: 2px solid white;
-      max-width: 95vw;
-      height: auto;
-    }
-    #gameOverOverlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 2em;
-      z-index: 20;
-      text-align: center;
-      padding: 10px;
-    }
-    #gameOverOverlay button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    #ranking {
-      margin-top: 15px;
-      font-size: 14px;
-      text-align: center;
-      background: rgba(0,0,0,0.6);
-      padding: 6px 12px;
-      border-radius: 8px;
-    }
-    #nicknameInput {
-      margin-top: 10px;
-      padding: 6px;
-      border-radius: 6px;
-      border: none;
-      text-align: center;
-      font-size: 1em;
-    }
+/* Slides generales */
+.slide{
+  flex:0 0 80%;
+  max-width:800px;
+  height:80%;
+  margin:0 30px;
+  border-radius:var(--radius);
+  scroll-snap-align:center;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+  position:relative;
+  overflow:hidden;
+  transition:transform .3s ease;
+  text-decoration:none;
+}
+.slide:hover{transform:scale(1.03);}
+.slide::after{
+  content:"";
+  position:absolute;
+  bottom:0; left:0;
+  width:100%; height:60%;
+  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+}
+.slide span{
+  position:relative;
+  z-index:2;
+  font-size:clamp(20px,3vw,32px);
+  font-weight:900;
+  text-transform:uppercase;
+  color:var(--fg);
+  text-shadow:0 0 10px rgba(0,0,0,0.8);
+  margin-bottom:25px;
+}
+.slide.welcome::after{content:none;}
 
-    /* Controles Snake móviles */
-    #snakeControls {
-      display: none;
-      margin-top: 10px;
-    }
-    #snakeControls button {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid white;
-      color: white;
-      font-size: 1.2em;
-      padding: 10px;
-      margin: 3px;
-      border-radius: 8px;
-    }
+/* Snake slide */
+.slide.snake-slide{
+  flex:0 0 95%;
+  max-width:1200px;
+  height:90%;
+  align-items:center;
+  justify-content:center;
+}
+.slide.snake-slide::after{content:none;}
+.slide.snake-slide span{display:none;}
 
-    /* ===== Subtítulos generales ===== */
-    .subtitles {
-      position: absolute;
-      top: 15px; /* SUBTÍTULOS ARRIBA */
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      font-size: 0.8em;
-      color: #fff;
-      opacity: 0.9;
-      z-index: 20;
-      line-height: 1.4;
-    }
+/* Snake contenido */
+.play-inner{
+  position:relative;
+  z-index:2; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; gap:12px;
+  height:100%;
+}
+#snakeWrap{
+  flex:1;
+  display:flex; justify-content:center; align-items:center;
+  background:#000;
+  border:4px solid #fff; 
+  border-radius:12px; padding:8px;
+  width:100%;
+  position:relative;
+}
+#snakeCanvas{
+  display:block;
+  width:100%; max-width:1000px;
+  height:auto; background:#000;
+  border:2px solid var(--accent);
+  border-radius:10px;
+}
 
-    /* ===== Controles de música ===== */
-    #controls {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 15;
-    }
-    #controls button,
-    #controls input[type=range] {
-      font-size: 1em;
-      padding: 6px 10px;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-    }
+/* Snake UI */
+.snake-ui{font-size:12px; color:var(--muted); text-align:center;}
+.score{
+  position:absolute; top:10px; left:10px;
+  font-size:14px; color:#bbb;
+  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
+}
 
-    /* ===== Responsive ===== */
-    @media (max-width: 768px) {
-      .slide-content {
-        width: 100%;
-        height: 100%;
-        font-size: 2em;
-        padding: 10px;
-        border-radius: 0;
-      }
-      #snakeCanvas {
-        width: 90vw;
-        height: 90vw;
-      }
-      #gameOverOverlay { font-size: 1.5em; }
-      #snakeControls { display: flex; flex-direction: column; align-items: center; }
-      .subtitles { font-size: 0.7em; top: 10px; bottom: auto; }
-    }
-  </style>
+/* Overlay Game Over */
+#gameOverOverlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  z-index:10;
+}
+#gameOverOverlay h2{font-size:2rem; margin-bottom:15px;}
+#nicknameInput{padding:8px; margin:10px; font-size:16px; border-radius:6px;}
+#submitScore, #playAgainBtn{
+  padding:8px 16px; 
+  background:var(--accent); 
+  border:none; 
+  color:#fff; 
+  font-weight:bold; 
+  border-radius:6px; 
+  cursor:pointer;
+  margin-top:5px;
+}
+#ranking{margin-top:20px; text-align:left;}
+
+/* Footer */
+.footer-genres, .footer-records{
+  position:absolute;
+  width:100%; text-align:center;
+  font-size:12px; color:var(--muted);
+}
+.footer-genres{bottom:110px;}
+.footer-records{bottom:90px; letter-spacing:2px;}
+
+/* Arrows */
+.arrow{
+  position:absolute;
+  top:50%; transform:translateY(-50%);
+  font-size:40px; color:rgba(255,255,255,0.6);
+  z-index:10; cursor:pointer;
+  animation:blink 1.5s infinite;
+}
+.arrow.left{left:15px;} .arrow.right{right:15px;}
+@keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
+
+/* Responsive Snake */
+@media(max-width:768px){
+  .slide.snake-slide{
+    flex:0 0 100%;
+    max-width:100%;
+    height:100vh;
+    border-radius:0;
+  }
+  #snakeWrap{border-radius:0; border:none; padding:0;}
+  #snakeCanvas{width:90vw; height:90vw; max-width:400px; max-height:400px;}
+  .snake-ui{position:absolute; bottom:60px; font-size:14px;}
+}
+
+@media(min-width:768px){
+  #snakeCanvas{
+    width:80vw;
+    height:45vw;
+    max-width:800px;
+    max-height:450px;
+  }
+}
+
+/* Player Controls */
+#playerControls{
+  position:fixed;
+  bottom:20px; left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  border:2px solid var(--fg);
+  border-radius:40px;
+  padding:10px 20px;
+  font-size:16px; font-weight:700;
+  color:#fff;
+  display:flex; align-items:center; gap:15px;
+  z-index:50;
+}
+#playerControls button{
+  background:none; border:none; color:#fff;
+  font-size:20px; cursor:pointer;
+}
+#playerControls button:disabled{opacity:.5; cursor:not-allowed;}
+#volumeSlider{width:100px;}
+</style>
 </head>
 <body>
-  <!-- Flechas -->
-  <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
-  <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
 
-  <!-- Carrusel -->
-  <div id="carousel" class="carousel-container">
-    <div class="slide">
-      <div id="welcomeSlide" class="slide-content" style="background-image:url('NSD.jpg')">
-        <div>
-          <p style="font-size:2em; margin:0;">WELCOME</p>
-          <p style="font-size:0.5em; margin:0; opacity:0.8;">This is NSD official website.<br>Underground Crew</p>
-        </div>
-      </div>
-    </div>
-    <div class="slide"><div class="slide-content" style="background-image:url('bandcamp.png')" onclick="window.open('https://noizesecretdoctrine.bandcamp.com/','_blank')">BUY MUSIC</div></div>
-    <div class="slide"><div class="slide-content" style="background-image:url('youtube.png')" onclick="window.open('https://www.youtube.com/@noizesecretdoctrine','_blank')">YOUTUBE</div></div>
-    <div class="slide"><div class="slide-content" style="background-image:url('spotify.png')" onclick="window.open('https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX','_blank')">SPOTIFY</div></div>
-    <div class="slide"><div class="slide-content" style="background-image:url('soundcloud.png')" onclick="window.open('https://soundcloud.com/noizesd','_blank')">SOUNDCLOUD</div></div>
-    <div class="slide"><div class="slide-content" style="background-image:url('bookings.png')" onclick="window.open('https://www.triple6.nl/bookings/','_blank')">BOOKINGS</div></div>
-    <div class="slide"><div class="slide-content" style="background-image:url('instagram.png')" onclick="window.open('https://www.instagram.com/nsd_noi/','_blank')">INSTAGRAM</div></div>
-    
-    <!-- Snake Game -->
-    <div class="slide">
+<!-- Flechas -->
+<div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
+<div class="arrow right" onclick="scrollCarousel(1)">❯</div>
+
+<main class="carousel-container">
+  <!-- WELCOME -->
+  <div class="slide welcome" style="background-image:url('NSD.jpg')">
+    <span>WELCOME</span>
+  </div>
+
+  <!-- Enlaces -->
+  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
+  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
+  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
+  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
+  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
+
+  <!-- Snake -->
+  <div class="slide snake-slide">
+    <div class="play-inner" id="snake">
       <div id="snakeWrap">
+        <div class="score" id="score">SCORE: 0</div>
         <canvas id="snakeCanvas" width="400" height="400"></canvas>
         <div id="gameOverOverlay">
-          <p>GAME OVER</p>
-          <input type="text" id="nicknameInput" placeholder="Enter your nickname">
-          <button onclick="saveAndRestart()">Play Again</button>
+          <h2>NSD TOP FREAKS</h2>
           <div id="ranking"></div>
-        </div>
-        <div id="snakeControls">
-          <div><button onclick="direction='UP'">⬆</button></div>
-          <div>
-            <button onclick="direction='LEFT'">⬅</button>
-            <button onclick="direction='DOWN'">⬇</button>
-            <button onclick="direction='RIGHT'">➡</button>
-          </div>
+          <input type="text" id="nicknameInput" placeholder="Enter nickname" maxlength="12">
+          <button id="submitScore">Save Score</button>
+          <button id="playAgainBtn">Play Again</button>
         </div>
       </div>
+      <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
     </div>
   </div>
+</main>
 
-  <!-- Subtítulos -->
-  <div class="subtitles">
-    <p>Noize Secret Doctrine</p>
-    <p>Underground Crew</p>
-    <p>Hardcore | Speedcore | Terrorcore | Uptempo Hardcore</p>
-  </div>
+<!-- Player Controls -->
+<div id="playerControls">
+  <button id="prevBtn" disabled>⏮</button>
+  <button id="playPauseBtn" disabled>▶</button>
+  <button id="nextBtn" disabled>⏭</button>
+  <input type="range" id="volumeSlider" min="0" max="100" value="80" disabled>
+</div>
 
-  <!-- Controles de Música -->
-  <div id="controls">
-    <button onclick="prevTrack()">⏮</button>
-    <button onclick="togglePlay()">⏯</button>
-    <button onclick="nextTrack()">⏭</button>
-    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
-  </div>
+<footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
+<div class="footer-records">DOCTRINE RECORDS</div>
 
-  <audio id="audioPlayer" style="display:none;"></audio>
+<!-- SoundCloud Widget (oculto pero operativo) -->
+<iframe
+  id="scPlayer"
+  src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd/tracks&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false&show_teaser=false"
+  allow="autoplay"
+  style="position:fixed; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none; border:0;"
+  aria-hidden="true"
+  tabindex="-1"
+></iframe>
+<script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
-      authDomain: "nsdsnake.firebaseapp.com",
-      projectId: "nsdsnake",
-      storageBucket: "nsdsnake.firebasestorage.app",
-      messagingSenderId: "719565977829",
-      appId: "1:719565977829:web:94911f469efd29aa9c7c0c",
-      databaseURL: "https://nsdsnake-default-rtdb.europe-west1.firebasedatabase.app"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-  </script>
+<script>
+/* Carousel */
+const carousel=document.querySelector('.carousel-container');
+function scrollCarousel(d){
+  const slideWidth=document.querySelector('.slide').offsetWidth+60;
+  carousel.scrollBy({left:slideWidth*d,behavior:'smooth'});
+}
+carousel.addEventListener('wheel',e=>{
+  e.preventDefault();
+  carousel.scrollBy({left:e.deltaY,behavior:'smooth'});
+});
 
-  <!-- Scripts -->
-  <script>
-    /* Carrusel */
-    const carousel = document.getElementById("carousel");
-    function scrollCarousel(dir) {
-      const width = window.innerWidth;
-      carousel.scrollBy({ left: dir * width, behavior: "smooth" });
-    }
-    carousel.addEventListener("wheel", e => {
-      e.preventDefault();
-      if (e.deltaY > 0) scrollCarousel(1);
-      else scrollCarousel(-1);
+/* Snake Game */
+const canvasEl=document.getElementById('snakeCanvas');
+const ctx=canvasEl.getContext('2d');
+const scoreEl=document.getElementById('score');
+const overlay=document.getElementById('gameOverOverlay');
+const rankingEl=document.getElementById('ranking');
+const nicknameInput=document.getElementById('nicknameInput');
+const submitScoreBtn=document.getElementById('submitScore');
+const playAgainBtn=document.getElementById('playAgainBtn');
+const GRID=20,SPEED=140;
+const W=canvasEl.width,H=canvasEl.height;
+const CELL=W/GRID;
+let snake,dir,food,score,pendingDir,gameLoop,lives=2;
+let ranking=[];
+
+function resetSnake(){
+  snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir={x:1,y:0}; pendingDir=null; score=0; placeFood(); overlay.style.display="none"; 
+  if(gameLoop) clearInterval(gameLoop);
+  gameLoop=setInterval(step,SPEED);
+  drawSnake();
+}
+function placeFood(){
+  while(true){
+    const f={x:Math.floor(Math.random()*GRID),y:Math.floor(Math.random()*GRID)};
+    if(!snake.some(s=>s.x===f.x&&s.y===f.y)){food=f;return;}
+  }
+}
+function step(){
+  if(pendingDir){
+    const nd=pendingDir;
+    if(!(nd.x===-dir.x&&nd.y===-dir.y)) dir=nd;
+    pendingDir=null;
+  }
+  const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+  if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    lives--;
+    if(lives>0){snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}]; dir={x:1,y:0}; return;}
+    clearInterval(gameLoop); overlay.style.display="flex"; renderRanking(); return;
+  }
+  snake.unshift(head);
+  if(head.x===food.x&&head.y===food.y){score+=10; placeFood();}
+  else snake.pop();
+  drawSnake();
+}
+function drawSnake(){
+  ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#fff'; ctx.lineWidth=4; ctx.strokeRect(0,0,W,H);
+  const fx=food.x*CELL+CELL/2,fy=food.y*CELL+CELL/2;
+  ctx.fillStyle='#e60000'; ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font=(CELL*0.5)+"px Orbitron"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("NSD",fx,fy+1);
+  ctx.fillStyle='#fff'; snake.forEach(seg=>{const m=CELL*0.25; ctx.fillRect(seg.x*CELL+m/2,seg.y*CELL+m/2,CELL-m,CELL-m);});
+  scoreEl.textContent='SCORE: '+score+' | LIVES: '+lives;
+}
+function renderRanking(){
+  rankingEl.innerHTML="";
+  ranking
+    .slice(0,5)
+    .forEach((r,i)=>{rankingEl.innerHTML+=`<div>${i+1}. ${r.name} — ${r.score}</div>`;});
+}
+submitScoreBtn.addEventListener('click',()=>{
+  const name=(nicknameInput.value||"Anon").slice(0,12);
+  ranking.push({name,score});
+  ranking.sort((a,b)=>b.score-a.score);
+  renderRanking();
+  nicknameInput.value="";
+  resetSnake(); // reinicia tras guardar puntaje
+});
+playAgainBtn.addEventListener('click',()=>{
+  resetSnake(); // reinicia sin necesidad de nickname
+});
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp') pendingDir={x:0,y:-1};
+  else if(e.key==='ArrowDown') pendingDir={x:0,y:1};
+  else if(e.key==='ArrowLeft') pendingDir={x:-1,y:0};
+  else if(e.key==='ArrowRight') pendingDir={x:1,y:0};
+  if(e.key.startsWith('Arrow')) e.preventDefault();
+});
+let touchStartX=null,touchStartY=null;
+canvasEl.addEventListener('touchstart',e=>{const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY;},{passive:true});
+canvasEl.addEventListener('touchmove',e=>{
+  if(!touchStartX||!touchStartY)return;
+  const t=e.touches[0]; const dx=t.clientX-touchStartX,dy=t.clientY-touchStartY;
+  if(Math.abs(dx)>30||Math.abs(dy)>30){
+    if(Math.abs(dx)>Math.abs(dy)) pendingDir={x:dx>0?1:-1,y:0};
+    else pendingDir={x:0,y:dy>0?1:-1};
+    touchStartX=null; touchStartY=null;
+  }
+  e.preventDefault();
+},{passive:false});
+resetSnake();
+
+/* Bloquear scroll solo cuando Snake está visible */
+const snakeSection=document.getElementById("snake");
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      document.body.style.overflow = entry.isIntersecting ? 'hidden' : '';
     });
+  },{threshold:0.15});
+  io.observe(snakeSection);
+}else{
+  document.addEventListener("scroll",()=>{
+    const rect=snakeSection.getBoundingClientRect();
+    document.body.style.overflow = (rect.top<window.innerHeight && rect.bottom>0) ? "hidden" : "";
+  });
+}
 
-    /* Música */
-    const playlist = [
-      "https://api.soundcloud.com/tracks/123456789/stream?client_id=YOUR_CLIENT_ID",
-      "https://api.soundcloud.com/tracks/987654321/stream?client_id=YOUR_CLIENT_ID"
-    ];
-    let currentTrack = 0;
-    const audioPlayer = document.getElementById("audioPlayer");
-    function loadTrack(index) {
-      currentTrack = index;
-      audioPlayer.src = playlist[currentTrack];
-      audioPlayer.play();
-    }
-    function prevTrack() { loadTrack((currentTrack - 1 + playlist.length) % playlist.length); }
-    function nextTrack() { loadTrack((currentTrack + 1) % playlist.length); }
-    function togglePlay() {
-      if (audioPlayer.paused) audioPlayer.play();
-      else audioPlayer.pause();
-    }
-    function setVolume(v) { audioPlayer.volume = v; }
+/* ===== SoundCloud Player (controles propios) ===== */
+const prevBtn = document.getElementById('prevBtn');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const nextBtn = document.getElementById('nextBtn');
+const volumeSlider = document.getElementById('volumeSlider');
 
-    /* Snake */
-    const canvas = document.getElementById("snakeCanvas");
-    const ctx = canvas.getContext("2d");
-    let box = 20;
-    let snake, food, direction, game, score;
+const scIframe = document.getElementById('scPlayer');
+const scWidget = SC.Widget(scIframe);
 
-    function initGame() {
-      snake = [{ x: 9 * box, y: 10 * box }];
-      direction = null;
-      score = 0;
-      food = {
-        x: Math.floor(Math.random() * 19) * box,
-        y: Math.floor(Math.random() * 19) * box
-      };
-      game = setInterval(draw, 100);
-    }
+let widgetReady = false;
+let isPlaying = false;
 
-    document.addEventListener("keydown", dir);
-    function dir(event) {
-      if (event.keyCode == 37 && direction != "RIGHT") direction = "LEFT";
-      else if (event.keyCode == 38 && direction != "DOWN") direction = "UP";
-      else if (event.keyCode == 39 && direction != "LEFT") direction = "RIGHT";
-      else if (event.keyCode == 40 && direction != "UP") direction = "DOWN";
-    }
+/* Habilitar controles cuando el widget está listo */
+scWidget.bind(SC.Widget.Events.READY, function(){
+  widgetReady = true;
 
-    function draw() {
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Volumen inicial desde el slider
+  const vol = Math.max(0, Math.min(100, parseInt(volumeSlider.value || '80',10)));
+  scWidget.setVolume(vol);
 
-      for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = (i == 0) ? "lime" : "white";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-      }
+  // Revisar si hay varias pistas para habilitar prev/next
+  scWidget.getSounds(function(sounds){
+    const multiple = Array.isArray(sounds) && sounds.length > 1;
+    prevBtn.disabled = !multiple;
+    nextBtn.disabled = !multiple;
+  });
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(food.x, food.y, box, box);
+  // Habilitar play/volumen
+  playPauseBtn.disabled = false;
+  volumeSlider.disabled = false;
+});
 
-      let snakeX = snake[0].x;
-      let snakeY = snake[0].y;
+/* Sincronizar iconos con eventos del widget */
+scWidget.bind(SC.Widget.Events.PLAY, function(){
+  isPlaying = true;
+  playPauseBtn.textContent = '⏸';
+});
+scWidget.bind(SC.Widget.Events.PAUSE, function(){
+  isPlaying = false;
+  playPauseBtn.textContent = '▶';
+});
+scWidget.bind(SC.Widget.Events.FINISH, function(){
+  // Cuando termina una pista, reflecta estado
+  isPlaying = false;
+  playPauseBtn.textContent = '▶';
+});
 
-      if (direction == "LEFT") snakeX -= box;
-      if (direction == "UP") snakeY -= box;
-      if (direction == "RIGHT") snakeX += box;
-      if (direction == "DOWN") snakeY += box;
+/* Controles */
+playPauseBtn.addEventListener('click', function(){
+  if(!widgetReady) return;
+  if(isPlaying){ scWidget.pause(); } else { scWidget.play(); }
+});
+prevBtn.addEventListener('click', function(){
+  if(!widgetReady) return;
+  scWidget.prev();
+});
+nextBtn.addEventListener('click', function(){
+  if(!widgetReady) return;
+  scWidget.next();
+});
+volumeSlider.addEventListener('input', function(e){
+  if(!widgetReady) return;
+  const v = Math.max(0, Math.min(100, parseInt(e.target.value || '0',10)));
+  scWidget.setVolume(v);
+});
+</script>
 
-      if (snakeX == food.x && snakeY == food.y) {
-        score++;
-        food = {
-          x: Math.floor(Math.random() * 19) * box,
-          y: Math.floor(Math.random() * 19) * box
-        };
-      } else {
-        snake.pop();
-      }
-
-      let newHead = { x: snakeX, y: snakeY };
-      if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
-        clearInterval(game);
-        document.getElementById("gameOverOverlay").style.display = "flex";
-        showRanking();
-        return;
-      }
-
-      snake.unshift(newHead);
-      ctx.fillStyle = "white";
-      ctx.font = "20px Orbitron";
-      ctx.fillText("Score: " + score, 10, canvas.height - 10);
-    }
-
-    function collision(head, array) {
-      return array.some(segment => head.x === segment.x && head.y === segment.y);
-    }
-
-    function saveAndRestart() {
-      let nickname = document.getElementById("nicknameInput").value || "Anon";
-      db.ref("scores").push({ nickname: nickname, score: score });
-      document.getElementById("nicknameInput").value = "";
-      document.getElementById("gameOverOverlay").style.display = "none";
-      initGame();
-    }
-
-    function showRanking() {
-      const rankingDiv = document.getElementById("ranking");
-      db.ref("scores").orderByChild("score").limitToLast(5).once("value", snapshot => {
-        let scores = [];
-        snapshot.forEach(child => {
-          scores.push(child.val());
-        });
-        scores.reverse();
-        rankingDiv.innerHTML = "<h3>Top 5</h3>" + scores.map(s => `${s.nickname}: ${s.score}`).join("<br>");
-      });
-    }
-
-    initGame();
-  </script>
 </body>
 </html>
+
