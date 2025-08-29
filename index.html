@@ -271,191 +271,157 @@ html,body{
 
 
 <script>
-// ---------------------- Snake Game ---------------------- //
 const canvas = document.getElementById("snakeCanvas");
 const ctx = canvas.getContext("2d");
-let box = 20;
-let snake = [{ x: 9 * box, y: 10 * box }];
+const box = 20;
+let snake = [{x: 9*box, y: 10*box}];
 let direction;
+let foods = ["N","S","D"];
+let food = {
+  x: Math.floor(Math.random()*(canvas.width/box)) * box,
+  y: Math.floor(Math.random()*(canvas.height/box)) * box,
+  letter: foods[Math.floor(Math.random()*foods.length)]
+};
 let score = 0;
-let food = spawnFood();
-let gameLoop;
+const scoreDisplay = document.getElementById("score");
+const gameOverOverlay = document.getElementById("gameOverOverlay");
+const nicknameInput = document.getElementById("nicknameInput");
+const submitScore = document.getElementById("submitScore");
+const playAgainBtn = document.getElementById("playAgainBtn");
+const rankingDiv = document.getElementById("ranking");
 
-function spawnFood() {
-  return {
-    x: Math.floor(Math.random() * (canvas.width / box)) * box,
-    y: Math.floor(Math.random() * (canvas.height / box)) * box
-  };
+/* ====== LocalStorage Ranking ====== */
+function loadRanking(){
+  let stored = localStorage.getItem("snakeRanking");
+  return stored ? JSON.parse(stored) : [];
 }
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-  if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-  if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-  if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-});
-
-// Touch controls (mobile)
-let startX, startY;
-canvas.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-  startY = e.touches[0].clientY;
-});
-canvas.addEventListener("touchend", (e) => {
-  let dx = e.changedTouches[0].clientX - startX;
-  let dy = e.changedTouches[0].clientY - startY;
-  if (Math.abs(dx) > Math.abs(dy)) {
-    if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
-    else if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
-  } else {
-    if (dy > 0 && direction !== "UP") direction = "DOWN";
-    else if (dy < 0 && direction !== "DOWN") direction = "UP";
-  }
-});
-
-// ------------------ Ranking con localStorage ------------------ //
-function saveScore(newScore) {
-  const nickname = document.getElementById("nicknameInput").value || "Anon";
-  let ranking = JSON.parse(localStorage.getItem("snakeRanking")) || [];
-
-  ranking.push({ name: nickname, score: newScore });
-  ranking.sort((a, b) => b.score - a.score);
-  ranking = ranking.slice(0, 10);
-
+function saveRanking(ranking){
   localStorage.setItem("snakeRanking", JSON.stringify(ranking));
 }
-
-function showRanking() {
-  let ranking = JSON.parse(localStorage.getItem("snakeRanking")) || [];
-  const container = document.getElementById("ranking");
-  container.innerHTML = ranking
-    .map((p, i) => `<div>${i + 1}. ${p.name} — ${p.score}</div>`)
-    .join("");
+function showRanking(){
+  let ranking = loadRanking();
+  rankingDiv.innerHTML = "<h3>Ranking</h3>";
+  ranking.slice(0,10).forEach((r,i)=>{
+    rankingDiv.innerHTML += `${i+1}. ${r.name} — ${r.score}<br>`;
+  });
 }
 
-function showGameOver() {
-  document.getElementById("gameOverOverlay").style.display = "flex";
-  showRanking();
-}
+/* ====== Controles de dirección ====== */
+document.addEventListener("keydown", event => {
+  if(event.keyCode == 37 && direction != "RIGHT") direction = "LEFT";
+  else if(event.keyCode == 38 && direction != "DOWN") direction = "UP";
+  else if(event.keyCode == 39 && direction != "LEFT") direction = "RIGHT";
+  else if(event.keyCode == 40 && direction != "UP") direction = "DOWN";
+});
 
-// ------------------ Game Loop ------------------ //
-function draw() {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Dibujar snake
-  for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = i === 0 ? "#e60000" : "#fff";
-    ctx.fillRect(snake[i].x, snake[i].y, box, box);
+let touchStartX=0, touchStartY=0;
+canvas.addEventListener("touchstart", e=>{
+  const t = e.touches[0]; touchStartX = t.clientX; touchStartY = t.clientY;
+});
+canvas.addEventListener("touchend", e=>{
+  const t = e.changedTouches[0];
+  let dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
+  if(Math.abs(dx) > Math.abs(dy)){
+    if(dx > 0 && direction!="LEFT") direction="RIGHT";
+    else if(dx < 0 && direction!="RIGHT") direction="LEFT";
+  } else {
+    if(dy > 0 && direction!="UP") direction="DOWN";
+    else if(dy < 0 && direction!="DOWN") direction="UP";
   }
+});
 
-  // Dibujar comida (texto NSD pequeño)
-  ctx.fillStyle = "#0f0";
-  ctx.font = "bold 14px Orbitron, sans-serif";
-  ctx.fillText("NSD", food.x + 2, food.y + 16);
+// Bloquear scroll en móvil dentro del juego
+document.getElementById("snakeWrap").addEventListener("touchmove", e=>{
+  e.preventDefault();
+},{passive:false});
+
+/* ====== Colisiones ====== */
+function collision(newHead, array){
+  return array.some(s=> s.x==newHead.x && s.y==newHead.y);
+}
+
+/* ====== Dibujar ====== */
+function draw(){
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Snake
+  snake.forEach((s,i)=>{
+    ctx.fillStyle = i==0 ? "lime" : "white";
+    ctx.fillRect(s.x,s.y,box,box);
+    ctx.strokeStyle = "#000";
+    ctx.strokeRect(s.x,s.y,box,box);
+  });
+
+  // Food: letra blanca (N,S,D)
+  ctx.fillStyle = "white";
+  ctx.font = "bold 16px Orbitron, sans-serif";
+  ctx.fillText(food.letter, food.x+6, food.y+16);
 
   // Movimiento
-  let headX = snake[0].x;
-  let headY = snake[0].y;
+  let snakeX = snake[0].x;
+  let snakeY = snake[0].y;
+  if(direction=="LEFT") snakeX -= box;
+  if(direction=="UP") snakeY -= box;
+  if(direction=="RIGHT") snakeX += box;
+  if(direction=="DOWN") snakeY += box;
 
-  if (direction === "LEFT") headX -= box;
-  if (direction === "UP") headY -= box;
-  if (direction === "RIGHT") headX += box;
-  if (direction === "DOWN") headY += box;
-
-  // Comida
-  if (headX === food.x && headY === food.y) {
+  // Comer food
+  if(snakeX == food.x && snakeY == food.y){
     score++;
-    document.getElementById("score").innerText = "SCORE: " + score;
-    food = spawnFood();
+    food = {
+      x: Math.floor(Math.random()*(canvas.width/box)) * box,
+      y: Math.floor(Math.random()*(canvas.height/box)) * box,
+      letter: foods[Math.floor(Math.random()*foods.length)]
+    };
   } else {
     snake.pop();
   }
 
-  let newHead = { x: headX, y: headY };
+  let newHead = {x:snakeX, y:snakeY};
 
-  // Colisiones
-  if (
-    headX < 0 || headY < 0 ||
-    headX >= canvas.width || headY >= canvas.height ||
-    snake.some(s => s.x === newHead.x && s.y === newHead.y)
-  ) {
-    clearInterval(gameLoop);
-    saveScore(score);
-    showGameOver();
+  // Game Over
+  if(snakeX<0 || snakeY<0 || snakeX>=canvas.width || snakeY>=canvas.height || collision(newHead,snake)){
+    clearInterval(game);
+    gameOverOverlay.style.display = "flex";
+    showRanking();
     return;
   }
 
   snake.unshift(newHead);
+  scoreDisplay.textContent = "SCORE: " + score;
 }
 
-function startGame() {
-  snake = [{ x: 9 * box, y: 10 * box }];
-  direction = null;
-  score = 0;
-  food = spawnFood();
-  document.getElementById("score").innerText = "SCORE: 0";
-  document.getElementById("gameOverOverlay").style.display = "none";
-  clearInterval(gameLoop);
-  gameLoop = setInterval(draw, 100);
-}
-
-document.getElementById("submitScore").onclick = () => {
-  saveScore(score);
-  showRanking();
-};
-document.getElementById("playAgainBtn").onclick = startGame;
-
-// Iniciar el juego
-startGame();
-
-// ---------------------- Carousel ---------------------- //
-const carousel = document.querySelector(".carousel-container");
-function scrollCarousel(dir) {
-  carousel.scrollBy({ left: dir * window.innerWidth * 0.8, behavior: "smooth" });
-}
-
-// ---------------------- SoundCloud Player ---------------------- //
-const scPlayer = SC.Widget(document.getElementById("scPlayer"));
-const playPauseBtn = document.getElementById("playPauseBtn");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const volumeSlider = document.getElementById("volumeSlider");
-
-// Habilitar botones cuando el widget cargue
-scPlayer.bind(SC.Widget.Events.READY, () => {
-  playPauseBtn.disabled = false;
-  prevBtn.disabled = false;
-  nextBtn.disabled = false;
-  volumeSlider.disabled = false;
-});
-
-// Play/Pause
-let isPlaying = false;
-playPauseBtn.addEventListener("click", () => {
-  if (isPlaying) {
-    scPlayer.pause();
-    playPauseBtn.textContent = "▶";
-  } else {
-    scPlayer.play();
-    playPauseBtn.textContent = "⏸";
+/* ====== Botones ====== */
+submitScore.addEventListener("click", ()=>{
+  let nick = nicknameInput.value.trim();
+  if(nick){
+    let ranking = loadRanking();
+    ranking.push({name:nick, score:score});
+    ranking.sort((a,b)=>b.score-a.score);
+    saveRanking(ranking);
+    showRanking();
+    nicknameInput.value = "";
   }
-  isPlaying = !isPlaying;
 });
 
-// Prev / Next
-prevBtn.addEventListener("click", () => scPlayer.prev());
-nextBtn.addEventListener("click", () => scPlayer.next());
-
-// Volume
-volumeSlider.addEventListener("input", (e) => {
-  scPlayer.setVolume(e.target.value / 100);
+playAgainBtn.addEventListener("click", ()=>{
+  snake = [{x:9*box,y:10*box}];
+  direction = undefined;
+  score=0;
+  gameOverOverlay.style.display="none";
+  game = setInterval(draw,100);
 });
 
-// ---------------------- Bloquear scroll en móvil dentro del snake ---------------------- //
-document.getElementById("snakeCanvas").addEventListener("touchmove", (e) => {
-  e.preventDefault();
-}, { passive: false });
+/* ====== Iniciar juego ====== */
+let game = setInterval(draw,100);
+showRanking();
+
+/* ====== Carousel ====== */
+function scrollCarousel(dir){
+  const container = document.querySelector(".carousel-container");
+  container.scrollBy({left:dir*window.innerWidth*0.8, behavior:"smooth"});
+}
 </script>
 </body>
 </html>
