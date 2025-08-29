@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NSD Snake + Carrusel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSD Snake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       background: black;
       color: white;
-      font-family: 'Orbitron', sans-serif;
+      font-family: "Orbitron", sans-serif;
       overflow: hidden;
     }
-
-    /* Carrusel */
     .carousel-container {
       display: flex;
       overflow-x: hidden;
@@ -27,140 +25,119 @@
       height: 100vh;
       background-size: cover;
       background-position: center;
-      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3em;
+      text-shadow: 0 0 10px black;
     }
-
-    /* Flechas */
     .arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+      font-size: 2em;
       background: rgba(0,0,0,0.5);
-      color: white;
       border: none;
-      padding: 12px;
+      color: white;
       cursor: pointer;
       z-index: 10;
-      border-radius: 50%;
-      font-size: 24px;
+      padding: 10px;
     }
     .arrow.left { left: 10px; }
     .arrow.right { right: 10px; }
 
-    /* Snake */
+    /* Snake styles */
     #snakeWrap {
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 100%;
       height: 100%;
-      position: relative;
     }
     #snakeCanvas {
       background: black;
       display: block;
-      margin: auto;
+      border: 2px solid white;
     }
     #gameOverOverlay {
       position: absolute;
-      top: 0; left: 0;
-      right: 0; bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.8);
       display: none;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      text-align: center;
+      color: white;
+      font-size: 2em;
       z-index: 20;
     }
-    #gameOverOverlay input {
-      margin-top: 10px;
-      padding: 6px;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      text-align: center;
-    }
-    #gameOverOverlay button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      border: none;
-      background: lime;
-      color: black;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    /* Controles de música */
-    #playerControls {
+    #controls {
       position: absolute;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       gap: 10px;
-      align-items: center;
-      z-index: 50;
+      z-index: 15;
     }
-    #playerControls button {
-      padding: 8px;
+    #controls button,
+    #controls input[type=range] {
+      font-size: 1em;
+      padding: 6px 10px;
+      border-radius: 5px;
       border: none;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      color: white;
       cursor: pointer;
-      font-size: 18px;
-    }
-    #playerControls input[type=range] {
-      width: 100px;
     }
   </style>
 </head>
 <body>
-  <!-- Carrusel -->
-  <div class="carousel-container" id="carousel">
-    <div class="slide" style="background-image:url('instagram.png')"></div>
-    <div class="slide" style="background-image:url('bookings.png')"></div>
-    <div class="slide" style="background-image:url('spotify.png')"></div>
-    <div class="slide" style="background-image:url('soundcloud.png')"></div>
-    <div class="slide" style="background-image:url('merch.png')"></div>
-    <div class="slide" style="background-image:url('youtube.png')"></div>
+  <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
+  <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
 
-    <!-- 🚀 Última slide con el Snake -->
-    <div class="slide" style="background-image:url('bandcamp.png')">
+  <div id="carousel" class="carousel-container">
+    <!-- 7 → Bandcamp -->
+    <div class="slide" style="background-image:url('bandcamp.png')">Bandcamp</div>
+    <!-- 6 → YouTube -->
+    <div class="slide" style="background-image:url('youtube.png')">YouTube</div>
+    <!-- 3 → Spotify -->
+    <div class="slide" style="background-image:url('spotify.png')">Spotify</div>
+    <!-- 4 → SoundCloud -->
+    <div class="slide" style="background-image:url('soundcloud.png')">SoundCloud</div>
+    <!-- 2 → Bookings -->
+    <div class="slide" style="background-image:url('bookings.png')">Bookings</div>
+    <!-- 1 → Instagram -->
+    <div class="slide" style="background-image:url('instagram.png')">Instagram</div>
+    <!-- Snake (última slide) -->
+    <div class="slide" style="background:black; flex-direction:column;">
       <div id="snakeWrap">
         <canvas id="snakeCanvas"></canvas>
-
-        <div id="gameOverOverlay">
-          <h2>GAME OVER</h2>
-          <p id="score">SCORE: 0</p>
-          <input type="text" id="nicknameInput" placeholder="Tu nombre...">
-          <button id="playAgainBtn">JUGAR DE NUEVO</button>
-        </div>
+      </div>
+      <div id="gameOverOverlay">
+        <div>GAME OVER</div>
+        <div id="score">SCORE: 0</div>
+        <input id="nicknameInput" placeholder="Your nickname" maxlength="20"/>
+        <button id="playAgainBtn">Play Again</button>
       </div>
     </div>
   </div>
 
-  <!-- Botones del carrusel -->
-  <button class="arrow left" onclick="scrollCarousel(-1)">&#10094;</button>
-  <button class="arrow right" onclick="scrollCarousel(1)">&#10095;</button>
-
   <!-- Controles de música -->
-  <div id="playerControls">
+  <div id="controls">
     <button id="prevBtn">⏮</button>
     <button id="playPauseBtn">▶</button>
     <button id="nextBtn">⏭</button>
-    <input id="volumeSlider" type="range" min="0" max="100" value="50">
+    <input id="volumeSlider" type="range" min="0" max="100" value="50"/>
   </div>
 
-  <!-- Iframe SoundCloud oculto -->
-  <iframe id="scPlayer" 
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/yourplaylist&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false"
-    style="display:none; width:0; height:0;">
+  <!-- SoundCloud oculto -->
+  <iframe id="scPlayer" width="0" height="0" style="display:none;"
+    scrolling="no" frameborder="no"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/123456789&color=%23ff5500&inverse=false&auto_play=false&show_user=true">
   </iframe>
-  <!-- Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- Firebase + SoundCloud -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
   <script>
@@ -226,7 +203,7 @@
     /* ======================= Snake ======================= */
     const canvas = document.getElementById("snakeCanvas");
     const ctx = canvas.getContext("2d");
-    let snake, dir, food, box, score;
+    let snake, dir, food, box, score, game;
 
     function setCanvasSize() {
       let size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
@@ -312,11 +289,15 @@
       saveScore(score);
     }
 
-    let game = setInterval(draw, 150);
+    function startGameLoop() {
+      clearInterval(game);
+      game = setInterval(draw, 150);
+    }
+    startGameLoop();
 
     document.getElementById("playAgainBtn").onclick = () => {
       initGame();
-      game = setInterval(draw, 150);
+      startGameLoop();
     };
 
     /* ======================= Firebase Ranking ======================= */
@@ -335,6 +316,17 @@
       scores.sort((a,b) => b.score - a.score);
       console.log("TOP 5:", scores);
     });
+
+    /* ======================= Bloquear scroll en Snake ======================= */
+    carousel.addEventListener("wheel", e => {
+      if (currentSlide === slides.length - 1) {
+        e.preventDefault(); // bloquea scroll en móvil/PC dentro del Snake
+      } else {
+        if (e.deltaY > 0) scrollCarousel(1);
+        else scrollCarousel(-1);
+      }
+    }, { passive: false });
   </script>
 </body>
 </html>
+
