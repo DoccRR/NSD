@@ -7,186 +7,175 @@
 <meta name="description" content="NSD aKa Noize Secret Doctrine — Official portal. Contact: info@noizesecretdoctrine.xyz">
 <meta name="color-scheme" content="dark">
 <style>
-  :root{
-    --bg:#000000;
-    --fg:#ffffff;
-    --muted:#9ca3af;   
-    --card:#0b0b0b;    
-    --card-hover:#141414;
-    --ring:#ffffff;    
-    --radius:16px;
-    --maxw:620px;
-    --red:#b30000;
-  }
+:root{
+  --bg:#000000;
+  --fg:#ffffff;
+  --muted:#9ca3af;   
+  --card:#0b0b0b;    
+  --card-hover:#141414;
+  --ring:#ffffff;    
+  --radius:16px;
+  --maxw:620px;
+  --red:#b30000;
+  --gothic:"UnifrakturCook", "Cloister Black", "Fraktur", "Times New Roman", serif;
+}
 
-  *{box-sizing:border-box;}
-  html,body{height:100%; margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans", sans-serif; background:var(--bg); color:var(--fg); overflow-x:hidden;}
-  a{color:inherit;text-decoration:none}
+/* Reset */
+*{box-sizing:border-box;}
+html,body{height:100%; margin:0; font-family: var(--gothic); background:var(--bg); color:var(--fg); overflow-x:hidden;}
+a{color:inherit;text-decoration:none}
 
-  body{
-    position:relative;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    background:#000 url('NSD.jpg') center/cover no-repeat;
-  }
+body{
+  position:relative;
+  min-height:100vh;
+  background:#000 url('NSD.jpg') center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-  .side-text-left, .side-text-right{
-    position:absolute;
-    top:0;
-    bottom:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    font-weight:700;
-    letter-spacing:0.15em;
-    color:rgba(255,255,255,0.1);
-    font-size:clamp(24px, 4vw, 48px);
-    line-height:1.5;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-  }
+/* Lateral titles */
+.side-text-left, .side-text-right{
+  position:absolute;
+  top:0;
+  bottom:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  font-weight:700;
+  letter-spacing:0.1em;
+  line-height:1.5;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color:rgba(255,255,255,0.15);
+}
+.side-text-left{ left:10px; font-size:clamp(24px, 4vw, 48px); text-align:left; }
+.side-text-right{ right:0; font-size:clamp(36px, 8vw, 120px); text-align:right; color:#fff; }
 
-  .side-text-left{ left:10px; text-align:left; }
-  .side-text-right{ right:10px; text-align:right; }
+/* Central wrapper */
+.wrap{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+  padding:0 16px 40px;
+  z-index:2;
+  width:100%;
+}
 
-  .wrap{
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
-    padding:0 16px 40px;
-    z-index:2;
-  }
+/* Links */
+.links{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  max-width:var(--maxw);
+  width:100%;
+}
 
-  .links{
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-    max-width:var(--maxw);
-    width:100%;
-  }
+.link-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:18px 18px;
+  background:var(--card);
+  border:1px solid #1f1f1f;
+  border-radius:var(--radius);
+  font-size:18px;
+  font-weight:650;
+  transition:transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.link-btn:hover{
+  background:var(--card-hover);
+  transform:translateY(-1px);
+  border-color:#2a2a2a;
+}
+.link-btn img{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+}
 
-  .link-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    padding:18px 18px;
-    background:var(--card);
-    border:1px solid #1f1f1f;
-    border-radius:var(--radius);
-    font-size:18px;
-    font-weight:650;
-    transition:transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-    box-shadow:0 0 0 0 rgba(255,255,255,0);
-  }
-  .link-btn:hover{
-    background:var(--card-hover);
-    transform:translateY(-1px);
-    border-color:#2a2a2a;
-  }
+/* Contact Dropdown */
+.dropdown{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
+  z-index:0;
+}
+.dropbtn{
+  background:var(--card);
+  color:var(--red);
+  font-weight:bold;
+  padding:10px 14px;
+  font-size:14px;
+  border-radius:var(--radius);
+  cursor:pointer;
+}
+.dropbtn:hover{
+  background:var(--card-hover);
+}
+.dropdown-content{
+  display:none;
+  flex-direction:column;
+  background:var(--card);
+  margin-top:4px;
+  border-radius:var(--radius);
+  padding:8px 12px;
+  font-size:14px;
+  text-align:center;
+  line-height:1.5;
+}
+.dropdown:hover .dropdown-content{ display:flex; }
 
-  .link-btn img{
-    width:36px;
-    height:36px;
-    border-radius:50%;
-  }
-
-  /* Contact Dropdown in corner */
-  .dropdown{
-    position:absolute;
-    top:20px;
-    right:20px;
-    display:flex;
-    flex-direction:column;
-    align-items:flex-end;
-    gap:4px;
-    z-index:1;
-  }
-  .dropbtn{
-    background:var(--card);
-    color:var(--red);
-    font-weight:bold;
-    padding:12px 16px;
-    border:1px solid #1f1f1f;
-    border-radius:var(--radius);
-    font-size:16px;
-    cursor:pointer;
-    text-align:center;
-  }
-  .dropbtn:hover{
-    background:var(--card-hover);
-  }
-  .dropdown-content{
-    display:none;
-    flex-direction:column;
-    background:var(--card);
-    margin-top:4px;
-    border-radius:var(--radius);
-    padding:12px 16px;
-    font-size:16px;
-    text-align:center;
-    line-height:1.5;
-  }
-  .dropdown:hover .dropdown-content{ display:flex; }
-
-  .footer-genres{
-    width:100%;
-    max-width:var(--maxw);
-    text-align:center;
-    color:var(--muted);
-    font-size:12px;
-    opacity:.9;
-    margin-top:12px;
-  }
-
-  .footer-records{
-    width:100%;
-    max-width:var(--maxw);
-    text-align:center;
-    color:var(--muted);
-    font-size:12px;
-    margin-top:4px;
-    letter-spacing:0.1em;
-  }
-
+/* Footer */
+.footer-genres{
+  width:100%;
+  max-width:var(--maxw);
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  opacity:.9;
+  margin-top:12px;
+}
+.footer-records{
+  width:100%;
+  max-width:var(--maxw);
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+  letter-spacing:0.1em;
+}
 </style>
 </head>
 <body>
 
-<div class="side-text-left">
-NSD
-</div>
-
-<div class="side-text-right">
-NOIZE SECRET DOCTRINE
-</div>
+<div class="side-text-left">NSD</div>
+<div class="side-text-right">NOIZE SECRET DOCTRINE</div>
 
 <main class="wrap">
   <div class="links" role="navigation" aria-label="Social & music links">
     <a class="link-btn" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener">
       <img src="bandcamp.png" alt="BUY MUSIC"> BUY MUSIC
     </a>
-
     <a class="link-btn" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener">
       <img src="spotify.png" alt="SPOTIFY"> SPOTIFY
     </a>
-
     <a class="link-btn" href="https://www.youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener">
       <img src="youtube.png" alt="YOUTUBE"> YOUTUBE
     </a>
-
     <a class="link-btn" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener">
       <img src="soundcloud.png" alt="SOUNDCLOUD"> SOUNDCLOUD
     </a>
-
     <a class="link-btn" href="https://www.instagram.com/nsd_noi/" target="_blank" rel="noopener">
       <img src="instagram.png" alt="INSTAGRAM"> INSTAGRAM
     </a>
-
     <a class="link-btn" href="https://triple6.nl/bookings/" target="_blank" rel="noopener">
       <img src="bookings.png" alt="BOOKINGS"> BOOKINGS
     </a>
@@ -203,14 +192,8 @@ NOIZE SECRET DOCTRINE
   <footer class="footer-genres">
     Hardcore, Terrorcore, Speedcore, Uptempo Hardcore
   </footer>
-
-  <div class="footer-records">
-    DOCTRINE RECORDS
-  </div>
+  <div class="footer-records">DOCTRINE RECORDS</div>
 </main>
 
-<script>
-document.getElementById('y').textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
