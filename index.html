@@ -17,24 +17,33 @@
     /* ===== Carrusel ===== */
     .carousel-container {
       display: flex;
-      overflow-x: scroll;       /* permitir scroll horizontal */
+      overflow-x: scroll;
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
       width: 100vw;
       height: 100vh;
-      position: relative; /* Para flechas */
+      position: relative;
     }
     .slide {
       flex: 0 0 100%;
       height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      scroll-snap-align: start;
+    }
+    .slide-content {
+      width: 70%;
+      height: 70%;
       background-size: cover;
       background-position: center;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 3em;
       text-shadow: 0 0 10px black;
-      scroll-snap-align: start;
     }
 
     /* Flechas */
@@ -59,7 +68,7 @@
       justify-content: center;
       align-items: center;
       width: 100%;
-      height: 100%;
+      height: 80%;
     }
     #snakeCanvas {
       background: black;
@@ -77,6 +86,14 @@
       color: white;
       font-size: 2em;
       z-index: 20;
+    }
+    #ranking {
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: center;
+      background: rgba(0,0,0,0.6);
+      padding: 6px 12px;
+      border-radius: 8px;
     }
 
     /* ===== Controles de música ===== */
@@ -106,22 +123,27 @@
 
   <!-- Carrusel -->
   <div id="carousel" class="carousel-container">
-    <div class="slide" style="background-image:url('NSD.jpg')">WELCOME</div>
-    <div class="slide" style="background-image:url('bandcamp.png')">BUY MUSIC</div>
-    <div class="slide" style="background-image:url('youtube.png')">YOUTUBE</div>
-    <div class="slide" style="background-image:url('spotify.png')">SPOTIFY</div>
-    <div class="slide" style="background-image:url('soundcloud.png')">SOUNDCLOUD</div>
-    <div class="slide" style="background-image:url('bookings.png')">BOOKINGS</div>
-    <div class="slide" style="background-image:url('instagram.png')">INSTAGRAM</div>
-    <div class="slide" style="background:black; flex-direction:column;">
-      <div id="snakeWrap">
-        <canvas id="snakeCanvas"></canvas>
-      </div>
-      <div id="gameOverOverlay">
-        <div>GAME OVER</div>
-        <div id="score">SCORE: 0</div>
-        <input id="nicknameInput" placeholder="Your nickname" maxlength="20"/>
-        <button id="playAgainBtn">Play Again</button>
+    <div class="slide"><div class="slide-content" style="background-image:url('NSD.jpg')">WELCOME</div></div>
+    <div class="slide"><div class="slide-content" style="background-image:url('bandcamp.png')">BUY MUSIC</div></div>
+    <div class="slide"><div class="slide-content" style="background-image:url('youtube.png')">YOUTUBE</div></div>
+    <div class="slide"><div class="slide-content" style="background-image:url('spotify.png')">SPOTIFY</div></div>
+    <div class="slide"><div class="slide-content" style="background-image:url('soundcloud.png')">SOUNDCLOUD</div></div>
+    <div class="slide"><div class="slide-content" style="background-image:url('bookings.png')">BOOKINGS</div></div>
+    <div class="slide"><div class="slide-content" style="background-image:url('instagram.png')">INSTAGRAM</div></div>
+
+    <!-- Snake Slide -->
+    <div class="slide">
+      <div class="slide-content" style="background:black; flex-direction:column; padding:20px; position:relative;">
+        <div id="snakeWrap">
+          <canvas id="snakeCanvas"></canvas>
+        </div>
+        <div id="ranking"></div>
+        <div id="gameOverOverlay">
+          <div>GAME OVER</div>
+          <div id="score">SCORE: 0</div>
+          <input id="nicknameInput" placeholder="Your nickname" maxlength="20"/>
+          <button id="playAgainBtn">Play Again</button>
+        </div>
       </div>
     </div>
   </div>
@@ -175,8 +197,6 @@
       behavior: "smooth"
     });
   }
-
-  // Scroll con rueda del ratón
   container.addEventListener("wheel", (e) => {
     if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){ 
       e.preventDefault();
@@ -194,7 +214,7 @@
   let scoreElement = document.getElementById("score");
 
   function resizeCanvas(){
-    let size = Math.min(window.innerWidth, window.innerHeight) - 40;
+    let size = Math.min(window.innerWidth, window.innerHeight) * 0.6;
     canvas.width = size;
     canvas.height = size;
   }
@@ -269,18 +289,13 @@
     });
   }
 
-  /* ---------------- Ranking ---------------- */
-  const rankingDiv = document.createElement("div");
-  rankingDiv.id = "ranking";
-  rankingDiv.style = "position:absolute;bottom:160px;left:50%;transform:translateX(-50%);color:white;font-size:14px;text-align:center;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:8px;max-width:90%;";
-  document.body.appendChild(rankingDiv);
-
+  /* ---------------- Ranking dentro del Snake Slide ---------------- */
   function loadRanking(){
     db.ref("scores").orderByChild("score").limitToLast(5).on("value", snapshot=>{
       let scores=[];
       snapshot.forEach(child=>{ scores.push(child.val()); });
       scores.sort((a,b)=>b.score-a.score);
-      rankingDiv.innerHTML = "<b>TOP 5 PLAYERS</b><br>" +
+      document.getElementById("ranking").innerHTML = "<b>TOP 5 PLAYERS</b><br>" +
         scores.map(s=>`${s.nickname}: ${s.score}`).join("<br>");
     });
   }
@@ -319,3 +334,4 @@
   </script>
 </body>
 </html>
+
