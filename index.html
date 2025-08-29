@@ -270,158 +270,178 @@ html,body{
 <script src="https://w.soundcloud.com/player/api.js"></script>
 
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+<script src="https://w.soundcloud.com/player/api.js"></script>
+
 <script>
-const canvas = document.getElementById("snakeCanvas");
-const ctx = canvas.getContext("2d");
-const box = 20;
-let snake = [{x: 9*box, y: 10*box}];
-let direction;
-let foods = ["N","S","D"];
-let food = {
-  x: Math.floor(Math.random()*(canvas.width/box)) * box,
-  y: Math.floor(Math.random()*(canvas.height/box)) * box,
-  letter: foods[Math.floor(Math.random()*foods.length)]
-};
-let score = 0;
-const scoreDisplay = document.getElementById("score");
-const gameOverOverlay = document.getElementById("gameOverOverlay");
-const nicknameInput = document.getElementById("nicknameInput");
-const submitScore = document.getElementById("submitScore");
-const playAgainBtn = document.getElementById("playAgainBtn");
-const rankingDiv = document.getElementById("ranking");
-
-/* ====== LocalStorage Ranking ====== */
-function loadRanking(){
-  let stored = localStorage.getItem("snakeRanking");
-  return stored ? JSON.parse(stored) : [];
+/* 🎠 Carousel */
+const carousel=document.querySelector('.carousel-container');
+function scrollCarousel(d){
+  const slideWidth=document.querySelector('.slide').offsetWidth+60;
+  carousel.scrollBy({left:slideWidth*d,behavior:'smooth'});
 }
-function saveRanking(ranking){
-  localStorage.setItem("snakeRanking", JSON.stringify(ranking));
-}
-function showRanking(){
-  let ranking = loadRanking();
-  rankingDiv.innerHTML = "<h3>Ranking</h3>";
-  ranking.slice(0,10).forEach((r,i)=>{
-    rankingDiv.innerHTML += `${i+1}. ${r.name} — ${r.score}<br>`;
-  });
-}
-
-/* ====== Controles de dirección ====== */
-document.addEventListener("keydown", event => {
-  if(event.keyCode == 37 && direction != "RIGHT") direction = "LEFT";
-  else if(event.keyCode == 38 && direction != "DOWN") direction = "UP";
-  else if(event.keyCode == 39 && direction != "LEFT") direction = "RIGHT";
-  else if(event.keyCode == 40 && direction != "UP") direction = "DOWN";
-});
-
-let touchStartX=0, touchStartY=0;
-canvas.addEventListener("touchstart", e=>{
-  const t = e.touches[0]; touchStartX = t.clientX; touchStartY = t.clientY;
-});
-canvas.addEventListener("touchend", e=>{
-  const t = e.changedTouches[0];
-  let dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
-  if(Math.abs(dx) > Math.abs(dy)){
-    if(dx > 0 && direction!="LEFT") direction="RIGHT";
-    else if(dx < 0 && direction!="RIGHT") direction="LEFT";
-  } else {
-    if(dy > 0 && direction!="UP") direction="DOWN";
-    else if(dy < 0 && direction!="DOWN") direction="UP";
-  }
-});
-
-// Bloquear scroll en móvil dentro del juego
-document.getElementById("snakeWrap").addEventListener("touchmove", e=>{
+carousel.addEventListener('wheel',e=>{
   e.preventDefault();
-},{passive:false});
+  carousel.scrollBy({left:e.deltaY,behavior:'smooth'});
+});
 
-/* ====== Colisiones ====== */
-function collision(newHead, array){
-  return array.some(s=> s.x==newHead.x && s.y==newHead.y);
-}
+/* 🐍 Snake Game */
+const canvas=document.getElementById("snakeCanvas");
+const ctx=canvas.getContext("2d");
+const scoreEl=document.getElementById("score");
+const overlay=document.getElementById("gameOverOverlay");
+const rankingEl=document.getElementById("ranking");
+const nicknameInput=document.getElementById("nicknameInput");
+const submitScoreBtn=document.getElementById("submitScore");
+const playAgainBtn=document.getElementById("playAgainBtn");
+const box=20;
+let snake,dx,dy,food,score,game;
 
-/* ====== Dibujar ====== */
-function draw(){
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // Snake
-  snake.forEach((s,i)=>{
-    ctx.fillStyle = i==0 ? "lime" : "white";
-    ctx.fillRect(s.x,s.y,box,box);
-    ctx.strokeStyle = "#000";
-    ctx.strokeRect(s.x,s.y,box,box);
-  });
-
-  // Food: letra blanca (N,S,D)
-  ctx.fillStyle = "white";
-  ctx.font = "bold 16px Orbitron, sans-serif";
-  ctx.fillText(food.letter, food.x+6, food.y+16);
-
-  // Movimiento
-  let snakeX = snake[0].x;
-  let snakeY = snake[0].y;
-  if(direction=="LEFT") snakeX -= box;
-  if(direction=="UP") snakeY -= box;
-  if(direction=="RIGHT") snakeX += box;
-  if(direction=="DOWN") snakeY += box;
-
-  // Comer food
-  if(snakeX == food.x && snakeY == food.y){
-    score++;
-    food = {
-      x: Math.floor(Math.random()*(canvas.width/box)) * box,
-      y: Math.floor(Math.random()*(canvas.height/box)) * box,
-      letter: foods[Math.floor(Math.random()*foods.length)]
-    };
-  } else {
-    snake.pop();
-  }
-
-  let newHead = {x:snakeX, y:snakeY};
-
-  // Game Over
-  if(snakeX<0 || snakeY<0 || snakeX>=canvas.width || snakeY>=canvas.height || collision(newHead,snake)){
-    clearInterval(game);
-    gameOverOverlay.style.display = "flex";
-    showRanking();
-    return;
-  }
-
-  snake.unshift(newHead);
-  scoreDisplay.textContent = "SCORE: " + score;
-}
-
-/* ====== Botones ====== */
-submitScore.addEventListener("click", ()=>{
-  let nick = nicknameInput.value.trim();
-  if(nick){
-    let ranking = loadRanking();
-    ranking.push({name:nick, score:score});
-    ranking.sort((a,b)=>b.score-a.score);
-    saveRanking(ranking);
-    showRanking();
-    nicknameInput.value = "";
+/* 🔒 Bloquear flechas navegador */
+document.addEventListener("keydown", e=>{
+  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)){
+    e.preventDefault();
   }
 });
 
-playAgainBtn.addEventListener("click", ()=>{
-  snake = [{x:9*box,y:10*box}];
-  direction = undefined;
+/* 🔥 Firebase config */
+const firebaseConfig = {
+  apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
+  authDomain: "nsdsnake.firebaseapp.com",
+  databaseURL: "https://nsdsnake-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nsdsnake",
+  storageBucket: "nsdsnake.firebasestorage.app",
+  messagingSenderId: "719565977829",
+  appId: "1:719565977829:web:94911f469efd29aa9c7c0c"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* === Snake === */
+function initGame(){
+  snake=[{x:9*box,y:10*box}];
+  dx=box;dy=0;
   score=0;
-  gameOverOverlay.style.display="none";
-  game = setInterval(draw,100);
+  scoreEl.textContent="SCORE: "+score;
+  food=randomFood();
+  overlay.style.display="none";
+  clearInterval(game);
+  game=setInterval(draw,100);
+}
+function randomFood(){
+  const letters=["N","S","D"];
+  return {
+    x:Math.floor(Math.random()*(canvas.width/box))*box,
+    y:Math.floor(Math.random()*(canvas.height/box))*box,
+    letter:letters[Math.floor(Math.random()*letters.length)]
+  };
+}
+function draw(){
+  ctx.fillStyle="#000";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#0f0";
+  snake.forEach(s=>ctx.fillRect(s.x,s.y,box,box));
+  ctx.fillStyle="#fff";
+  ctx.font="16px Orbitron, sans-serif";
+  ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillText(food.letter,food.x+box/2,food.y+box/2);
+  let head={x:snake[0].x+dx,y:snake[0].y+dy};
+  if(head.x===food.x&&head.y===food.y){
+    score++;scoreEl.textContent="SCORE: "+score;
+    food=randomFood();
+  }else snake.pop();
+  if(head.x<0||head.y<0||head.x>=canvas.width||head.y>=canvas.height||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    clearInterval(game);showGameOver();return;
+  }
+  snake.unshift(head);
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft"&&dx===0){dx=-box;dy=0;}
+  else if(e.key==="ArrowUp"&&dy===0){dx=0;dy=-box;}
+  else if(e.key==="ArrowRight"&&dx===0){dx=box;dy=0;}
+  else if(e.key==="ArrowDown"&&dy===0){dx=0;dy=box;}
+});
+let touchStartX,touchStartY;
+canvas.addEventListener("touchstart",e=>{
+  let t=e.touches[0];touchStartX=t.clientX;touchStartY=t.clientY;
+});
+canvas.addEventListener("touchend",e=>{
+  let t=e.changedTouches[0];let dxT=t.clientX-touchStartX;let dyT=t.clientY-touchStartY;
+  if(Math.abs(dxT)>Math.abs(dyT)){
+    if(dxT>0&&dx===0){dx=box;dy=0;}
+    else if(dxT<0&&dx===0){dx=-box;dy=0;}
+  }else{
+    if(dyT>0&&dy===0){dx=0;dy=box;}
+    else if(dyT<0&&dy===0){dx=0;dy=-box;}
+  }
 });
 
-/* ====== Iniciar juego ====== */
-let game = setInterval(draw,100);
-showRanking();
-
-/* ====== Carousel ====== */
-function scrollCarousel(dir){
-  const container = document.querySelector(".carousel-container");
-  container.scrollBy({left:dir*window.innerWidth*0.8, behavior:"smooth"});
+/* 🏆 Ranking con Firebase */
+function showGameOver(){overlay.style.display="flex";loadRanking();}
+submitScoreBtn.addEventListener("click",()=>{
+  const name=nicknameInput.value.trim()||"Anon";
+  db.ref("snakeRanking").push({name,score});
+  nicknameInput.value="";
+});
+function loadRanking(){
+  db.ref("snakeRanking").orderByChild("score").limitToLast(10).on("value",snap=>{
+    let data=[];snap.forEach(c=>data.unshift(c.val()));
+    rankingEl.innerHTML=data.map((r,i)=>`<div>${i+1}. ${r.name} — ${r.score}</div>`).join("");
+  });
 }
+playAgainBtn.addEventListener("click",initGame);
+initGame();
+
+/* 📱 Bloquear scroll solo cuando Snake está visible */
+const snakeSection=document.getElementById("snake");
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      document.body.style.overflow = entry.isIntersecting ? 'hidden' : '';
+    });
+  },{threshold:0.15});
+  io.observe(snakeSection);
+}else{
+  document.addEventListener("scroll",()=>{
+    const rect=snakeSection.getBoundingClientRect();
+    document.body.style.overflow = (rect.top<window.innerHeight && rect.bottom>0) ? "hidden" : "";
+  });
+}
+
+/* 🎵 SoundCloud Player (controles propios) */
+const prevBtn = document.getElementById('prevBtn');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const nextBtn = document.getElementById('nextBtn');
+const volumeSlider = document.getElementById('volumeSlider');
+
+const scIframe = document.getElementById('scPlayer');
+const scWidget = SC.Widget(scIframe);
+
+let widgetReady = false;
+let isPlaying = false;
+
+scWidget.bind(SC.Widget.Events.READY, function(){
+  widgetReady = true;
+  const vol = Math.max(0, Math.min(100, parseInt(volumeSlider.value || '80',10)));
+  scWidget.setVolume(vol);
+  scWidget.getSounds(function(sounds){
+    const multiple = Array.isArray(sounds) && sounds.length > 1;
+    prevBtn.disabled = !multiple;
+    nextBtn.disabled = !multiple;
+  });
+  playPauseBtn.disabled = false;
+  volumeSlider.disabled = false;
+});
+scWidget.bind(SC.Widget.Events.PLAY, function(){isPlaying = true;playPauseBtn.textContent = '⏸';});
+scWidget.bind(SC.Widget.Events.PAUSE, function(){isPlaying = false;playPauseBtn.textContent = '▶';});
+scWidget.bind(SC.Widget.Events.FINISH, function(){isPlaying = false;playPauseBtn.textContent = '▶';});
+playPauseBtn.addEventListener('click', function(){if(!widgetReady) return;if(isPlaying){scWidget.pause();} else {scWidget.play();}});
+prevBtn.addEventListener('click', function(){if(widgetReady) scWidget.prev();});
+nextBtn.addEventListener('click', function(){if(widgetReady) scWidget.next();});
+volumeSlider.addEventListener('input', function(e){if(widgetReady){const v=Math.max(0,Math.min(100,parseInt(e.target.value||'0',10)));scWidget.setVolume(v);}});
 </script>
+
 </body>
 </html>
