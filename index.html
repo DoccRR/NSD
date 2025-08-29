@@ -14,7 +14,6 @@
   --card:#0b0b0b;    
   --card-hover:#141414;
   --radius:16px;
-  --maxw:620px;
   --font-futuristic:"Orbitron", "Rajdhani", "Exo 2", sans-serif;
 }
 
@@ -31,16 +30,23 @@ body{
   align-items:center;
 }
 
-/* Top-right title */
-.top-title-right{
+/* Lateral left vertical title */
+.side-title-left{
   position:absolute;
-  top:10px;
-  right:10px;
+  top:0;
+  bottom:0;
+  left:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
   font-weight:900;
-  font-size:clamp(32px,5vw,64px);
+  letter-spacing:0.1em;
+  line-height:1;
+  font-size:clamp(48px, 8vw, 120px);
   color:#fff;
-  text-transform:uppercase;
-  z-index:2;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  padding-left:10px;
 }
 
 /* Central wrapper for links */
@@ -50,27 +56,32 @@ body{
   align-items:center;
   justify-content:center;
   gap:25px;
+  width:100%;
   z-index:2;
 }
 
-/* Links */
+/* Links full-width style */
 .links{
   display:flex;
   flex-direction:column;
   gap:20px;
-  align-items:center;
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
 }
 .link-btn{
   display:flex;
   align-items:center;
   gap:20px;
-  padding:18px 18px;
+  padding:20px;
   background:var(--card);
   border:1px solid #1f1f1f;
   border-radius:var(--radius);
   font-size:18px;
   font-weight:700;
-  transition:transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  transition:transform .08s ease, background .2s ease, border-color .2s ease;
+  width:100%; /* full row */
+  justify-content:flex-start;
 }
 .link-btn:hover{
   background:var(--card-hover);
@@ -78,22 +89,27 @@ body{
   border-color:#2a2a2a;
 }
 .link-btn img{
-  width:60px;
-  height:60px;
+  width:50px;
+  height:50px;
   border-radius:50%;
 }
 
 /* Footer */
-.footer-genres, .footer-records{
+.footer-genres{
   position:absolute;
-  bottom:10px;
+  bottom:25px;
   width:100%;
   text-align:center;
   font-size:12px;
   color:var(--muted);
 }
 .footer-records{
-  margin-top:4px;
+  position:absolute;
+  bottom:5px;
+  width:100%;
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
   letter-spacing:0.1em;
 }
 
@@ -104,7 +120,7 @@ body{
   align-items:center;
   gap:4px;
   position:absolute;
-  bottom:40px;
+  bottom:60px;
   width:100%;
 }
 .contact-dropbtn{
@@ -133,7 +149,7 @@ body{
 </head>
 <body>
 
-<div class="top-title-right">NOIZE SECRET DOCTRINE</div>
+<div class="side-title-left">NOIZE SECRET DOCTRINE</div>
 
 <main class="wrap">
   <div class="links" role="navigation" aria-label="Social & music links">
@@ -157,7 +173,7 @@ body{
     </a>
   </div>
 
-  <!-- Footer contact in bottom center -->
+  <!-- Footer contact -->
   <div class="contact-dropdown">
     <div class="contact-dropbtn">CONTACT</div>
     <div class="contact-content">
