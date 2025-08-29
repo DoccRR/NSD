@@ -32,15 +32,15 @@
       justify-content: center;
       align-items: center;
       scroll-snap-align: start;
+      background: rgba(0,0,0,0.4); /* un poco de overlay para que se lean bien los textos */
     }
     .slide-content {
-      width: 70%;
-      height: 70%;
+      width: 80%;
+      height: 80%;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -130,6 +130,20 @@
       border-radius: 8px;
     }
 
+    /* ===== Subtítulos generales ===== */
+    .subtitles {
+      position: absolute;
+      bottom: 80px; /* justo encima del reproductor */
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 0.8em;
+      color: #fff;
+      opacity: 0.9;
+      z-index: 20;
+      line-height: 1.4;
+    }
+
     /* ===== Controles de música ===== */
     #controls {
       position: absolute;
@@ -157,16 +171,14 @@
         font-size: 2em;
         padding: 10px;
         border-radius: 0;
-        box-shadow: none;
       }
       #snakeCanvas {
         width: 90vw;
         height: 90vw;
       }
-      #gameOverOverlay {
-        font-size: 1.5em;
-      }
+      #gameOverOverlay { font-size: 1.5em; }
       #snakeControls { display: flex; flex-direction: column; align-items: center; }
+      .subtitles { font-size: 0.7em; bottom: 70px; }
     }
   </style>
 </head>
@@ -177,7 +189,7 @@
 
   <!-- Carrusel -->
   <div id="carousel" class="carousel-container">
-    <!-- Slide con doble estado -->
+    <!-- Slides -->
     <div class="slide">
       <div id="welcomeSlide" class="slide-content" style="background-image:url('NSD.jpg')">
         WELCOME
@@ -189,6 +201,7 @@
     <div class="slide"><div class="slide-content" style="background-image:url('soundcloud.png')" onclick="window.open('https://soundcloud.com/noizesd','_blank')">SOUNDCLOUD</div></div>
     <div class="slide"><div class="slide-content" style="background-image:url('bookings.png')" onclick="window.open('https://www.triple6.nl/bookings/','_blank')">BOOKINGS</div></div>
     <div class="slide"><div class="slide-content" style="background-image:url('instagram.png')" onclick="window.open('https://www.instagram.com/nsd_noi/','_blank')">INSTAGRAM</div></div>
+    
     <!-- Snake Game -->
     <div class="slide">
       <div id="snakeWrap">
@@ -198,7 +211,6 @@
           <button onclick="restartGame()">Play Again</button>
           <div id="ranking"></div>
         </div>
-        <!-- Controles móviles -->
         <div id="snakeControls">
           <div><button onclick="direction='UP'">⬆</button></div>
           <div>
@@ -209,6 +221,12 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Subtítulos -->
+  <div class="subtitles">
+    <p>Hardcore · Speedcore · Terrorcore · Uptempo Hardcore</p>
+    <p>DOCTRINE RECORDS</p>
   </div>
 
   <!-- Controles del reproductor -->
@@ -243,7 +261,7 @@
 
   <!-- Script principal -->
   <script>
-    /* ===== Carrusel ===== */
+    /* Carrusel */
     let currentIndex = 0;
     const carousel = document.getElementById("carousel");
     const slides = document.querySelectorAll(".slide");
@@ -256,13 +274,11 @@
       });
     }
 
-    // Scroll con rueda del ratón
     window.addEventListener("wheel", (e) => {
       if (e.deltaY > 0) scrollCarousel(1);
       else scrollCarousel(-1);
     }, { passive: true });
 
-    // Scroll táctil en móvil (swipe)
     let startX = 0;
     carousel.addEventListener("touchstart", e => startX = e.touches[0].clientX);
     carousel.addEventListener("touchend", e => {
@@ -271,7 +287,7 @@
       else if (endX - startX > 50) scrollCarousel(-1);
     });
 
-    /* ===== Welcome Slide Toggle ===== */
+    /* Welcome Slide Toggle */
     const welcome = document.getElementById("welcomeSlide");
     let welcomeAlt = false;
     welcome.addEventListener("click", () => {
@@ -290,7 +306,7 @@
       }
     });
 
-    /* ===== Snake Game ===== */
+    /* Snake */
     const canvas = document.getElementById("snakeCanvas");
     const ctx = canvas.getContext("2d");
     const box = 20;
@@ -326,7 +342,6 @@
       ctx.fillStyle = "black";
       ctx.fillRect(0,0,canvas.width,canvas.height);
 
-      // Snake
       for (let i=0;i<snake.length;i++) {
         ctx.fillStyle = (i===0) ? "lime" : "white";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
@@ -334,7 +349,6 @@
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
       }
 
-      // Food
       ctx.fillStyle = "white";
       ctx.font = "20px Orbitron";
       ctx.fillText(food.type, food.x+4, food.y+16);
@@ -346,7 +360,6 @@
       if (direction === "RIGHT") snakeX += box;
       if (direction === "DOWN") snakeY += box;
 
-      // Comer
       if (snakeX === food.x && snakeY === food.y) {
         score++;
         placeFood();
@@ -356,7 +369,6 @@
 
       let newHead = { x: snakeX, y: snakeY };
 
-      // Game over
       if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height ||
           snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
         clearInterval(game);
@@ -367,7 +379,6 @@
 
       snake.unshift(newHead);
 
-      // Score
       ctx.fillStyle = "white";
       ctx.font = "20px Orbitron";
       ctx.fillText("Score: " + score, box, box);
@@ -375,7 +386,7 @@
 
     function restartGame() { init(); }
 
-    /* ===== Ranking Firebase ===== */
+    /* Ranking Firebase */
     function saveScore(score) {
       const nickname = "Player" + Math.floor(Math.random()*1000);
       db.ref("scores").push({ nickname, score }).then(loadRanking);
@@ -396,7 +407,7 @@
 
     init();
 
-    /* ===== Reproductor ===== */
+    /* Reproductor */
     let widget;
     window.addEventListener("load", () => {
       const iframe = document.getElementById("scPlayer");
@@ -411,5 +422,3 @@
   <script src="https://w.soundcloud.com/player/api.js"></script>
 </body>
 </html>
-
-
