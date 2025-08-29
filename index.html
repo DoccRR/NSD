@@ -44,7 +44,7 @@ html, body {
   background-position: center;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
   position: relative;
   overflow: hidden;
@@ -52,74 +52,56 @@ html, body {
   text-decoration: none;
 }
 .slide:hover { transform: scale(1.03); }
-.slide::after {
-  content: "";
-  position: absolute; bottom: 0; left: 0;
-  width: 100%; height: 60%;
-  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
-}
-.slide span {
-  position: relative; z-index: 2;
-  font-size: clamp(20px,3vw,32px);
-  font-weight: 900;
-  text-transform: uppercase;
-  color: var(--fg);
-  text-shadow: 0 0 10px rgba(0,0,0,0.8);
-  margin-bottom: 25px;
-}
 
-/* --- FOOTERS --- */
-.footer-genres, .footer-records {
-  position: absolute; width: 100%; text-align: center;
-  font-size: 12px; color: var(--muted);
-}
-.footer-genres { bottom: 30px; }
-.footer-records { bottom: 10px; letter-spacing: 2px; }
-
-/* --- ARROWS --- */
-.arrow {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  font-size: 40px; color: rgba(255,255,255,0.6);
-  z-index: 10; pointer-events: none;
-  animation: blink 1.5s infinite;
-  user-select: none;
-}
-.arrow.left { left: 15px; }
-.arrow.right { right: 15px; }
-@keyframes blink { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
-
-/* --- SNAKE --- */
-#snakeCanvas {
+/* --- NSDAKE --- */
+#snakeWrapper {
   width: 100%; height: 100%;
-  background: #000; display: block;
+  background: #000; display: flex;
+  justify-content: center; align-items: center;
+  flex-direction: column;
 }
-
-/* --- PLAYER --- */
-#playerControls {
-  position: fixed;
-  bottom: 70px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #000;
-  padding: 10px 20px;
-  border-radius: 30px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.7);
-  z-index: 9999;
-}
-#playerControls button {
-  background: #000; color: #fff;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 50%;
+#snakeCanvas { display: none; background:#000; }
+#playSnakeBtn {
+  background: red; color: white; font-size: 20px;
+  border: none; padding: 12px 24px;
+  border-radius: 12px; cursor: pointer;
   transition: .2s;
 }
-#playerControls button:hover { transform: scale(1.2); }
-#volume { width: 80px; }
+#playSnakeBtn:hover { transform: scale(1.1); }
+
+/* --- Game Over --- */
+#gameOverScreen {
+  display: none;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+#gameOverScreen input {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+}
+#gameOverScreen button {
+  background: red;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#ranking {
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: left;
+}
 </style>
 </head>
 <body>
@@ -133,13 +115,6 @@ html, body {
   <div class="slide" style="background-image:url('NSD.jpg')">
     <span>WELCOME</span>
   </div>
-
-  <a class="slide" href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" 
-     target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')">
-    <span>MERCHANDISING</span>
-  </a>
-
-  <div class="slide"><canvas id="snakeCanvas"></canvas></div>
 
   <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener noreferrer" style="background-image:url('bandcamp.png')">
     <span>BUY MUSIC</span>
@@ -159,24 +134,31 @@ html, body {
   <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')">
     <span>BOOKINGS</span>
   </a>
+
+  <!-- MERCH -->
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')">
+    <span>MERCHANDISING</span>
+  </a>
+
+  <!-- NSDAKE GAME -->
+  <div class="slide">
+    <div id="snakeWrapper">
+      <button id="playSnakeBtn">PLAY NSDAKE</button>
+      <canvas id="snakeCanvas"></canvas>
+      <div id="gameOverScreen">
+        <h2>GAME OVER</h2>
+        <p>Your Score: <span id="finalScore"></span></p>
+        <input id="nickname" placeholder="Enter nickname">
+        <button id="saveScore">Save Score</button>
+        <div id="ranking"></div>
+      </div>
+    </div>
+  </div>
 </main>
 
-<!-- Footers -->
+<!-- FOOTER -->
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
-
-<!-- Hidden SoundCloud -->
-<iframe id="scPlayer" width="0" height="0" scrolling="no" frameborder="no" allow="autoplay"
-  src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
-</iframe>
-
-<!-- Player Controls -->
-<div id="playerControls">
-  <button id="prevBtn">⏮</button>
-  <button id="playBtn">▶</button>
-  <button id="nextBtn">⏭</button>
-  <input type="range" id="volume" min="0" max="100" value="50">
-</div>
 
 <script>
 /* --- CAROUSEL --- */
@@ -191,26 +173,34 @@ container.addEventListener('wheel', e=>{
   e.preventDefault();
   container.scrollBy({left: e.deltaY, behavior:"smooth"});
 }, {passive:false});
-window.addEventListener("keydown", e=>{
-  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.code)) e.preventDefault();
-}, {passive:false});
 
-/* --- SNAKE GAME --- */
+/* --- NSDAKE GAME --- */
 const canvas = document.getElementById('snakeCanvas');
 const ctx = canvas.getContext('2d');
-let box = 20, snake, dir, food, game;
+const playBtn = document.getElementById('playSnakeBtn');
+const gameOverScreen = document.getElementById('gameOverScreen');
+const finalScoreEl = document.getElementById('finalScore');
+const saveBtn = document.getElementById('saveScore');
+const rankingEl = document.getElementById('ranking');
+
+let box = 20, snake, dir, food, game, score=0;
 
 function init() {
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+  canvas.width = 400; // fijo para simplicidad
+  canvas.height = 400;
   snake = [{x:9*box,y:10*box}];
   dir = null;
-  food = {
-    x: Math.floor(Math.random()*(canvas.width/box))*box,
-    y: Math.floor(Math.random()*(canvas.height/box))*box
-  };
+  score = 0;
+  food = randomFood();
   clearInterval(game);
   game = setInterval(draw,150);
+}
+
+function randomFood(){
+  return {
+    x: Math.floor(Math.random()*(canvas.width/box))*box,
+    y: Math.floor(Math.random()*(canvas.height/box))*box
+  }
 }
 
 function draw() {
@@ -222,7 +212,6 @@ function draw() {
     ctx.fillRect(snake[i].x,snake[i].y,box-2,box-2);
   }
 
-  // comida (mini NSD en rojo)
   ctx.fillStyle="#f00";
   ctx.beginPath();
   ctx.arc(food.x+box/2, food.y+box/2, box/2.5, 0, 2*Math.PI);
@@ -235,17 +224,16 @@ function draw() {
   if(dir=="DOWN") headY+=box;
 
   if(headX==food.x && headY==food.y) {
-    food={
-      x: Math.floor(Math.random()*(canvas.width/box))*box,
-      y: Math.floor(Math.random()*(canvas.height/box))*box
-    };
+    food=randomFood();
+    score++;
   } else {
     snake.pop();
   }
 
   let newHead={x:headX,y:headY};
   if(headX<0 || headY<0 || headX>=canvas.width || headY>=canvas.height || collision(newHead,snake)) {
-    init(); return;
+    gameOver();
+    return;
   }
   snake.unshift(newHead);
 }
@@ -257,42 +245,48 @@ function collision(h,array) {
   return false;
 }
 
+/* GAME FLOW */
+function gameOver(){
+  clearInterval(game);
+  finalScoreEl.textContent = score;
+  gameOverScreen.style.display="flex";
+}
+
+/* Ranking */
+function saveScore(){
+  const nick=document.getElementById('nickname').value || "Anon";
+  let scores=JSON.parse(localStorage.getItem("nsdakeScores"))||[];
+  scores.push({nick,score});
+  scores.sort((a,b)=>b.score-a.score);
+  scores=scores.slice(0,5);
+  localStorage.setItem("nsdakeScores",JSON.stringify(scores));
+  showRanking(scores);
+}
+
+function showRanking(scores){
+  rankingEl.innerHTML="<h3>TOP 5</h3><ol>"+scores.map(s=>`<li>${s.nick} — ${s.score}</li>`).join("")+"</ol>";
+}
+
+saveBtn.addEventListener("click",()=>{
+  saveScore();
+  gameOverScreen.style.display="none";
+  canvas.style.display="none";
+  playBtn.style.display="block";
+});
+
+/* Start game */
+playBtn.addEventListener("click",()=>{
+  playBtn.style.display="none";
+  canvas.style.display="block";
+  gameOverScreen.style.display="none";
+  init();
+});
+
 document.addEventListener("keydown",e=>{
   if(e.code=="ArrowLeft" && dir!="RIGHT") dir="LEFT";
   if(e.code=="ArrowUp" && dir!="DOWN") dir="UP";
   if(e.code=="ArrowRight" && dir!="LEFT") dir="RIGHT";
   if(e.code=="ArrowDown" && dir!="UP") dir="DOWN";
-});
-canvas.addEventListener("click",()=>{
-  const d=["LEFT","UP","RIGHT","DOWN"];
-  dir=d[(d.indexOf(dir)+1)%4]||"RIGHT";
-});
-window.addEventListener('resize',init);
-init();
-
-/* --- SOUNDPLAYER --- */
-const scPlayer = document.getElementById('scPlayer');
-let isPlaying = false;
-function post(action,value){
-  scPlayer.contentWindow.postMessage(JSON.stringify(
-    value ? {method:action,value} : {method:action}
-  ), '*');
-}
-document.getElementById('playBtn').addEventListener('click',()=>{
-  if(!isPlaying){
-    post('play');
-    isPlaying=true;
-    playBtn.textContent="⏸";
-  } else {
-    post('pause');
-    isPlaying=false;
-    playBtn.textContent="▶";
-  }
-});
-document.getElementById('nextBtn').addEventListener('click',()=>post('next'));
-document.getElementById('prevBtn').addEventListener('click',()=>post('prev'));
-document.getElementById('volume').addEventListener('input',e=>{
-  post('setVolume', parseInt(e.target.value));
 });
 </script>
 </body>
