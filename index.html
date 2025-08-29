@@ -10,9 +10,9 @@
 :root{
   --bg:#000000;
   --fg:#ffffff;
-  --muted:#9ca3af;   
-  --card:#d1d1d1;    
-  --card-text:#000000; 
+  --muted:#9ca3af;
+  --card:#d1d1d1;
+  --card-text:#000000;
   --card-hover:#bdbdbd;
   --radius:16px;
   --font-futuristic:"Orbitron", "Rajdhani", "Exo 2", sans-serif;
@@ -20,7 +20,7 @@
 
 /* Reset */
 *{box-sizing:border-box;}
-html,body{height:100%; margin:0; font-family: var(--font-futuristic); background:var(--bg); color:var(--fg); overflow-x:hidden;}
+html,body{height:100%; margin:0; font-family: var(--font-futuristic); background:var(--bg); color:var(--fg);}
 body{
   position:relative;
   min-height:100vh;
@@ -28,6 +28,7 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+  overflow-x:hidden;
 }
 
 /* Top-right title */
@@ -40,7 +41,6 @@ body{
   color:#fff;
   text-transform:uppercase;
   z-index:2;
-  text-align:right;
   white-space: nowrap;
 }
 
@@ -57,50 +57,52 @@ body{
   white-space: nowrap;
 }
 
-/* Central wrapper for links */
-.wrap{
+/* Carousel container */
+.carousel-container{
+  position:relative;
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  padding: 20px 0;
+  z-index:2;
+}
+
+.carousel{
+  display:flex;
+  overflow-x:auto;
+  gap:20px;
+  scroll-snap-type: x mandatory;
+  padding-bottom:20px;
+}
+
+.slide{
+  flex:0 0 auto;
+  width:180px;
+  height:220px;
+  scroll-snap-align:start;
+  background:var(--card);
+  border-radius:var(--radius);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:20px;
-  width:100%;
-  z-index:2;
-  padding:0 10px;
+  transition: transform .2s ease;
 }
-
-/* Links full-width style */
-.links{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-  width:100%;
-  max-width:1200px;
-  margin:0 auto;
+.slide:hover{
+  transform:translateY(-3px);
 }
-.link-btn{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  padding:25px; 
-  background:var(--card);
-  color:var(--card-text);
-  border-radius:var(--radius);
-  font-size:20px; 
-  font-weight:700;
-  width:100%;
-  justify-content:center; 
-  text-decoration:none; 
-  transition: transform .08s ease, background .2s ease;
-}
-.link-btn:hover{
-  background:var(--card-hover);
-  transform:translateY(-1px);
-}
-.link-btn img{
-  width:50px;
-  height:50px;
+.slide img{
+  width:80px;
+  height:80px;
   border-radius:50%;
+  margin-bottom:10px;
+}
+.slide span{
+  font-weight:700;
+  color:var(--card-text);
+  text-align:center;
+  font-size:18px;
+  text-transform:uppercase;
 }
 
 /* Footer texts */
@@ -127,13 +129,16 @@ body{
   .top-title-right, .bottom-title-left{
     font-size:clamp(24px,8vw,40px);
   }
-  .link-btn{
-    padding:20px;
-    font-size:18px;
+  .slide{
+    width:140px;
+    height:180px;
   }
-  .link-btn img{
-    width:40px;
-    height:40px;
+  .slide img{
+    width:60px;
+    height:60px;
+  }
+  .slide span{
+    font-size:16px;
   }
 }
 </style>
@@ -143,33 +148,51 @@ body{
 <div class="top-title-right">NOIZE SECRET DOCTRINE</div>
 <div class="bottom-title-left">NSD</div>
 
-<main class="wrap">
-  <div class="links" role="navigation" aria-label="Social & music links">
-    <a class="link-btn" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener">
-      <img src="bandcamp.png" alt="BUY MUSIC"> BUY MUSIC
-    </a>
-    <a class="link-btn" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener">
-      <img src="spotify.png" alt="SPOTIFY"> SPOTIFY
-    </a>
-    <a class="link-btn" href="https://www.youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener">
-      <img src="youtube.png" alt="YOUTUBE"> YOUTUBE
-    </a>
-    <a class="link-btn" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener">
-      <img src="soundcloud.png" alt="SOUNDCLOUD"> SOUNDCLOUD
-    </a>
-    <a class="link-btn" href="https://www.instagram.com/nsd_noi/" target="_blank" rel="noopener">
-      <img src="instagram.png" alt="INSTAGRAM"> INSTAGRAM
-    </a>
-    <a class="link-btn" href="https://triple6.nl/bookings/" target="_blank" rel="noopener">
-      <img src="bookings.png" alt="BOOKINGS"> BOOKINGS
-    </a>
+<main class="carousel-container">
+  <div class="carousel" role="navigation" aria-label="Social & music links">
+    <div class="slide">
+      <a href="https://noizesecretdoctrine.bandcamp.com" target="_blank">
+        <img src="bandcamp.png" alt="BUY MUSIC">
+        <span>BUY MUSIC</span>
+      </a>
+    </div>
+    <div class="slide">
+      <a href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank">
+        <img src="spotify.png" alt="SPOTIFY">
+        <span>SPOTIFY</span>
+      </a>
+    </div>
+    <div class="slide">
+      <a href="https://www.youtube.com/@noizesecretdoctrine" target="_blank">
+        <img src="youtube.png" alt="YOUTUBE">
+        <span>YOUTUBE</span>
+      </a>
+    </div>
+    <div class="slide">
+      <a href="https://soundcloud.com/noizesd" target="_blank">
+        <img src="soundcloud.png" alt="SOUNDCLOUD">
+        <span>SOUNDCLOUD</span>
+      </a>
+    </div>
+    <div class="slide">
+      <a href="https://www.instagram.com/nsd_noi/" target="_blank">
+        <img src="instagram.png" alt="INSTAGRAM">
+        <span>INSTAGRAM</span>
+      </a>
+    </div>
+    <div class="slide">
+      <a href="https://triple6.nl/bookings/" target="_blank">
+        <img src="bookings.png" alt="BOOKINGS">
+        <span>BOOKINGS</span>
+      </a>
+    </div>
   </div>
-
-  <footer class="footer-genres">
-    Hardcore, Terrorcore, Speedcore, Uptempo Hardcore
-  </footer>
-  <div class="footer-records">DOCTRINE RECORDS</div>
 </main>
+
+<footer class="footer-genres">
+  Hardcore, Terrorcore, Speedcore, Uptempo Hardcore
+</footer>
+<div class="footer-records">DOCTRINE RECORDS</div>
 
 </body>
 </html>
