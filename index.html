@@ -16,7 +16,6 @@
   --ring:#ffffff;    
   --radius:16px;
   --maxw:620px;
-  --red:#b30000;
   --font-futuristic:"Orbitron", "Rajdhani", "Exo 2", sans-serif;
 }
 
@@ -88,8 +87,8 @@ body{
 .link-btn{
   display:flex;
   align-items:center;
-  justify-content:center;
-  gap:14px;
+  justify-content:flex-start; /* icon on the left */
+  gap:20px; /* space between icon and text */
   padding:18px 18px;
   background:var(--card);
   border:1px solid #1f1f1f;
@@ -104,8 +103,8 @@ body{
   border-color:#2a2a2a;
 }
 .link-btn img{
-  width:42px;
-  height:42px;
+  width:52px; /* más grande */
+  height:52px;
   border-radius:50%;
 }
 
