@@ -23,8 +23,6 @@ html,body{
   background: url("fondo.png") no-repeat center center fixed;
   background-size: cover;
 }
-
-/* Fondo oscurecido sutil encima de la imagen */
 body::before {
   content:"";
   position:fixed;
@@ -63,7 +61,6 @@ body::before {
   overflow:hidden;
   transition:transform .3s ease;
   text-decoration:none;
-  cursor:pointer;
 }
 .slide:hover{transform:scale(1.03);}
 
@@ -113,42 +110,51 @@ body::before {
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
 
-/* Overlay para Welcome */
+/* Overlay "second page" */
 .overlay{
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.92);
+  top:0; left:0;
+  width:100%; height:100%;
+  background:var(--bg);
   color:var(--fg);
-  display:none;
+  display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
-  padding:40px;
-  z-index:100;
+  font-family:var(--font-futuristic);
+  z-index:999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s ease;
 }
-.overlay.active{display:flex;}
+.overlay.active{
+  opacity:1;
+  pointer-events:auto;
+}
 .overlay h1{
-  font-size:clamp(24px,4vw,40px);
+  font-size:clamp(22px,4vw,40px);
   margin-bottom:20px;
 }
 .overlay p{
   font-size:clamp(16px,3vw,22px);
-  margin-top:10px;
   color:var(--muted);
 }
 .overlay button{
-  margin-top:30px;
+  margin-top:40px;
+  background:none;
+  border:1px solid var(--fg);
+  color:var(--fg);
+  font-size:16px;
   padding:10px 20px;
-  border:none;
-  border-radius:8px;
-  background:#fff;
-  color:#000;
-  font-weight:700;
+  border-radius:10px;
   cursor:pointer;
-  transition:background .2s;
+  transition:background .2s,color .2s;
 }
-.overlay button:hover{background:#ddd;}
+.overlay button:hover{
+  background:var(--fg);
+  color:var(--bg);
+}
 </style>
 </head>
 <body>
@@ -158,8 +164,8 @@ body::before {
 <div class="arrow right">❯</div>
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- Slide principal (WELCOME abre la "página interna") -->
-  <div class="slide welcome-slide" style="background-image:url('NSD.jpg')">
+  <!-- Slide principal que abre overlay -->
+  <div class="slide" id="welcomeSlide" style="background-image:url('NSD.jpg')">
     <span>WELCOME</span>
   </div>
 
@@ -193,19 +199,15 @@ body::before {
 <div class="overlay" id="welcomeOverlay">
   <h1>This is NSD aKa Noize Secret Doctrine official website.</h1>
   <p>Underground crew.</p>
-  <button id="closeOverlay">Close</button>
+  <button id="closeOverlay">⟵ Back</button>
 </div>
 
 <script>
-// referencias
+// scroll con flechas
 const container = document.querySelector('.carousel-container');
 const leftArrow = document.querySelector('.arrow.left');
 const rightArrow = document.querySelector('.arrow.right');
-const welcomeSlide = document.querySelector('.welcome-slide');
-const overlay = document.getElementById('welcomeOverlay');
-const closeOverlay = document.getElementById('closeOverlay');
 
-// scroll con flechas
 function getScrollAmount(){
   const slide = container.querySelector('.slide');
   return slide ? slide.offsetWidth + 60 : 400;
@@ -226,12 +228,16 @@ container.addEventListener('wheel', (e) => {
   });
 }, { passive: false });
 
-// abrir/cerrar overlay
-welcomeSlide.addEventListener('click', () => {
-  overlay.classList.add('active');
+// overlay welcome
+const welcomeSlide = document.getElementById("welcomeSlide");
+const overlay = document.getElementById("welcomeOverlay");
+const closeOverlay = document.getElementById("closeOverlay");
+
+welcomeSlide.addEventListener("click", () => {
+  overlay.classList.add("active");
 });
-closeOverlay.addEventListener('click', () => {
-  overlay.classList.remove('active');
+closeOverlay.addEventListener("click", () => {
+  overlay.classList.remove("active");
 });
 </script>
 
