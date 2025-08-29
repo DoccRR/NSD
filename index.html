@@ -29,7 +29,7 @@ body::before {
   content:"";
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.55); /* oscurece la imagen de fondo */
+  background:rgba(0,0,0,0.55);
   z-index:-1;
 }
 
@@ -40,6 +40,7 @@ body::before {
   scroll-snap-type:x mandatory;
   width:100vw; height:100vh;
   padding:40px 0;
+  scroll-behavior:smooth; /* importante para scroll suave */
 }
 .carousel-container::-webkit-scrollbar{display:none;}
 .carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
@@ -103,17 +104,13 @@ body::before {
   font-size:40px;
   color:rgba(255,255,255,0.6);
   z-index:10;
-  pointer-events:none;
-  animation:blink 1.5s infinite;
+  cursor:pointer;
   user-select:none;
+  transition:color .2s;
 }
+.arrow:hover{color:#fff;}
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
-
-@keyframes blink{
-  0%,100%{opacity:0.4;}
-  50%{opacity:1;}
-}
 </style>
 </head>
 <body>
@@ -153,6 +150,27 @@ body::before {
   Hardcore, Terrorcore, Speedcore, Uptempo Hardcore
 </footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
+
+<script>
+// hacer que las flechas scrolleen
+const container = document.querySelector('.carousel-container');
+const leftArrow = document.querySelector('.arrow.left');
+const rightArrow = document.querySelector('.arrow.right');
+
+function getScrollAmount(){
+  // Desplaza aproximadamente el ancho de un slide
+  const slide = container.querySelector('.slide');
+  return slide ? slide.offsetWidth + 60 : 400; // 60 = margen horizontal
+}
+
+leftArrow.addEventListener('click', () => {
+  container.scrollBy({left:-getScrollAmount(), behavior:'smooth'});
+});
+
+rightArrow.addEventListener('click', () => {
+  container.scrollBy({left:getScrollAmount(), behavior:'smooth'});
+});
+</script>
 
 </body>
 </html>
