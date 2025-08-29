@@ -18,58 +18,38 @@
     }
 
     *{box-sizing:border-box;}
-    html,body{height:100%;}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
-      background:var(--bg);
-      color:var(--fg);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-    }
+    html,body{height:100%; margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol"; color:var(--fg); background:var(--bg); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
     a{color:inherit;text-decoration:none;}
 
+    /* Fondo full screen con logo */
+    body {
+      background: url('NSD.jpg') center center / cover no-repeat;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .overlay {
+      position: absolute;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.7); /* oscurece un poco para contraste del texto */
+      z-index:0;
+    }
+
     .wrap{
-      min-height:100%;
+      position: relative;
+      z-index:1;
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:28px;
       padding:0 16px 56px;
-    }
-
-    /* Letterboxed logo */
-    .hero{
-      width:100%;
-      background:#000;
-      overflow:hidden;
-      position:relative;
-      height:320px; /* ajusta según quieras más grande */
-    }
-    .hero img{
-      display:block;
-      width:100%;
-      height:auto;
-      object-fit:cover;       /* ocupa todo el ancho */
-      object-position:center;  /* centra verticalmente la imagen */
-      min-height:100%;
-    }
-    .hero::before, .hero::after{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      height:30px; /* altura de la barra negra tipo cine */
-      background:#000;
-      z-index:2;
-    }
-    .hero::before{top:0;}
-    .hero::after{bottom:0;}
-
-    .title{
       width:100%;
       max-width:var(--maxw);
-      margin:0 auto;
+    }
+
+    .title{
       text-align:center;
       font-weight:800;
       letter-spacing:.06em;
@@ -81,8 +61,6 @@
     /* Links con iconos redondos */
     .links{
       width:100%;
-      max-width:var(--maxw);
-      margin:8px auto 0;
       display:flex;
       flex-direction:column;
       gap:14px;
@@ -114,8 +92,8 @@
     .emoji img{
       width:40px;
       height:40px;
-      border-radius:50%;        /* redondo */
-      object-fit:cover;         /* centra la parte central */
+      border-radius:50%;
+      object-fit:cover;
     }
 
     .hint{
@@ -127,48 +105,44 @@
 
     footer{
       width:100%;
-      max-width:var(--maxw);
-      margin:10px auto 0;
       text-align:center;
       color:var(--muted);
       font-size:12px;
       opacity:.9;
+      margin-top:20px;
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
+  <div class="overlay"></div>
 
-    <!-- Logo principal -->
-    <section class="hero" aria-label="Logo">
-      <img src="NSD.jpg" alt="NOIZE SECRET DOCTRINE — Logo">
-    </section>
+  <main class="wrap">
 
     <h1 class="title">NOIZE SECRET DOCTRINE</h1>
 
     <div class="links" role="navigation" aria-label="Social & music links">
 
-      <a class="link-btn" href="https://bandcamp.com/" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener">
         <span class="emoji"><img src="bandcamp.png" alt="BUY MUSIC"></span> BUY MUSIC
       </a>
 
-      <a class="link-btn" href="https://open.spotify.com/" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener">
         <span class="emoji"><img src="spotify.png" alt="SPOTIFY"></span> SPOTIFY
       </a>
 
-      <a class="link-btn" href="https://www.youtube.com/" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener">
         <span class="emoji"><img src="youtube.png" alt="YOUTUBE"></span> YOUTUBE
       </a>
 
-      <a class="link-btn" href="https://soundcloud.com/" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener">
         <span class="emoji"><img src="soundcloud.png" alt="SOUNDCLOUD"></span> SOUNDCLOUD
       </a>
 
-      <a class="link-btn" href="https://www.instagram.com/" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://instagram.com/nsd_noi/" target="_blank" rel="noopener">
         <span class="emoji"><img src="instagram.png" alt="INSTAGRAM"></span> INSTAGRAM
       </a>
 
-      <a class="link-btn" href="#" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://triple6.nl/bookings/" target="_blank" rel="noopener">
         <span class="emoji"><img src="bookings.png" alt="BOOKINGS"></span> BOOKINGS
       </a>
 
