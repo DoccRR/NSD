@@ -391,16 +391,24 @@ function saveScore(){
   const nickname = (nicknameInput.value || "Anon").slice(0,20);
   const safeScore = Math.max(0, Math.min(9999, Number(score)||0));
 
+  console.log("👉 Intentando guardar:", { nickname, safeScore });
+
   submitScoreBtn.disabled = true;
   rankErrorEl.textContent = "";
 
   return db.ref("scores").push({ nickname, score: safeScore })
-    .then(()=>{ nicknameInput.value=""; })
+    .then(()=>{
+      console.log("✅ Guardado con éxito en Firebase");
+      nicknameInput.value="";
+    })
     .catch(err=>{
       rankErrorEl.textContent = "Error saving score: " + err.message;
-      console.error('[SaveScore] ', err);
+      console.error('❌ [SaveScore] ', err);
     })
-    .finally(()=>{ submitScoreBtn.disabled = false; });
+    .finally(()=>{
+      submitScoreBtn.disabled = false;
+    });
+}
 }
 
 // Helpers
@@ -520,6 +528,7 @@ volumeSlider.addEventListener('input', function(e){
 
 </body>
 </html>
+
 
 
 
