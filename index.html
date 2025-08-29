@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -9,7 +9,7 @@
 <style>
 :root{
   --bg:#000;
-  --fg:#fff;             
+  --fg:#fff;
   --muted:#aaa;
   --radius:20px;
   --font-futuristic:"Orbitron","Rajdhani","Exo 2",sans-serif;
@@ -20,7 +20,7 @@
 html,body{
   height:100%; margin:0; font-family:var(--font-futuristic);
   background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
-  color:var(--fg); overflow:hidden;
+  color:var(--fg); overflow-x:hidden;
 }
 
 /* Carousel */
@@ -34,7 +34,7 @@ html,body{
 .carousel-container::-webkit-scrollbar{display:none;}
 .carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
 
-/* Slides */
+/* Slides generales */
 .slide{
   flex:0 0 80%;
   max-width:800px;
@@ -73,7 +73,7 @@ html,body{
 }
 .slide.welcome::after{content:none;}
 
-/* Snake grande */
+/* Snake slide */
 .slide.snake-slide{
   flex:0 0 95%;
   max-width:1200px;
@@ -105,40 +105,35 @@ html,body{
   display:block;
   width:100%; max-width:1000px;
   height:auto; background:#000;
-  aspect-ratio:1/1;
+  border:2px solid var(--accent);
+  border-radius:10px;
 }
+
+/* Snake UI */
 .snake-ui{font-size:12px; color:var(--muted); text-align:center;}
 .score{
   position:absolute; top:10px; left:10px;
   font-size:14px; color:#bbb;
   background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
 }
-.lives{
-  position:absolute; top:10px; right:10px;
-  font-size:14px; color:#bbb;
-  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
-}
 
-/* Game Over overlay */
-#gameOverScreen{
-  position:absolute; inset:0;
+/* Overlay Game Over */
+#gameOverOverlay{
+  position:absolute;
+  inset:0;
   background:rgba(0,0,0,0.9);
-  display:none; flex-direction:column;
-  justify-content:center; align-items:center;
-  text-align:center; padding:20px; z-index:10;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  z-index:10;
 }
-#gameOverScreen h2{font-size:2rem; color:var(--accent);}
-#gameOverScreen input{
-  margin:10px 0; padding:6px 12px;
-  border-radius:8px; border:none; font-size:1rem;
-}
-#gameOverScreen button{
-  margin-top:8px; padding:8px 16px;
-  background:var(--accent); color:#fff; border:none; border-radius:6px;
-  font-size:1rem; cursor:pointer;
-}
-#ranking{margin-top:15px; font-size:0.9rem; color:#fff; text-align:left;}
-#ranking li{margin:4px 0;}
+#gameOverOverlay h2{font-size:2rem; margin-bottom:15px;}
+#nicknameInput{padding:8px; margin:10px; font-size:16px; border-radius:6px;}
+#submitScore{padding:8px 16px; background:var(--accent); border:none; color:#fff; font-weight:bold; border-radius:6px; cursor:pointer;}
+#ranking{margin-top:20px; text-align:left;}
 
 /* Footer */
 .footer-genres, .footer-records{
@@ -160,8 +155,27 @@ html,body{
 .arrow.left{left:15px;} .arrow.right{right:15px;}
 @keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
 
-/* Hidden Soundcloud iframe */
-#scPlayer{display:none;}
+/* Responsive Snake */
+@media(max-width:768px){
+  .slide.snake-slide{
+    flex:0 0 100%;
+    max-width:100%;
+    height:100vh;
+    border-radius:0;
+  }
+  #snakeWrap{border-radius:0; border:none; padding:0;}
+  #snakeCanvas{width:90vw; height:90vw; max-width:400px; max-height:400px;}
+  .snake-ui{position:absolute; bottom:60px; font-size:14px;}
+}
+
+@media(min-width:768px){
+  #snakeCanvas{
+    width:80vw;
+    height:45vw;
+    max-width:800px;
+    max-height:450px;
+  }
+}
 
 /* Player Controls */
 #playerControls{
@@ -182,14 +196,6 @@ html,body{
   font-size:20px; cursor:pointer;
 }
 #volumeSlider{width:100px;}
-
-/* 📱 Responsive */
-@media(max-width:768px){
-  .slide.snake-slide{flex:0 0 100%; max-width:100%; height:100vh; border-radius:0;}
-  #snakeWrap{border-radius:0; border:none; padding:0;}
-  #snakeCanvas{width:100vw; height:100vh; max-width:none; aspect-ratio:auto;}
-  .snake-ui{position:absolute; bottom:60px; font-size:14px;}
-}
 </style>
 </head>
 <body>
@@ -207,51 +213,47 @@ html,body{
   <!-- Enlaces -->
   <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
   <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
-  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" style="background-image:url('soundcloud.png')"><span>SOUNDCLOUD</span></a>
   <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
   <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
   <a class="slide" href="https://triple6.nl/bookings/" target="_blank" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
   <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
-  <!-- SNAKE -->
+  <!-- Snake -->
   <div class="slide snake-slide">
-    <div class="play-inner">
+    <div class="play-inner" id="snake">
       <div id="snakeWrap">
         <div class="score" id="score">SCORE: 0</div>
-        <div class="lives" id="lives">LIVES: 2</div>
         <canvas id="snakeCanvas" width="400" height="400"></canvas>
-        <div id="gameOverScreen">
-          <h2>GAME OVER</h2>
+        <div id="gameOverOverlay">
+          <h2>NSD TOP FREAKS</h2>
           <p>TOP NSD FREAKS:</p>
-          <input type="text" id="nickname" placeholder="Enter nickname" maxlength="12">
-          <button onclick="saveScore()">Save Score</button>
-          <ul id="ranking"></ul>
-          <button onclick="reset(true)">Play Again</button>
+          <div id="ranking"></div>
+          <input type="text" id="nicknameInput" placeholder="Enter nickname">
+          <button id="submitScore">Save Score</button>
         </div>
       </div>
-      <div class="snake-ui">Mueve con flechas o deslizando el dedo en pantalla</div>
+      <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
     </div>
   </div>
 </main>
 
-<footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
-<div class="footer-records">DOCTRINE RECORDS</div>
-
-<!-- Hidden Soundcloud -->
-<iframe id="scPlayer" width="100%" height="166" scrolling="no" frameborder="no"
-  src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23e60000&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
-</iframe>
-
 <!-- Player Controls -->
 <div id="playerControls">
   <button id="prevBtn">⏮</button>
-  <button id="playPauseBtn"><span>▶</span></button>
+  <button id="playPauseBtn">▶</button>
   <button id="nextBtn">⏭</button>
   <input type="range" id="volumeSlider" min="0" max="100" value="80">
 </div>
 
+<footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
+<div class="footer-records">DOCTRINE RECORDS</div>
+
+<!-- SoundCloud Widget (hidden) -->
+<iframe id="scPlayer" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false" style="display:none;"></iframe>
 <script src="https://w.soundcloud.com/player/api.js"></script>
+
 <script>
+/* Carousel */
 const carousel=document.querySelector('.carousel-container');
 function scrollCarousel(d){
   const slideWidth=document.querySelector('.slide').offsetWidth+60;
@@ -262,29 +264,26 @@ carousel.addEventListener('wheel',e=>{
   carousel.scrollBy({left:e.deltaY,behavior:'smooth'});
 });
 
-/* === Snake === */
-const canvas=document.getElementById('snakeCanvas');
-const ctx=canvas.getContext('2d');
+/* Snake Game */
+const canvasEl=document.getElementById('snakeCanvas');
+const ctx=canvasEl.getContext('2d');
 const scoreEl=document.getElementById('score');
-const livesEl=document.getElementById('lives');
-const gameOverScreen=document.getElementById('gameOverScreen');
+const overlay=document.getElementById('gameOverOverlay');
 const rankingEl=document.getElementById('ranking');
+const nicknameInput=document.getElementById('nicknameInput');
+const submitScoreBtn=document.getElementById('submitScore');
 const GRID=20,SPEED=140;
-const W=canvas.width,H=canvas.height;
+const W=canvasEl.width,H=canvasEl.height;
 const CELL=W/GRID;
-let snake,dir,food,running,score,pendingDir,gameLoop,lives=2;
-let highScores=[];
+let snake,dir,food,score,pendingDir,gameLoop,lives=2;
+let ranking=[];
 
-function reset(full=false){
-  if(full) lives=2;
-  gameOverScreen.style.display="none";
+function resetSnake(){
   snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
-  dir={x:1,y:0}; pendingDir=null; score=0; placeFood(); running=true;
-  scoreEl.textContent="SCORE: 0";
-  livesEl.textContent="LIVES: "+lives;
+  dir={x:1,y:0}; pendingDir=null; score=0; placeFood(); overlay.style.display="none"; 
   if(gameLoop) clearInterval(gameLoop);
   gameLoop=setInterval(step,SPEED);
-  draw();
+  drawSnake();
 }
 function placeFood(){
   while(true){
@@ -293,7 +292,6 @@ function placeFood(){
   }
 }
 function step(){
-  if(!running) return;
   if(pendingDir){
     const nd=pendingDir;
     if(!(nd.x===-dir.x&&nd.y===-dir.y)) dir=nd;
@@ -302,50 +300,43 @@ function step(){
   const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
   if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID||snake.some(s=>s.x===head.x&&s.y===head.y)){
     lives--;
-    if(lives>0){
-      livesEl.textContent="LIVES: "+lives;
-      snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}]; dir={x:1,y:0};
-      return;
-    }else{
-      running=false; clearInterval(gameLoop);
-      scoreEl.textContent="SCORE: "+score+" — GAME OVER";
-      livesEl.textContent="LIVES: 0";
-      gameOverScreen.style.display="flex";
-      return;
-    }
+    if(lives>0){snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}]; dir={x:1,y:0}; return;}
+    clearInterval(gameLoop); overlay.style.display="flex"; renderRanking(); return;
   }
   snake.unshift(head);
   if(head.x===food.x&&head.y===food.y){score+=10; placeFood();}
   else snake.pop();
-  draw();
+  drawSnake();
 }
-function draw(){
+function drawSnake(){
   ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='#fff'; ctx.lineWidth=4; ctx.strokeRect(0,0,W,H);
   const fx=food.x*CELL+CELL/2,fy=food.y*CELL+CELL/2;
   ctx.fillStyle='#e60000'; ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
   ctx.fillStyle='#fff'; ctx.font=(CELL*0.5)+"px Orbitron"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("NSD",fx,fy+1);
-  ctx.fillStyle='#fff';
-  snake.forEach(seg=>{
-    const m=CELL*0.25;
-    ctx.fillRect(seg.x*CELL+m/2,seg.y*CELL+m/2,CELL-m,CELL-m);
-  });
-  scoreEl.textContent="SCORE: "+score;
+  ctx.fillStyle='#fff'; snake.forEach(seg=>{const m=CELL*0.25; ctx.fillRect(seg.x*CELL+m/2,seg.y*CELL+m/2,CELL-m,CELL-m);});
+  scoreEl.textContent='SCORE: '+score+' | LIVES: '+lives;
 }
+submitScoreBtn.addEventListener('click',()=>{
+  const name=nicknameInput.value||"Anon";
+  ranking.push({name,score});
+  ranking.sort((a,b)=>b.score-b.score);
+  rankingEl.innerHTML="";
+  ranking.slice(0,5).forEach((r,i)=>{rankingEl.innerHTML+=`<div>${i+1}. ${r.name} — ${r.score}</div>`;});
+  nicknameInput.value="";
+});
+
 window.addEventListener('keydown',e=>{
-  const k=e.key;
-  if(k==='ArrowUp') pendingDir={x:0,y:-1};
-  else if(k==='ArrowDown') pendingDir={x:0,y:1};
-  else if(k==='ArrowLeft') pendingDir={x:-1,y:0};
-  else if(k==='ArrowRight') pendingDir={x:1,y:0};
-  if(k.startsWith('Arrow')) e.preventDefault();
+  if(e.key==='ArrowUp') pendingDir={x:0,y:-1};
+  else if(e.key==='ArrowDown') pendingDir={x:0,y:1};
+  else if(e.key==='ArrowLeft') pendingDir={x:-1,y:0};
+  else if(e.key==='ArrowRight') pendingDir={x:1,y:0};
+  if(e.key.startsWith('Arrow')) e.preventDefault();
 });
 let touchStartX=null,touchStartY=null;
-canvas.addEventListener('touchstart',e=>{
-  const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY;
-},{passive:true});
-canvas.addEventListener('touchmove',e=>{
-  if(!touchStartX||!touchStartY) return;
+canvasEl.addEventListener('touchstart',e=>{const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY;},{passive:true});
+canvasEl.addEventListener('touchmove',e=>{
+  if(!touchStartX||!touchStartY)return;
   const t=e.touches[0]; const dx=t.clientX-touchStartX,dy=t.clientY-touchStartY;
   if(Math.abs(dx)>30||Math.abs(dy)>30){
     if(Math.abs(dx)>Math.abs(dy)) pendingDir={x:dx>0?1:-1,y:0};
@@ -354,41 +345,34 @@ canvas.addEventListener('touchmove',e=>{
   }
   e.preventDefault();
 },{passive:false});
-reset(true);
+resetSnake();
 
-function saveScore(){
-  const name=document.getElementById('nickname').value||"Anon";
-  highScores.push({name,score});
-  highScores.sort((a,b)=>b.score-a.score);
-  highScores=highScores.slice(0,5);
-  rankingEl.innerHTML=highScores.map(s=>`<li>${s.name} — ${s.score}</li>`).join('');
-  document.getElementById('nickname').value="";
-}
+/* Bloquear scroll solo Snake */
+const snakeSection=document.getElementById("snake");
+document.addEventListener("scroll",()=>{
+  const rect=snakeSection.getBoundingClientRect();
+  if(rect.top<window.innerHeight && rect.bottom>0) document.body.style.overflow="hidden";
+  else document.body.style.overflow="";
+});
 
-/* SoundCloud */
-const widget=SC.Widget(document.getElementById('scPlayer'));
-const playPauseBtn=document.getElementById('playPauseBtn');
-const prevBtn=document.getElementById('prevBtn');
-const nextBtn=document.getElementById('nextBtn');
-const volumeSlider=document.getElementById('volumeSlider');
+/* SoundCloud Player */
+const scIframe = document.getElementById('scPlayer');
+const scWidget = SC.Widget(scIframe);
 let isPlaying=false;
 
-playPauseBtn.addEventListener('click',()=>{
-  if(!isPlaying){
-    widget.play();
-    playPauseBtn.innerHTML='<span>⏸</span>';
-    isPlaying=true;
-  }else{
-    widget.pause();
-    playPauseBtn.innerHTML='<span>▶</span>';
-    isPlaying=false;
-  }
+document.getElementById('playPauseBtn').addEventListener('click',()=>{
+  if(isPlaying){scWidget.pause();} else {scWidget.play();}
 });
-prevBtn.addEventListener('click',()=>{widget.prev();});
-nextBtn.addEventListener('click',()=>{widget.next();});
-volumeSlider.addEventListener('input',()=>{widget.setVolume(volumeSlider.value);});
+document.getElementById('prevBtn').addEventListener('click',()=>{scWidget.prev();});
+document.getElementById('nextBtn').addEventListener('click',()=>{scWidget.next();});
+document.getElementById('volumeSlider').addEventListener('input',(e)=>{
+  scWidget.setVolume(e.target.value);
+});
+
+scWidget.bind(SC.Widget.Events.PLAY,()=>{isPlaying=true; document.getElementById('playPauseBtn').textContent="⏸";});
+scWidget.bind(SC.Widget.Events.PAUSE,()=>{isPlaying=false; document.getElementById('playPauseBtn').textContent="▶";});
 </script>
+
 </body>
 </html>
-
 
