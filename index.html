@@ -23,7 +23,7 @@ html,body{
   color:var(--fg); overflow:hidden;
 }
 
-/* Carousel wrapper */
+/* Carousel */
 .carousel-container{
   display:flex;
   overflow-x:auto;
@@ -54,8 +54,6 @@ html,body{
   text-decoration:none;
 }
 .slide:hover{transform:scale(1.03);}
-
-/* Overlay dark gradient */
 .slide::after{
   content:"";
   position:absolute;
@@ -63,8 +61,6 @@ html,body{
   width:100%; height:60%;
   background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
 }
-
-/* Link text */
 .slide span{
   position:relative;
   z-index:2;
@@ -76,7 +72,7 @@ html,body{
   margin-bottom:25px;
 }
 
-/* Footer info */
+/* Footer */
 .footer-genres, .footer-records{
   position:absolute;
   width:100%; text-align:center;
@@ -88,26 +84,19 @@ html,body{
 /* Arrows */
 .arrow{
   position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:40px;
-  color:rgba(255,255,255,0.6);
-  z-index:10;
-  cursor:pointer;
-  user-select:none;
+  top:50%; transform:translateY(-50%);
+  font-size:40px; color:rgba(255,255,255,0.6);
+  z-index:10; cursor:pointer;
   animation:blink 1.5s infinite;
 }
-.arrow.left{left:15px;}
-.arrow.right{right:15px;}
+.arrow.left{left:15px;} .arrow.right{right:15px;}
 @keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
 
-/* Welcome overlay */
+/* Overlay welcome */
 .welcome-overlay{
   position:absolute;
-  inset:0;
-  background:#000;
-  color:#fff;
-  display:none;
+  inset:0; background:#000;
+  color:#fff; display:none;
   flex-direction:column;
   justify-content:center;
   align-items:center;
@@ -118,64 +107,45 @@ html,body{
 .welcome-overlay h1{font-size:2rem; margin-bottom:10px;}
 .welcome-overlay p{margin:5px 0;}
 
-/* Modal SoundCloud */
+/* Modal */
 #playerModal{
-  position:fixed;
-  inset:0;
+  position:fixed; inset:0;
   background:rgba(0,0,0,0.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
+  display:none; justify-content:center; align-items:center;
   z-index:20;
 }
 #playerModal iframe{
-  width:80%;
-  max-width:600px;
-  height:300px;
+  width:80%; max-width:600px; height:300px;
 }
 #playerModal button{
-  position:absolute;
-  top:20px; right:20px;
-  background:none;
-  border:none;
-  color:#fff;
-  font-size:30px;
-  cursor:pointer;
+  position:absolute; top:20px; right:20px;
+  background:none; border:none; color:#fff;
+  font-size:30px; cursor:pointer;
 }
 
-/* PLAY slide layout (juego + botón) */
+/* PLAY */
 .play-inner{
   position:relative;
-  z-index:2;
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:12px;
+  z-index:2; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; gap:12px;
   padding-bottom:30px;
 }
 #snakeWrap{
   background:#000;
   border:1px solid #444;
-  border-radius:12px;
-  padding:8px;
+  border-radius:12px; padding:8px;
 }
 #snakeCanvas{
   display:block;
   width:min(90vw, 520px);
-  height:auto;
-  background:#000;
+  height:auto; background:#000;
 }
-.snake-ui{
-  font-size:12px;
-  color:var(--muted);
-  text-align:center;
-}
+.snake-ui{font-size:12px; color:var(--muted); text-align:center;}
 .play-btn{
   background:#111; color:#fff; padding:12px 24px;
-  border:none; border-radius:8px; font-size:1rem;
-  cursor:pointer; text-transform:uppercase;
-  margin-top:6px;
+  border:none; border-radius:8px;
+  font-size:1rem; cursor:pointer; text-transform:uppercase;
 }
 .score{
   position:absolute; top:10px; left:10px;
@@ -190,9 +160,9 @@ html,body{
 <div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
 <div class="arrow right" onclick="scrollCarousel(1)">❯</div>
 
-<main class="carousel-container" role="navigation" aria-label="NSD links">
-  <!-- Slide principal con overlay -->
-  <div class="slide" style="background-image:url('NSD.jpg')" onclick="toggleWelcome()">
+<main class="carousel-container">
+  <!-- WELCOME -->
+  <div class="slide" style="background-image:url('NSD.jpg')" onclick="toggleWelcome('welcomeOverlay')">
     <span>WELCOME</span>
     <div class="welcome-overlay" id="welcomeOverlay">
       <h1>THIS IS NSD AKA NOIZE SECRET DOCTRINE OFFICIAL WEBSITE</h1>
@@ -201,58 +171,42 @@ html,body{
   </div>
 
   <!-- Enlaces -->
-  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener noreferrer" style="background-image:url('bandcamp.png')">
-    <span>BUY MUSIC</span>
-  </a>
-  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener noreferrer" style="background-image:url('youtube.png')">
-    <span>YOUTUBE</span>
-  </a>
-  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener noreferrer" style="background-image:url('soundcloud.png')">
-    <span>SOUNDCLOUD</span>
-  </a>
-  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener noreferrer" style="background-image:url('spotify.png')">
-    <span>SPOTIFY</span>
-  </a>
-  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" rel="noopener noreferrer" style="background-image:url('instagram.png')">
-    <span>INSTAGRAM</span>
-  </a>
-  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')">
-    <span>BOOKINGS</span>
-  </a>
+  <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" rel="noopener noreferrer" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
+  <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" rel="noopener noreferrer" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
+  <a class="slide" href="https://soundcloud.com/noizesd" target="_blank" rel="noopener noreferrer" style="background-image:url('soundcloud.png')"><span>SOUNDCLOUD</span></a>
+  <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" rel="noopener noreferrer" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
+  <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" rel="noopener noreferrer" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
+  <a class="slide" href="https://triple6.nl/bookings/" target="_blank" rel="noopener noreferrer" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
 
   <!-- MERCH -->
-  <a class="slide" href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')">
-    <span>MERCHANDISING</span>
-  </a>
+  <a class="slide" href="https://triple6-shop.nl/collections/nsd?fbclid=PAdGRjcAMef8NjbGNrAaK88GV4dG4DYWVtAjEwAAGm4gmnMBOBDD4L9CVMSvJyJRhdXItTSxn9rzQLl9AvApL3gfL86sbbZ-Q__aem_Eemvq29OOpwNv8oeXUy01g" target="_blank" rel="noopener noreferrer" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
-  <!-- PLAY: Snake + botón modal -->
-  <div class="slide" style="background-image:url('fondo.png'); background-size:cover; background-position:center; display:flex; justify-content:center; align-items:flex-end; flex-direction:column;">
+  <!-- PLAY snake -->
+  <div class="slide" style="background-image:url('snake.png')" onclick="toggleWelcome('snakeOverlay')">
     <span>PLAY</span>
-    <div class="play-inner">
+    <div class="welcome-overlay" id="snakeOverlay">
+      <h1>PLAY NSD SNAKE</h1>
+      <p>CLICK TO START</p>
+    </div>
+    <div class="play-inner" id="snakeContent" style="display:none;">
       <div id="snakeWrap">
         <div class="score" id="score">SCORE: 0</div>
-        <canvas id="snakeCanvas" width="400" height="400" aria-label="Snake game"></canvas>
+        <canvas id="snakeCanvas" width="400" height="400"></canvas>
       </div>
-      <div class="snake-ui">Click/tap donde quieras para girar hacia ese lado • Flechas del teclado también funcionan</div>
+      <div class="snake-ui">Click/tap para girar • Flechas del teclado también funcionan</div>
       <button class="play-btn" onclick="openModal()">▶ PLAY NSD</button>
     </div>
   </div>
 </main>
 
-<footer class="footer-genres">
-  Hardcore, Terrorcore, Speedcore, Uptempo Hardcore
-</footer>
+<footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
 
-<!-- Modal con SoundCloud -->
+<!-- Modal -->
 <div id="playerModal">
   <button onclick="closeModal()">✕</button>
-  <iframe 
-    scrolling="no" 
-    frameborder="no" 
-    allow="autoplay" 
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23000000&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
-  </iframe>
+  <iframe scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&color=%23000000&auto_play=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
 </div>
 
 <script>
@@ -266,131 +220,107 @@ carousel.addEventListener('wheel', e=>{
   carousel.scrollBy({left:e.deltaY, behavior:'smooth'});
 });
 
-// overlay welcome
-function toggleWelcome(){
-  const overlay = document.getElementById('welcomeOverlay');
-  overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+// overlays
+function toggleWelcome(id){
+  const overlay = document.getElementById(id);
+  if(id==='snakeOverlay'){
+    // si es snake, al cerrar mostramos juego
+    if(overlay.style.display==='flex'){ overlay.style.display='none'; }
+    else { overlay.style.display='flex'; }
+  } else {
+    overlay.style.display = overlay.style.display==='flex' ? 'none' : 'flex';
+  }
 }
+document.getElementById('snakeOverlay').addEventListener('click', ()=>{
+  document.getElementById('snakeOverlay').style.display='none';
+  document.getElementById('snakeContent').style.display='flex';
+  reset(); // empieza el juego
+});
 
-// modal soundcloud
-function openModal(){ document.getElementById('playerModal').style.display = 'flex'; }
-function closeModal(){ document.getElementById('playerModal').style.display = 'none'; }
+// modal
+function openModal(){document.getElementById('playerModal').style.display='flex';}
+function closeModal(){document.getElementById('playerModal').style.display='none';}
 
-/* === Snake minimal === */
-(function(){
-  const canvas = document.getElementById('snakeCanvas');
-  const ctx = canvas.getContext('2d');
-  const scoreEl = document.getElementById('score');
-  const GRID = 20;                 // 20x20 celdas
-  const SPEED = 140;               // ms por paso
-  const W = canvas.width, H = canvas.height;
-  const CELL = W / GRID;
+/* === Snake === */
+const canvas = document.getElementById('snakeCanvas');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+const GRID = 20;
+const SPEED = 140;
+const W = canvas.width, H = canvas.height;
+const CELL = W / GRID;
+let snake, dir, food, running, score, pendingDir;
 
-  let snake, dir, food, running, score, pendingDir;
-
-  function reset(){
-    snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
-    dir = {x:1,y:0};
-    pendingDir = null;
-    score = 0;
-    placeFood();
-    running = true;
+function reset(){
+  snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir={x:1,y:0}; pendingDir=null; score=0; placeFood(); running=true; draw();
+}
+function placeFood(){
+  while(true){
+    const f={x:Math.floor(Math.random()*GRID),y:Math.floor(Math.random()*GRID)};
+    if(!snake.some(s=>s.x===f.x&&s.y===f.y)){food=f;return;}
   }
-
-  function placeFood(){
-    while(true){
-      const f = {x: Math.floor(Math.random()*GRID), y: Math.floor(Math.random()*GRID)};
-      if(!snake.some(s=>s.x===f.x && s.y===f.y)){
-        food = f; return;
-      }
-    }
+}
+function step(){
+  if(!running) return;
+  if(pendingDir){
+    const nd=pendingDir;
+    if(!(nd.x===-dir.x&&nd.y===-dir.y)) dir=nd;
+    pendingDir=null;
   }
+  const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+  if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID) {running=false; draw(); return;}
+  if(snake.some(s=>s.x===head.x&&s.y===head.y)){running=false; draw(); return;}
+  snake.unshift(head);
+  if(head.x===food.x&&head.y===food.y){score+=10; placeFood();}
+  else{snake.pop();}
+  draw();
+}
+function draw(){
+  ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+  // comida = mini NSD
+  const fx=food.x*CELL+CELL/2, fy=food.y*CELL+CELL/2;
+  ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#fff'; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font=(CELL*0.6)+"px Orbitron"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("NSD",fx,fy+1);
 
-  function step(){
-    if(!running) return;
-    // aplicar dirección pendiente (evitar invertir 180º)
-    if(pendingDir){
-      const nd = pendingDir;
-      if(!(nd.x === -dir.x && nd.y === -dir.y)){
-        dir = nd;
-      }
-      pendingDir = null;
-    }
-    const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-    // colisiones bordes
-    if(head.x<0 || head.y<0 || head.x>=GRID || head.y>=GRID){ running=false; draw(); return; }
-    // colisión propia
-    if(snake.some(s=>s.x===head.x && s.y===head.y)){ running=false; draw(); return; }
-
-    snake.unshift(head);
-    if(head.x === food.x && head.y === food.y){
-      score += 10;
-      placeFood();
-    } else {
-      snake.pop();
-    }
-    draw();
-  }
-
-  function draw(){
-    // fondo negro
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0,0,W,H);
-
-    // vinilo (food): círculo con aro blanco
-    const fx = food.x*CELL + CELL/2;
-    const fy = food.y*CELL + CELL/2;
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(fx, fy, CELL*0.35, 0, Math.PI*2); ctx.stroke();
-    ctx.beginPath(); ctx.arc(fx, fy, CELL*0.12, 0, Math.PI*2); ctx.stroke();
-
-    // snake blanca (cuadrados)
-    ctx.fillStyle = '#fff';
-    snake.forEach((seg,i)=>{
-      ctx.fillRect(seg.x*CELL, seg.y*CELL, CELL-1, CELL-1);
-    });
-
-    scoreEl.textContent = 'SCORE: ' + score + (running ? '' : ' — GAME OVER (click para reiniciar)');
-  }
-
-  // input teclado
-  window.addEventListener('keydown', (e)=>{
-    const k = e.key;
-    if(!running && (k.startsWith('Arrow') || k===' ')){ reset(); return; }
-    if(k==='ArrowUp') pendingDir = {x:0,y:-1};
-    else if(k==='ArrowDown') pendingDir = {x:0,y:1};
-    else if(k==='ArrowLeft') pendingDir = {x:-1,y:0};
-    else if(k==='ArrowRight') pendingDir = {x:1,y:0};
+  // snake (más fina: la mitad del cell)
+  ctx.fillStyle='#fff';
+  snake.forEach(seg=>{
+    const margin=CELL*0.25;
+    ctx.fillRect(seg.x*CELL+margin/2, seg.y*CELL+margin/2, CELL-margin, CELL-margin);
   });
 
-  // input clic/tap: dirigir hacia el punto clicado (eje dominante)
-  function clickDir(evt){
-    const rect = canvas.getBoundingClientRect();
-    const cx = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
-    const cy = (evt.touches ? evt.touches[0].clientY : evt.clientY) - rect.top;
-    // cabeza en píxeles
-    const hx = (snake[0].x + 0.5) * CELL;
-    const hy = (snake[0].y + 0.5) * CELL;
-    const dx = cx - hx;
-    const dy = cy - hy;
-    if(!running){ reset(); return; }
-    if(Math.abs(dx) > Math.abs(dy)){
-      pendingDir = {x: dx>0 ? 1 : -1, y: 0};
-    } else {
-      pendingDir = {x: 0, y: dy>0 ? 1 : -1};
-    }
-  }
-  canvas.addEventListener('click', clickDir);
-  canvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); clickDir(e); }, {passive:false});
+  scoreEl.textContent='SCORE: '+score+(running?'':' — GAME OVER (click para reiniciar)');
+}
 
-  // loop
-  reset();
-  draw();
-  setInterval(step, SPEED);
+// teclado → solo snake
+window.addEventListener('keydown',e=>{
+  const k=e.key;
+  if(!running&&(k.startsWith('Arrow')||k===' ')){reset();return;}
+  if(k==='ArrowUp') pendingDir={x:0,y:-1};
+  else if(k==='ArrowDown') pendingDir={x:0,y:1};
+  else if(k==='ArrowLeft') pendingDir={x:-1,y:0};
+  else if(k==='ArrowRight') pendingDir={x:1,y:0};
+  // evitar scroll con flechas
+  if(k.startsWith('Arrow')) e.preventDefault();
+});
 
-  // mantener canvas nítido al escalar (ya fijamos width/height en atributos)
-})();
+// click/tap
+function clickDir(evt){
+  const rect=canvas.getBoundingClientRect();
+  const cx=(evt.touches?evt.touches[0].clientX:evt.clientX)-rect.left;
+  const cy=(evt.touches?evt.touches[0].clientY:evt.clientY)-rect.top;
+  const hx=(snake[0].x+0.5)*CELL, hy=(snake[0].y+0.5)*CELL;
+  const dx=cx-hx, dy=cy-hy;
+  if(!running){reset();return;}
+  if(Math.abs(dx)>Math.abs(dy)){pendingDir={x:dx>0?1:-1,y:0};}
+  else{pendingDir={x:0,y:dy>0?1:-1};}
+}
+canvas.addEventListener('click',clickDir);
+canvas.addEventListener('touchstart',e=>{e.preventDefault();clickDir(e);},{passive:false});
+
+setInterval(step,SPEED);
 </script>
 
 </body>
