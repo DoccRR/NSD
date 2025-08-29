@@ -39,6 +39,13 @@ body{
   text-transform:uppercase;
   z-index:2;
   white-space: nowrap;
+  text-align:right;
+}
+.top-title-right-small{
+  font-weight:600;
+  font-size:clamp(16px,3vw,24px);
+  display:block;
+  margin-top:4px;
 }
 
 /* Bottom-left title horizontal */
@@ -58,7 +65,7 @@ body{
 .carousel-container{
   position:relative;
   width:100%;
-  max-width:1200px;
+  max-width:1400px;
   margin:0 auto;
   padding: 20px 0;
   z-index:2;
@@ -67,15 +74,16 @@ body{
 .carousel{
   display:flex;
   overflow-x:auto;
-  gap:20px;
+  gap:25px;
   scroll-snap-type: x mandatory;
   padding-bottom:20px;
+  align-items:flex-start;
 }
 
 .slide{
   flex:0 0 auto;
-  width:180px;
-  height:220px;
+  width:220px;      /* más ancho */
+  height:350px;     /* más alto */
   scroll-snap-align:start;
   border-radius:var(--radius);
   display:flex;
@@ -88,7 +96,7 @@ body{
   position:relative;
 }
 .slide:hover{
-  transform:translateY(-3px);
+  transform:translateY(-5px);
 }
 
 /* Slide title below image */
@@ -96,7 +104,7 @@ body{
   font-weight:900;
   color:#fff;
   text-align:center;
-  font-size:18px;
+  font-size:22px;    /* más grande */
   margin-top:10px;
   text-transform:uppercase;
   text-shadow:0 0 6px rgba(0,0,0,0.7);
@@ -126,19 +134,25 @@ body{
   .top-title-right, .bottom-title-left{
     font-size:clamp(24px,8vw,40px);
   }
+  .top-title-right-small{
+    font-size:clamp(12px,4vw,20px);
+  }
   .slide{
-    width:140px;
-    height:180px;
+    width:180px;
+    height:280px;
   }
   .slide span{
-    font-size:16px;
+    font-size:20px;
   }
 }
 </style>
 </head>
 <body>
 
-<div class="top-title-right">NOIZE SECRET DOCTRINE</div>
+<div class="top-title-right">
+  NOIZE SECRET DOCTRINE
+  <span class="top-title-right-small">NSD</span>
+</div>
 <div class="bottom-title-left">NSD</div>
 
 <main class="carousel-container">
