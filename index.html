@@ -281,13 +281,12 @@ html,body{
 const firebaseConfig = {
   apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
   authDomain: "nsdsnake.firebaseapp.com",
+  databaseURL: "https://nsdsnake-default-rtdb.firebaseio.com",
   projectId: "nsdsnake",
   storageBucket: "nsdsnake.firebasestorage.app",
   messagingSenderId: "719565977829",
   appId: "1:719565977829:web:94911f469efd29aa9c7c0c"
 };
-};
-  };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 </script>
@@ -378,7 +377,9 @@ function renderRanking(){
         rankingEl.innerHTML = "No scores yet";
         return;
       }
-      rankingEl.innerHTML = arr.map((r,i)=>`<div>${i+1}. ${escapeHtml(r.nickname||'Anon')} — ${Number(r.score)||0}</div>`).join("");
+      rankingEl.innerHTML = arr
+        .map((r,i)=>`<div>${i+1}. ${escapeHtml(r.nickname||'Anon')} — ${Number(r.score)||0}</div>`)
+        .join("");
     })
     .catch(err=>{
       rankingEl.innerHTML = "";
@@ -391,24 +392,16 @@ function saveScore(){
   const nickname = (nicknameInput.value || "Anon").slice(0,20);
   const safeScore = Math.max(0, Math.min(9999, Number(score)||0));
 
-  console.log("👉 Intentando guardar:", { nickname, safeScore });
-
   submitScoreBtn.disabled = true;
   rankErrorEl.textContent = "";
 
   return db.ref("scores").push({ nickname, score: safeScore })
-    .then(()=>{
-      console.log("✅ Guardado con éxito en Firebase");
-      nicknameInput.value="";
-    })
+    .then(()=>{ nicknameInput.value=""; })
     .catch(err=>{
       rankErrorEl.textContent = "Error saving score: " + err.message;
-      console.error('❌ [SaveScore] ', err);
+      console.error('[SaveScore] ', err);
     })
-    .finally(()=>{
-      submitScoreBtn.disabled = false;
-    });
-}
+    .finally(()=>{ submitScoreBtn.disabled = false; });
 }
 
 // Helpers
@@ -529,6 +522,6 @@ volumeSlider.addEventListener('input', function(e){
 </body>
 </html>
 
-
+ 
 
 
