@@ -22,10 +22,7 @@ body{
   position:relative;
   min-height:100vh;
   background:#000 url('NSD.jpg') center/cover no-repeat;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow-x:hidden;
+  overflow:hidden;
 }
 
 /* Top-right title */
@@ -42,56 +39,39 @@ body{
   text-align:right;
 }
 
-/* Carousel container */
+/* Carousel container full screen */
 .carousel-container{
-  position:relative;
-  width:100%;
-  max-width:1400px;
-  margin:0 auto;
-  padding: 20px 0;
-  z-index:2;
-}
-
-.carousel{
   display:flex;
   overflow-x:auto;
-  gap:25px;
   scroll-snap-type: x mandatory;
-  padding-bottom:20px;
-  align-items:flex-start;
+  width:100vw;
+  height:100vh;
 }
 
 .slide{
-  flex:0 0 auto;
-  width:220px;      /* más ancho */
-  height:350px;     /* más alto */
+  flex:0 0 100%;
+  width:100vw;
+  height:100vh;
   scroll-snap-align:start;
-  border-radius:var(--radius);
   display:flex;
   flex-direction:column;
+  justify-content:center;
   align-items:center;
-  justify-content:flex-end;
   background-size:cover;
   background-position:center;
-  transition: transform .2s ease;
   position:relative;
-}
-.slide:hover{
-  transform:translateY(-5px);
+  transition: transform .2s ease;
 }
 
-/* Slide title below image */
 .slide span{
   font-weight:900;
   color:#fff;
+  font-size:clamp(32px,6vw,64px);
   text-align:center;
-  font-size:22px;    /* más grande */
-  margin-top:10px;
+  text-shadow:0 0 8px rgba(0,0,0,0.7);
   text-transform:uppercase;
-  text-shadow:0 0 6px rgba(0,0,0,0.7);
 }
 
-/* Footer texts */
 .footer-genres{
   position:absolute;
   bottom:25px;
@@ -110,19 +90,9 @@ body{
   letter-spacing:0.1em;
 }
 
-/* Responsive adjustments */
-@media(max-width:768px){
-  .top-title-right{
-    font-size:clamp(24px,8vw,40px);
-  }
-  .slide{
-    width:180px;
-    height:280px;
-  }
-  .slide span{
-    font-size:20px;
-  }
-}
+/* Hide scroll bar */
+.carousel-container::-webkit-scrollbar {display:none;}
+.carousel-container {-ms-overflow-style:none; scrollbar-width:none;}
 </style>
 </head>
 <body>
@@ -131,26 +101,24 @@ body{
   NOIZE SECRET DOCTRINE
 </div>
 
-<main class="carousel-container">
-  <div class="carousel" role="navigation" aria-label="Social & music links">
-    <div class="slide" style="background-image:url('bandcamp.png')">
-      <span>BUY MUSIC</span>
-    </div>
-    <div class="slide" style="background-image:url('spotify.png')">
-      <span>SPOTIFY</span>
-    </div>
-    <div class="slide" style="background-image:url('youtube.png')">
-      <span>YOUTUBE</span>
-    </div>
-    <div class="slide" style="background-image:url('soundcloud.png')">
-      <span>SOUNDCLOUD</span>
-    </div>
-    <div class="slide" style="background-image:url('instagram.png')">
-      <span>INSTAGRAM</span>
-    </div>
-    <div class="slide" style="background-image:url('bookings.png')">
-      <span>BOOKINGS</span>
-    </div>
+<main class="carousel-container" role="navigation" aria-label="Social & music links">
+  <div class="slide" style="background-image:url('bandcamp.png')">
+    <span>BUY MUSIC</span>
+  </div>
+  <div class="slide" style="background-image:url('spotify.png')">
+    <span>SPOTIFY</span>
+  </div>
+  <div class="slide" style="background-image:url('youtube.png')">
+    <span>YOUTUBE</span>
+  </div>
+  <div class="slide" style="background-image:url('soundcloud.png')">
+    <span>SOUNDCLOUD</span>
+  </div>
+  <div class="slide" style="background-image:url('instagram.png')">
+    <span>INSTAGRAM</span>
+  </div>
+  <div class="slide" style="background-image:url('bookings.png')">
+    <span>BOOKINGS</span>
   </div>
 </main>
 
