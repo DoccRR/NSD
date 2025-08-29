@@ -19,7 +19,18 @@
 *{box-sizing:border-box;}
 html,body{
   height:100%; margin:0; font-family:var(--font-futuristic);
-  background:var(--bg); color:var(--fg); overflow:hidden;
+  color:var(--fg); overflow:hidden;
+  background: url("fondo.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Fondo oscurecido sutil encima de la imagen */
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55); /* oscurece la imagen de fondo */
+  z-index:-1;
 }
 
 /* Carousel wrapper */
