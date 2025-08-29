@@ -8,7 +8,6 @@
 <meta name="color-scheme" content="dark">
 <style>
 :root{
-  --bg:#000;
   --fg:#fff;
   --muted:#aaa;
   --radius:20px;
@@ -23,12 +22,24 @@ html,body{
   background: url("fondo.png") no-repeat center center fixed;
   background-size: cover;
 }
+
+/* Overlay dark layer */
 body::before {
   content:"";
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.55);
+  z-index:-2;
+}
+
+/* Static noise background */
+#noise {
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
   z-index:-1;
+  opacity:0.08; /* más bajo = más sutil */
+  pointer-events:none;
 }
 
 /* Carousel wrapper */
@@ -64,7 +75,7 @@ body::before {
 }
 .slide:hover{transform:scale(1.03);}
 
-/* Overlay gradient en imagen */
+/* Overlay dark gradient */
 .slide::after{
   content:"";
   position:absolute;
@@ -72,6 +83,8 @@ body::before {
   width:100%; height:60%;
   background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
 }
+
+/* Link text */
 .slide span{
   position:relative;
   z-index:2;
@@ -83,34 +96,6 @@ body::before {
   margin-bottom:25px;
 }
 
-/* --- ESTILO ESPECIAL PARA WELCOME --- */
-#welcomeSlide{
-  cursor:pointer;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  color:var(--fg);
-}
-#welcomeSlide.show-info{
-  background:black !important;
-  box-shadow:inset 0 0 30px rgba(255,255,255,0.2);
-}
-#welcomeSlide.show-info::after{display:none;}
-#welcomeSlide-content{
-  text-align:center;
-  padding:20px;
-}
-#welcomeSlide-content h2{
-  font-size:clamp(22px,4vw,36px);
-  margin-bottom:15px;
-}
-#welcomeSlide-content p{
-  font-size:clamp(16px,2.5vw,22px);
-  margin:8px 0;
-  color:var(--muted);
-}
-
 /* Footer info */
 .footer-genres, .footer-records{
   position:absolute;
@@ -120,7 +105,7 @@ body::before {
 .footer-genres{bottom:30px;}
 .footer-records{bottom:10px; letter-spacing:2px;}
 
-/* Arrows generales */
+/* Arrows */
 .arrow{
   position:absolute;
   top:50%;
@@ -129,15 +114,46 @@ body::before {
   color:rgba(255,255,255,0.6);
   z-index:10;
   cursor:pointer;
+  animation:blink 1.5s infinite;
   user-select:none;
-  transition:color .2s;
 }
-.arrow:hover{color:#fff;}
 .arrow.left{left:15px;}
 .arrow.right{right:15px;}
+
+@keyframes blink{
+  0%,100%{opacity:0.4;}
+  50%{opacity:1;}
+}
+
+/* Glitch effect */
+#glitch {
+  position:fixed;
+  inset:0;
+  background:#000;
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+}
+#glitch.active {
+  animation: glitchAnim 0.35s steps(2, end);
+}
+@keyframes glitchAnim {
+  0% {opacity:1; clip-path: inset(20% 0 60% 0);}
+  20% {clip-path: inset(60% 0 20% 0);}
+  40% {clip-path: inset(10% 0 70% 0);}
+  60% {clip-path: inset(40% 0 40% 0);}
+  80% {clip-path: inset(30% 0 50% 0);}
+  100% {opacity:0;}
+}
 </style>
 </head>
 <body>
+
+<!-- Static noise canvas -->
+<canvas id="noise"></canvas>
+
+<!-- Glitch overlay -->
+<div id="glitch"></div>
 
 <!-- Flechas -->
 <div class="arrow left">❮</div>
@@ -145,14 +161,8 @@ body::before {
 
 <main class="carousel-container" role="navigation" aria-label="NSD links">
   <!-- Slide principal -->
-  <div class="slide" id="welcomeSlide" style="background-image:url('NSD.jpg')">
+  <div class="slide" style="background-image:url('NSD.jpg')">
     <span>WELCOME</span>
-    <!-- Contenido oculto -->
-    <div id="welcomeSlide-content" style="display:none;">
-      <h2>WELCOME</h2>
-      <p>This is NSD aKa Noize Secret Doctrine official website.</p>
-      <p>Underground crew.</p>
-    </div>
   </div>
 
   <!-- Enlaces -->
@@ -182,52 +192,59 @@ body::before {
 <div class="footer-records">DOCTRINE RECORDS</div>
 
 <script>
-// scroll con flechas
+/* Scroll con flechas */
 const container = document.querySelector('.carousel-container');
 const leftArrow = document.querySelector('.arrow.left');
 const rightArrow = document.querySelector('.arrow.right');
+const glitch = document.getElementById("glitch");
 
-function getScrollAmount(){
-  const slide = container.querySelector('.slide');
-  return slide ? slide.offsetWidth + 60 : 400;
+function triggerGlitch() {
+  glitch.classList.add("active");
+  setTimeout(()=> glitch.classList.remove("active"), 400);
 }
+
 leftArrow.addEventListener('click', () => {
-  container.scrollBy({left:-getScrollAmount(), behavior:'smooth'});
+  container.scrollBy({left: -window.innerWidth*0.8, behavior: "smooth"});
+  triggerGlitch();
 });
 rightArrow.addEventListener('click', () => {
-  container.scrollBy({left:getScrollAmount(), behavior:'smooth'});
+  container.scrollBy({left: window.innerWidth*0.8, behavior: "smooth"});
+  triggerGlitch();
 });
 
-// scroll con rueda
-container.addEventListener('wheel', (e) => {
+/* Glitch en clics de enlaces */
+document.querySelectorAll('.slide').forEach(slide=>{
+  slide.addEventListener("click", ()=> triggerGlitch());
+});
+
+/* Scroll con rueda del ratón */
+container.addEventListener('wheel', e=>{
   e.preventDefault();
-  container.scrollBy({
-    left: e.deltaY < 0 ? -getScrollAmount()/2 : getScrollAmount()/2,
-    behavior: 'smooth'
-  });
-}, { passive: false });
+  container.scrollBy({left: e.deltaY, behavior:"smooth"});
+},{passive:false});
 
-// toggle welcome
-const welcomeSlide = document.getElementById("welcomeSlide");
-const welcomeContent = document.getElementById("welcomeSlide-content");
-const welcomeTitle = welcomeSlide.querySelector("span");
+/* Static noise background */
+const noiseCanvas = document.getElementById("noise");
+const ctx = noiseCanvas.getContext("2d");
+function resizeNoise() {
+  noiseCanvas.width = window.innerWidth;
+  noiseCanvas.height = window.innerHeight;
+}
+resizeNoise();
+window.addEventListener("resize", resizeNoise);
 
-welcomeSlide.addEventListener("click", () => {
-  if(!welcomeSlide.classList.contains("show-info")){
-    // Mostrar segunda "página"
-    welcomeSlide.classList.add("show-info");
-    welcomeContent.style.display = "block";
-    welcomeTitle.style.display = "none";
-    welcomeSlide.style.backgroundImage = "none";
-  } else {
-    // Volver atrás
-    welcomeSlide.classList.remove("show-info");
-    welcomeContent.style.display = "none";
-    welcomeTitle.style.display = "block";
-    welcomeSlide.style.backgroundImage = "url('NSD.jpg')";
+function generateNoise() {
+  const imageData = ctx.createImageData(noiseCanvas.width, noiseCanvas.height);
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    const shade = Math.random() * 255;
+    imageData.data[i] = shade;
+    imageData.data[i+1] = shade;
+    imageData.data[i+2] = shade;
+    imageData.data[i+3] = 255;
   }
-});
+  ctx.putImageData(imageData, 0, 0);
+}
+setInterval(generateNoise, 60); // velocidad del ruido
 </script>
-
 </body>
 </html>
