@@ -15,98 +15,220 @@
   --font-futuristic:"Orbitron","Rajdhani","Exo 2",sans-serif;
   --accent:#e60000;
 }
+
 *{box-sizing:border-box;}
 html,body{
   height:100%; margin:0; font-family:var(--font-futuristic);
   background:var(--bg) url('fondo.png') center/cover no-repeat fixed;
   color:var(--fg); overflow-x:hidden;
 }
+
 /* Carousel */
 .carousel-container{
-  display:flex; overflow-x:auto;
+  display:flex;
+  overflow-x:auto;
   scroll-snap-type:x mandatory;
-  width:100vw; height:100vh; padding:40px 0;
+  width:100vw; height:100vh;
+  padding:40px 0;
 }
 .carousel-container::-webkit-scrollbar{display:none;}
 .carousel-container{-ms-overflow-style:none; scrollbar-width:none;}
-/* Slides */
+
+/* Slides generales */
 .slide{
-  flex:0 0 80%; max-width:800px; height:80%;
-  margin:0 30px; border-radius:var(--radius);
+  flex:0 0 80%;
+  max-width:800px;
+  height:80%;
+  margin:0 30px;
+  border-radius:var(--radius);
   scroll-snap-align:center;
-  background-size:cover; background-position:center;
-  display:flex; justify-content:center; align-items:flex-end;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
   box-shadow:0 10px 30px rgba(0,0,0,0.6);
-  position:relative; overflow:hidden;
-  transition:transform .3s ease; text-decoration:none;
+  position:relative;
+  overflow:hidden;
+  transition:transform .3s ease;
+  text-decoration:none;
 }
 .slide:hover{transform:scale(1.03);}
 .slide::after{
-  content:""; position:absolute;
-  bottom:0; left:0; width:100%; height:60%;
+  content:"";
+  position:absolute;
+  bottom:0; left:0;
+  width:100%; height:60%;
   background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
 }
 .slide span{
-  position:relative; z-index:2;
+  position:relative;
+  z-index:2;
   font-size:clamp(20px,3vw,32px);
-  font-weight:900; text-transform:uppercase;
+  font-weight:900;
+  text-transform:uppercase;
   color:var(--fg);
   text-shadow:0 0 10px rgba(0,0,0,0.8);
   margin-bottom:25px;
 }
 .slide.welcome::after{content:none;}
+
 /* Snake slide */
-.slide.snake-slide{flex:0 0 95%; max-width:1200px; height:90%; align-items:center; justify-content:center;}
-.slide.snake-slide::after{content:none;} .slide.snake-slide span{display:none;}
+.slide.snake-slide{
+  flex:0 0 95%;
+  max-width:1200px;
+  height:90%;
+  align-items:center;
+  justify-content:center;
+}
+.slide.snake-slide::after{content:none;}
+.slide.snake-slide span{display:none;}
+
 /* Snake contenido */
-.play-inner{position:relative; z-index:2; width:100%; display:flex; flex-direction:column; align-items:center; gap:12px; height:100%;}
-#snakeWrap{flex:1; display:flex; justify-content:center; align-items:center; background:#000; border:4px solid #fff; border-radius:12px; padding:8px; width:100%; position:relative;}
-#snakeCanvas{display:block; width:100%; max-width:1000px; height:auto; background:#000; border:2px solid var(--accent); border-radius:10px;}
+.play-inner{
+  position:relative;
+  z-index:2; width:100%;
+  display:flex; flex-direction:column;
+  align-items:center; gap:12px;
+  height:100%;
+}
+#snakeWrap{
+  flex:1;
+  display:flex; justify-content:center; align-items:center;
+  background:#000;
+  border:4px solid #fff; 
+  border-radius:12px; padding:8px;
+  width:100%;
+  position:relative;
+}
+#snakeCanvas{
+  display:block;
+  width:100%; max-width:1000px;
+  height:auto; background:#000;
+  border:2px solid var(--accent);
+  border-radius:10px;
+}
+
 /* Snake UI */
 .snake-ui{font-size:12px; color:var(--muted); text-align:center;}
-.score{position:absolute; top:10px; left:10px; font-size:14px; color:#bbb; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;}
-/* Overlay */
-#gameOverOverlay{position:absolute; inset:0; background:rgba(0,0,0,0.9); display:none; flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center; z-index:10;}
+.score{
+  position:absolute; top:10px; left:10px;
+  font-size:14px; color:#bbb;
+  background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px;
+}
+
+/* Overlay Game Over */
+#gameOverOverlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  z-index:10;
+}
 #gameOverOverlay h2{font-size:2rem; margin-bottom:15px;}
 #nicknameInput{padding:8px; margin:10px; font-size:16px; border-radius:6px;}
-#submitScore, #playAgainBtn{padding:8px 16px; background:var(--accent); border:none; color:#fff; font-weight:bold; border-radius:6px; cursor:pointer; margin-top:5px;}
+#submitScore, #playAgainBtn{
+  padding:8px 16px; 
+  background:var(--accent); 
+  border:none; 
+  color:#fff; 
+  font-weight:bold; 
+  border-radius:6px; 
+  cursor:pointer;
+  margin-top:5px;
+}
 #ranking{margin-top:20px; text-align:left;}
+
 /* Footer */
-.footer-genres, .footer-records{position:absolute; width:100%; text-align:center; font-size:12px; color:var(--muted);}
-.footer-genres{bottom:110px;} .footer-records{bottom:90px; letter-spacing:2px;}
+.footer-genres, .footer-records{
+  position:absolute;
+  width:100%; text-align:center;
+  font-size:12px; color:var(--muted);
+}
+.footer-genres{bottom:110px;}
+.footer-records{bottom:90px; letter-spacing:2px;}
+
 /* Arrows */
-.arrow{position:absolute; top:50%; transform:translateY(-50%); font-size:40px; color:rgba(255,255,255,0.6); z-index:10; cursor:pointer; animation:blink 1.5s infinite;}
+.arrow{
+  position:absolute;
+  top:50%; transform:translateY(-50%);
+  font-size:40px; color:rgba(255,255,255,0.6);
+  z-index:10; cursor:pointer;
+  animation:blink 1.5s infinite;
+}
 .arrow.left{left:15px;} .arrow.right{right:15px;}
 @keyframes blink{0%,100%{opacity:0.4;}50%{opacity:1;}}
-/* Responsive */
+
+/* Responsive Snake */
 @media(max-width:768px){
-  .slide.snake-slide{flex:0 0 100%; max-width:100%; height:100vh; border-radius:0;}
+  .slide.snake-slide{
+    flex:0 0 100%;
+    max-width:100%;
+    height:100vh;
+    border-radius:0;
+  }
   #snakeWrap{border-radius:0; border:none; padding:0;}
   #snakeCanvas{width:90vw; height:90vw; max-width:400px; max-height:400px;}
   .snake-ui{position:absolute; bottom:60px; font-size:14px;}
 }
+
 @media(min-width:768px){
-  #snakeCanvas{width:80vw; height:45vw; max-width:800px; max-height:450px;}
+  #snakeCanvas{
+    width:80vw;
+    height:45vw;
+    max-width:800px;
+    max-height:450px;
+  }
 }
+
 /* Player Controls */
-#playerControls{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#000; border:2px solid var(--fg); border-radius:40px; padding:10px 20px; font-size:16px; font-weight:700; color:#fff; display:flex; align-items:center; gap:15px; z-index:50;}
-#playerControls button{background:none; border:none; color:#fff; font-size:20px; cursor:pointer;}
+#playerControls{
+  position:fixed;
+  bottom:20px; left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  border:2px solid var(--fg);
+  border-radius:40px;
+  padding:10px 20px;
+  font-size:16px; font-weight:700;
+  color:#fff;
+  display:flex; align-items:center; gap:15px;
+  z-index:50;
+}
+#playerControls button{
+  background:none; border:none; color:#fff;
+  font-size:20px; cursor:pointer;
+}
 #playerControls button:disabled{opacity:.5; cursor:not-allowed;}
 #volumeSlider{width:100px;}
 </style>
 </head>
 <body>
+
+<!-- Flechas -->
 <div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
 <div class="arrow right" onclick="scrollCarousel(1)">❯</div>
 
 <main class="carousel-container">
-  <div class="slide welcome" style="background-image:url('NSD.jpg')"><span>WELCOME</span></div>
+  <!-- WELCOME -->
+  <div class="slide welcome" style="background-image:url('NSD.jpg')">
+    <span>WELCOME</span>
+  </div>
+
+  <!-- Enlaces -->
   <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
   <a class="slide" href="https://youtube.com/@noizesecretdoctrine" target="_blank" style="background-image:url('youtube.png')"><span>YOUTUBE</span></a>
   <a class="slide" href="https://open.spotify.com/intl-es/artist/79wYn0trIxj3ewBLhOBUzX" target="_blank" style="background-image:url('spotify.png')"><span>SPOTIFY</span></a>
   <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
   <a class="slide" href="https://triple6.nl/bookings/" target="_blank" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
   <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
+
+  <!-- Snake -->
   <div class="slide snake-slide">
     <div class="play-inner" id="snake">
       <div id="snakeWrap">
@@ -125,6 +247,7 @@ html,body{
   </div>
 </main>
 
+<!-- Player Controls -->
 <div id="playerControls">
   <button id="prevBtn" disabled>⏮</button>
   <button id="playPauseBtn" disabled>▶</button>
@@ -135,198 +258,114 @@ html,body{
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
 
+<!-- SoundCloud Widget -->
 <iframe
   id="scPlayer"
   src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/noizesd&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false&show_teaser=false"
   allow="autoplay"
   style="position:fixed; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none; border:0;"
-  aria-hidden="true" tabindex="-1"></iframe>
+  aria-hidden="true"
+  tabindex="-1"
+></iframe>
 <script src="https://w.soundcloud.com/player/api.js"></script>
 
-<!-- Firebase SDK -->
+<!-- Firebase + Snake Logic -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-  import { getDatabase, ref, push, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
-  const firebaseConfig = {
-    apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
-    authDomain: "nsdsnake.firebaseapp.com",
-    databaseURL: "https://nsdsnake-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "nsdsnake",
-    storageBucket: "nsdsnake.firebasestorage.app",
-    messagingSenderId: "719565977829",
-    appId: "1:719565977829:web:94911f469efd29aa9c7c0c"
-  };
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  window.db = db;
-  window.dbRef = ref;
-  window.pushScore = push;
-  window.queryDB = query;
-  window.orderByChildDB = orderByChild;
-  window.limitToLastDB = limitToLast;
-  window.getDB = get;
-</script>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { getDatabase, ref, push, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
-<!-- Firebase -->
-<script type="module">
-  // Importar Firebase
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getDatabase, ref, push, query, orderByChild, limitToLast, get } 
-    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
+  authDomain: "nsdsnake.firebaseapp.com",
+  databaseURL: "https://nsdsnake-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nsdsnake",
+  storageBucket: "nsdsnake.firebasestorage.app",
+  messagingSenderId: "719565977829",
+  appId: "1:719565977829:web:94911f469efd29aa9c7c0c"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-  // Configuración de tu proyecto
-  const firebaseConfig = {
-    apiKey: "AIzaSyANmEBw9kBijdWHmxV5cIBHy1patcfAuvA",
-    authDomain: "nsdsnake.firebaseapp.com",
-    databaseURL: "https://nsdsnake-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "nsdsnake",
-    storageBucket: "nsdsnake.firebasestorage.app",
-    messagingSenderId: "719565977829",
-    appId: "1:719565977829:web:94911f469efd29aa9c7c0c"
-  };
+// ========== Snake Game ==========
+const canvas = document.getElementById("snakeCanvas");
+const ctx = canvas.getContext("2d");
+let snake, direction, food, score, gameInterval;
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+function startGame(){
+  snake = [{x:10,y:10}];
+  direction = {x:1,y:0};
+  food = {x:5,y:5};
+  score = 0;
+  document.getElementById("score").innerText = "SCORE: " + score;
+  document.getElementById("gameOverOverlay").style.display="none";
+  clearInterval(gameInterval);
+  gameInterval = setInterval(updateGame, 120);
+}
 
-  /* ------------------------
-     🎮 Snake Game
-  -------------------------*/
-  const canvas = document.getElementById("snakeCanvas");
-  const ctx = canvas.getContext("2d");
-  const box = 20;
-  let snake, direction, food, score, game;
-
-  function resetGame() {
-    snake = [{x: 9*box, y: 10*box}];
-    direction = null;
-    food = randomFood();
-    score = 0;
-    document.getElementById("score").innerText = "SCORE: 0";
+function updateGame(){
+  const head = {x:snake[0].x+direction.x, y:snake[0].y+direction.y};
+  if(head.x<0||head.y<0||head.x>=20||head.y>=20||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    return gameOver();
   }
-
-  function randomFood() {
-    const types = ["N","S","D"];
-    return {
-      x: Math.floor(Math.random()* (canvas.width/box)) * box,
-      y: Math.floor(Math.random()* (canvas.height/box)) * box,
-      type: types[Math.floor(Math.random()*types.length)]
-    };
+  snake.unshift(head);
+  if(head.x===food.x && head.y===food.y){
+    score++;
+    document.getElementById("score").innerText="SCORE: "+score;
+    food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};
+  } else {
+    snake.pop();
   }
+  draw();
+}
 
-  function drawFood(f) {
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 16px Orbitron, sans-serif";
-    ctx.fillText(f.type, f.x+4, f.y+16);
-  }
+function draw(){
+  ctx.fillStyle="black"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="lime";
+  snake.forEach(p=>ctx.fillRect(p.x*20,p.y*20,18,18));
+  ctx.fillStyle="red";
+  ctx.fillRect(food.x*20,food.y*20,18,18);
+}
 
-  document.addEventListener("keydown", e => {
-    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)){
-      e.preventDefault(); // Evita mover el carrusel
-      if(e.key==="ArrowLeft" && direction!=="RIGHT") direction="LEFT";
-      else if(e.key==="ArrowUp" && direction!=="DOWN") direction="UP";
-      else if(e.key==="ArrowRight" && direction!=="LEFT") direction="RIGHT";
-      else if(e.key==="ArrowDown" && direction!=="UP") direction="DOWN";
-    }
-  });
+function gameOver(){
+  clearInterval(gameInterval);
+  document.getElementById("gameOverOverlay").style.display="flex";
+  loadRanking();
+}
 
-  function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(let i=0;i<snake.length;i++){
-      ctx.fillStyle = (i===0) ? "#e60000" : "#0f0";
-      ctx.fillRect(snake[i].x,snake[i].y,box,box);
-    }
-    drawFood(food);
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowUp"&&direction.y===0) direction={x:0,y:-1};
+  if(e.key==="ArrowDown"&&direction.y===0) direction={x:0,y:1};
+  if(e.key==="ArrowLeft"&&direction.x===0) direction={x:-1,y:0};
+  if(e.key==="ArrowRight"&&direction.x===0) direction={x:1,y:0};
+});
 
-    let head = {...snake[0]};
-    if(direction==="LEFT") head.x -= box;
-    if(direction==="UP") head.y -= box;
-    if(direction==="RIGHT") head.x += box;
-    if(direction==="DOWN") head.y += box;
+document.getElementById("submitScore").onclick=async()=>{
+  const nickname=document.getElementById("nicknameInput").value.trim();
+  if(!nickname) return alert("Nickname required!");
+  await push(ref(db,"scores"),{nickname,score});
+  loadRanking();
+};
 
-    // Colisión
-    if(head.x<0 || head.y<0 || head.x>=canvas.width || head.y>=canvas.height || collision(head,snake)){
-      clearInterval(game);
-      document.getElementById("gameOverOverlay").style.display="flex";
-      loadRanking();
-      return;
-    }
+document.getElementById("playAgainBtn").onclick=startGame;
 
-    // Comer
-    if(head.x===food.x && head.y===food.y){
-      score++;
-      document.getElementById("score").innerText="SCORE: "+score;
-      food = randomFood();
-    } else {
-      snake.pop();
-    }
-    snake.unshift(head);
-  }
+async function loadRanking(){
+  const rankingDiv=document.getElementById("ranking");
+  rankingDiv.innerHTML="Loading...";
+  const snapshot=await get(query(ref(db,"scores"), orderByChild("score"), limitToLast(10)));
+  const scores=[];
+  snapshot.forEach(child=>scores.push(child.val()));
+  scores.sort((a,b)=>b.score-a.score);
+  rankingDiv.innerHTML=scores.map((s,i)=>`${i+1}. ${s.nickname} — ${s.score}`).join("<br>");
+}
 
-  function collision(head, array){
-    return array.some(seg=>seg.x===head.x && seg.y===head.y);
-  }
+startGame();
 
-  function startGame(){
-    resetGame();
-    document.getElementById("gameOverOverlay").style.display="none";
-    game = setInterval(draw,120);
-  }
-
-  document.getElementById("playAgainBtn").addEventListener("click", startGame);
-
-  document.getElementById("submitScore").addEventListener("click", async ()=>{
-    const nick = document.getElementById("nicknameInput").value.trim();
-    if(!nick) return alert("Enter a nickname!");
-    await push(ref(db,"scores"), {nickname:nick, score:score, ts:Date.now()});
-    loadRanking();
-  });
-
-  async function loadRanking(){
-    const q = query(ref(db,"scores"), orderByChild("score"), limitToLast(10));
-    const snap = await get(q);
-    const data = [];
-    snap.forEach(c=>data.push(c.val()));
-    data.sort((a,b)=>b.score - a.score);
-
-    let html="<ol>";
-    data.forEach(s=>{
-      html+=`<li>${s.nickname} — ${s.score}</li>`;
-    });
-    html+="</ol>";
-    document.getElementById("ranking").innerHTML=html;
-  }
-
-  startGame();
-
-  /* ------------------------
-     🎵 SoundCloud Controls
-  -------------------------*/
-  const scWidget = SC.Widget(document.getElementById("scPlayer"));
-  const playPauseBtn = document.getElementById("playPauseBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const prevBtn = document.getElementById("prevBtn");
-  const volumeSlider = document.getElementById("volumeSlider");
-
-  scWidget.bind(SC.Widget.Events.READY, () => {
-    playPauseBtn.disabled=false;
-    nextBtn.disabled=false;
-    prevBtn.disabled=false;
-    volumeSlider.disabled=false;
-  });
-
-  playPauseBtn.addEventListener("click", ()=>{
-    scWidget.isPaused(paused=>{
-      if(paused){
-        scWidget.play(); playPauseBtn.textContent="⏸";
-      } else {
-        scWidget.pause(); playPauseBtn.textContent="▶";
-      }
-    });
-  });
-  nextBtn.addEventListener("click", ()=>scWidget.next());
-  prevBtn.addEventListener("click", ()=>scWidget.prev());
-  volumeSlider.addEventListener("input", e=>scWidget.setVolume(e.target.value));
+// Carousel Arrows
+function scrollCarousel(dir){
+  document.querySelector(".carousel-container").scrollBy({left:dir*window.innerWidth*0.8,behavior:"smooth"});
+}
+window.scrollCarousel=scrollCarousel;
 </script>
 </body>
 </html>
-
