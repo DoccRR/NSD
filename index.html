@@ -209,6 +209,29 @@ html,body{
 }
 #playerControls button:disabled{opacity:.5; cursor:not-allowed;}
 #volumeSlider{width:100px;}
+#welcomeOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;             /* 🔒 oculto por defecto */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+  z-index: 5;
+}
+
+#welcomeOverlay .welcome-content p {
+  margin: 8px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+#welcomeOverlay .welcome-content .small {
+  font-size: 14px;
+  opacity: 0.8;
+}
 </style>
 </head>
 <body>
@@ -219,9 +242,15 @@ html,body{
 
 <main class="carousel-container">
   <!-- WELCOME -->
-  <div class="slide welcome" style="background-image:url('NSD.jpg')">
-    <span>WELCOME</span>
+<div class="slide welcome" style="background-image:url('NSD.jpg')" onclick="toggleWelcomeOverlay()">
+  <span>WELCOME</span>
+  <div id="welcomeOverlay">
+    <div class="welcome-content">
+      <p>This is NSD official website.</p>
+      <p class="small">Underground crew</p>
+    </div>
   </div>
+</div>
 
   <!-- Enlaces -->
   <a class="slide" href="https://noizesecretdoctrine.bandcamp.com" target="_blank" style="background-image:url('bandcamp.png')"><span>BUY MUSIC</span></a>
@@ -272,6 +301,20 @@ html,body{
   tabindex="-1"
 ></iframe>
 <script src="https://w.soundcloud.com/player/api.js"></script>
+<script>
+function toggleWelcomeOverlay() {
+  const overlay = document.getElementById('welcomeOverlay');
+  const isVisible = overlay.style.display === 'flex';
+  overlay.style.display = isVisible ? 'none' : 'flex';
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const overlay = document.getElementById('welcomeOverlay');
+  overlay.addEventListener('click', () => {
+    overlay.style.display = 'none';
+  });
+});
+</script>
 
 <!-- ========================= -->
 <!--        FIREBASE          -->
@@ -534,6 +577,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
