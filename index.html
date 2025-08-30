@@ -188,7 +188,6 @@ html,body{
     max-height:450px;
   }
 }
-/* Contenedor del reproductor minimalista */
 #minimalPlayer {
   position: fixed;
   bottom: 20px;
@@ -212,10 +211,11 @@ html,body{
   outline: none;           /* Eliminar el borde de enfoque */
 }
 
-/* Estilo cuando los botones son enfocados o presionados */
-#minimalPlayer button:focus, #minimalPlayer button:active {
+/* Eliminar el fondo y el contorno al hacer clic o enfocar el botón */
+#minimalPlayer button:focus, 
+#minimalPlayer button:active {
   background: none;        /* Sin fondo */
-  outline: none;           /* Eliminar contorno azul */
+  outline: none;           /* Eliminar contorno azul al estar enfocado o activo */
 }
 
 /* Botones de prev y next */
@@ -262,7 +262,6 @@ html,body{
   margin-top: -5px;
   cursor: pointer;
 }
-
 
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
@@ -728,6 +727,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
