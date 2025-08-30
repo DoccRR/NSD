@@ -190,41 +190,35 @@ html,body{
 }
 /* 🎧 Underground Player Styles */
 #undergroundPlayer {
-  background: linear-gradient(145deg, #000, #111);
-  border: 2px solid var(--accent); /* usa tu color principal */
+  background: #fff; /* 🔥 fondo blanco */
+  border: 2px solid var(--accent);
   border-radius: 12px;
   padding: 15px;
   width: 90%;
   max-width: 400px;
-  color: #fff;
+  color: #000; /* 🔥 texto en negro */
   font-family: 'Orbitron', sans-serif;
-  box-shadow: 0 0 15px var(--accent), inset 0 0 5px #000;
+  box-shadow: 0 0 15px var(--accent), inset 0 0 5px #ccc; /* sombra clara */
   text-align: center;
 
   position: fixed;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20; /* ✅ más bajo, no bloquea las slides */
+  z-index: 20;
 }
 
 #undergroundPlayer .track-info {
   margin-bottom: 10px;
   font-size: 14px;
-  text-shadow: 0 0 8px var(--accent);
-}
-
-#undergroundPlayer .controls {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  text-shadow: none; /* quitamos el brillo */
+  color: #000; /* texto negro */
 }
 
 #undergroundPlayer .controls button {
   background: transparent;
   border: 2px solid var(--accent);
-  color: var(--accent);
+  color: var(--accent); /* mantiene acento */
   font-size: 20px;
   padding: 8px 12px;
   border-radius: 50%;
@@ -234,14 +228,14 @@ html,body{
 
 #undergroundPlayer .controls button:hover {
   background: var(--accent);
-  color: #000;
+  color: #fff; /* 🔥 cambia a blanco el icono al pasar el ratón */
   transform: scale(1.1);
 }
 
 .progress-container {
   width: 100%;
   height: 6px;
-  background: #333;
+  background: #ddd; /* barra clara */
   border-radius: 4px;
   overflow: hidden;
 }
@@ -252,7 +246,6 @@ html,body{
   background: var(--accent);
   transition: width 0.1s linear;
 }
-
 
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
@@ -724,6 +717,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
