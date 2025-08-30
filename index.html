@@ -188,7 +188,6 @@ html,body{
     max-height:450px;
   }
 }
-/* 🎧 Minimal Player Styles */
 #minimalPlayer {
   position: fixed;
   bottom: 20px;
@@ -198,20 +197,33 @@ html,body{
   align-items: center;
   gap: 15px;
   z-index: 100;
-  background: transparent; /* 🔥 transparente */
+  background: transparent;
 }
 
 #minimalPlayer button {
   background: none;
   border: none;
-  color: white; /* 🔥 todo blanco */
-  font-size: 26px;
+  font-size: 32px;   /* un poco más grande */
   cursor: pointer;
   transition: 0.2s;
 }
 
+/* Botones normales */
+#prevBtn, #nextBtn {
+  color: white; /* flechas en blanco */
+}
+
+/* Play en blanco */
+#playPauseBtn.play {
+  color: white;
+}
+
+/* Pause en rojo sangre */
+#playPauseBtn.pause {
+  color: #b00000; /* rojo sangre */
+}
+
 #minimalPlayer button:hover {
-  color: var(--accent); /* opcional: cambia al color acento */
   transform: scale(1.2);
 }
 
@@ -223,7 +235,7 @@ html,body{
 
 #minimalPlayer input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
-  background: white; /* 🔥 barra en blanco */
+  background: white;
   border-radius: 2px;
 }
 
@@ -232,22 +244,8 @@ html,body{
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background: white; /* 🔥 bolita blanca */
+  background: white;
   margin-top: -5px;
-  cursor: pointer;
-}
-
-#minimalPlayer input[type="range"]::-moz-range-track {
-  height: 4px;
-  background: white;
-  border-radius: 2px;
-}
-
-#minimalPlayer input[type="range"]::-moz-range-thumb {
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  background: white;
   cursor: pointer;
 }
 
@@ -711,11 +709,12 @@ volumeSlider.addEventListener('input', function(e){
   scWidget.setVolume(v);
 });
 </script>
-
 </body>
 </html>
 
+
  
+
 
 
 
