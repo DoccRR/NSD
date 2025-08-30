@@ -188,28 +188,20 @@ html,body{
     max-height:450px;
   }
 }
-/* Eliminar borde de enfoque para todos los elementos que no sean botones */
-*:focus {
+/* Eliminar borde de enfoque para botones, campos de entrada y canvas */
+button:focus, button:focus-visible, #playPauseBtn:focus, #playPauseBtn:focus-visible,
+input:focus, textarea:focus, select:focus, #snakeCanvas:focus, *:focus {
   outline: none !important;
   box-shadow: none !important;
   border: none !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
 }
 
-/* Asegurar que los botones mantengan un estilo de enfoque visible y no se vean afectados */
-button:focus,
-button:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+/* Solución para borde naranja en Android */
+button, input, textarea, select, canvas {
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Estilo de los botones (asegurarse de que no pierdan la funcionalidad visual) */
+/* Estilo general para los botones del reproductor */
 #minimalPlayer button {
   background: none;
   border: none;
@@ -217,19 +209,12 @@ button:focus-visible {
   cursor: pointer;
   color: white;
   transition: transform 0.2s ease-in-out;
-  outline: none;
 }
 
-/* También para el botón "playPauseBtn" */
-#playPauseBtn:focus-visible {
+/* Eliminar borde azul al enfocar los botones */
+#minimalPlayer button:focus, #minimalPlayer button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
-}
-
-/* Estilo para hover y enfoque en los botones */
-#minimalPlayer button:focus,
-#minimalPlayer button:hover {
-  transform: scale(1.2);
 }
 
 /* Estilo para los botones prev/next */
@@ -237,15 +222,9 @@ button:focus-visible {
   color: white;
 }
 
-/* Estilo del botón de Play (color blanco) */
-#playPauseBtn.play {
-  color: white;
-}
-
-/* Estilo para el botón de Pause (color rojo sangre) */
-#playPauseBtn.pause {
-  color: #b00000;
-}
+/* Estilo para los botones de Play y Pause */
+#playPauseBtn.play { color: white; }
+#playPauseBtn.pause { color: #b00000; }
 
 /* Estilos del slider */
 #minimalPlayer input[type="range"] {
@@ -254,14 +233,12 @@ button:focus-visible {
   background: transparent;
 }
 
-/* Estilo del track del slider */
 #minimalPlayer input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   background: white;
   border-radius: 2px;
 }
 
-/* Estilo del thumb (manija) del slider */
 #minimalPlayer input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 14px;
@@ -272,11 +249,15 @@ button:focus-visible {
   cursor: pointer;
 }
 
-/* Asegurarse de que no haya borde en el overlay de bienvenida */
-#welcomeOverlay .welcome-content p {
-  margin: 8px 0;
-  color: #fff;
-  font-size: 16px;
+/* Ajustes para pantallas móviles */
+@media (max-width: 768px) {
+  /* Asegurarse de que el botón de "share" esté en la parte superior */
+  #shareBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+  }
 }
 
 
@@ -744,6 +725,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
