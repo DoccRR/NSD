@@ -107,6 +107,8 @@ html,body{
   height:auto; background:#000;
   border:2px solid var(--accent);
   border-radius:10px;
+  touch-action:none;       /* 🚫 evita scroll y zoom en móvil */
+  -ms-touch-action:none;   /* compatibilidad IE/Edge antiguos */
 }
 
 /* Snake UI */
@@ -442,6 +444,7 @@ canvasEl.addEventListener('touchmove',e=>{
   }
   e.preventDefault();
 },{passive:false});
+
 resetSnake();
 
 /* Bloquear scroll solo cuando Snake está visible */
@@ -531,6 +534,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
