@@ -188,15 +188,7 @@ html,body{
     max-height:450px;
   }
 }
-/* Eliminar borde de enfoque para todos los botones y otros elementos enfocados */
-button:focus,
-button:focus-visible,
-#playPauseBtn:focus,
-#playPauseBtn:focus-visible,
-input:focus,
-textarea:focus,
-select:focus,
-#snakeCanvas:focus,
+/* Eliminar borde de enfoque para todos los elementos que no sean botones */
 *:focus {
   outline: none !important;
   box-shadow: none !important;
@@ -206,18 +198,18 @@ select:focus,
   appearance: none;
 }
 
-/* Solución para evitar borde naranja en Android */
-button, input, textarea, select, canvas {
-  -webkit-tap-highlight-color: transparent !important;  /* Eliminar borde en dispositivos móviles */
-}
-
-/* Específico para el Canvas */
-#snakeCanvas:focus {
+/* Asegurar que los botones mantengan un estilo de enfoque visible y no se vean afectados */
+button:focus,
+button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
+  border: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-/* Estilos para los botones del reproductor */
+/* Estilo de los botones (asegurarse de que no pierdan la funcionalidad visual) */
 #minimalPlayer button {
   background: none;
   border: none;
@@ -228,8 +220,8 @@ button, input, textarea, select, canvas {
   outline: none;
 }
 
-/* Eliminar borde azul de enfoque visible en botones */
-#minimalPlayer button:focus-visible {
+/* También para el botón "playPauseBtn" */
+#playPauseBtn:focus-visible {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -752,6 +744,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
