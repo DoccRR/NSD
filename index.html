@@ -333,23 +333,6 @@ html,body{
   <a class="slide" href="https://instagram.com/nsd_noi" target="_blank" style="background-image:url('instagram.png')"><span>INSTAGRAM</span></a>
   <a class="slide" href="https://triple6.nl/bookings/" target="_blank" style="background-image:url('bookings.png')"><span>BOOKINGS</span></a>
   <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
-
-</main>
-
-<!-- 🎧 Underground Player -->
-<div id="undergroundPlayer">
-  <div class="track-info">Reproduciendo: <span id="trackTitle">Cargando...</span></div>
-  
-  <div class="controls">
-    <button id="prevBtn">⏮</button>
-    <button id="playPauseBtn">▶️</button>
-    <button id="nextBtn">⏭</button>
-  </div>
-
-  <div class="progress-container">
-    <div id="progressBar"></div>
-  </div>
-</div>
   <!-- WELCOME -->
 <div class="slide welcome" style="background-image:url('NSD.jpg')" onclick="toggleWelcomeOverlay()">
   <span>WELCOME</span>
@@ -379,10 +362,27 @@ html,body{
       <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
     </div>
   </div>
+  
 </main>
 
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
+</main>
+
+<!-- 🎧 Underground Player -->
+<div id="undergroundPlayer">
+  <div class="track-info">Reproduciendo: <span id="trackTitle">Cargando...</span></div>
+  
+  <div class="controls">
+    <button id="prevBtn">⏮</button>
+    <button id="playPauseBtn">▶️</button>
+    <button id="nextBtn">⏭</button>
+  </div>
+
+  <div class="progress-container">
+    <div id="progressBar"></div>
+  </div>
+</div>
 
 <!-- SoundCloud Widget (oculto pero operativo) -->
 <iframe
@@ -697,6 +697,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
