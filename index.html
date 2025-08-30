@@ -586,7 +586,7 @@ function renderRanking(){
     });
 }
 function saveScore(){
-  const nickname = (nicknameInput.value || "Anon").slice(0,5);
+  const nickname = (nicknameInput.value || "Anon").slice(0,7);
   const safeScore = Math.max(0, Math.min(9999, Number(score)||0));
 
   submitScoreBtn.disabled = true;
@@ -725,6 +725,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
