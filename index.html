@@ -188,64 +188,69 @@ html,body{
     max-height:450px;
   }
 }
-/* 🎧 Underground Player Styles */
-#undergroundPlayer {
-  background: #fff; /* 🔥 fondo blanco */
-  border: 2px solid var(--accent);
-  border-radius: 12px;
-  padding: 15px;
-  width: 90%;
-  max-width: 400px;
-  color: #000; /* 🔥 texto en negro */
-  font-family: 'Orbitron', sans-serif;
-  box-shadow: 0 0 15px var(--accent), inset 0 0 5px #ccc; /* sombra clara */
-  text-align: center;
-
+/* 🎧 Minimal Player Styles */
+#minimalPlayer {
   position: fixed;
-  bottom: 10px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 100;
+  background: transparent; /* 🔥 transparente */
 }
 
-#undergroundPlayer .track-info {
-  margin-bottom: 10px;
-  font-size: 14px;
-  text-shadow: none; /* quitamos el brillo */
-  color: #000; /* texto negro */
-}
-
-#undergroundPlayer .controls button {
-  background: transparent;
-  border: 2px solid var(--accent);
-  color: var(--accent); /* mantiene acento */
-  font-size: 20px;
-  padding: 8px 12px;
-  border-radius: 50%;
+#minimalPlayer button {
+  background: none;
+  border: none;
+  color: white; /* 🔥 todo blanco */
+  font-size: 26px;
   cursor: pointer;
   transition: 0.2s;
 }
 
-#undergroundPlayer .controls button:hover {
-  background: var(--accent);
-  color: #fff; /* 🔥 cambia a blanco el icono al pasar el ratón */
-  transform: scale(1.1);
+#minimalPlayer button:hover {
+  color: var(--accent); /* opcional: cambia al color acento */
+  transform: scale(1.2);
 }
 
-.progress-container {
-  width: 100%;
-  height: 6px;
-  background: #ddd; /* barra clara */
-  border-radius: 4px;
-  overflow: hidden;
+#minimalPlayer input[type="range"] {
+  -webkit-appearance: none;
+  width: 100px;
+  background: transparent;
 }
 
-#progressBar {
-  height: 100%;
-  width: 0%;
-  background: var(--accent);
-  transition: width 0.1s linear;
+#minimalPlayer input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: white; /* 🔥 barra en blanco */
+  border-radius: 2px;
 }
+
+#minimalPlayer input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: white; /* 🔥 bolita blanca */
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+#minimalPlayer input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: white;
+  border-radius: 2px;
+}
+
+#minimalPlayer input[type="range"]::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
 
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
@@ -389,21 +394,15 @@ html,body{
   
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
-
-<!-- 🎧 Underground Player -->
-<div id="undergroundPlayer">
-  <div class="track-info">Reproduciendo: <span id="trackTitle">Cargando...</span></div>
   
-  <div class="controls">
-    <button id="prevBtn">⏮</button>
-    <button id="playPauseBtn">▶️</button>
-    <button id="nextBtn">⏭</button>
-  </div>
-
-  <div class="progress-container">
-    <div id="progressBar"></div>
-  </div>
+<!-- 🎧 Minimal Player --> 
+<div id="minimalPlayer">
+  <button id="prevBtn">⏮</button>
+  <button id="playPauseBtn">▶️</button>
+  <button id="nextBtn">⏭</button>
+  <input type="range" id="volumeSlider" min="0" max="100" value="80">
 </div>
+
 
 <!-- SoundCloud Widget (oculto pero operativo) -->
 <iframe
@@ -717,6 +716,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
