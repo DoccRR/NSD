@@ -188,6 +188,27 @@ html,body{
     max-height:450px;
   }
 }
+/* Eliminar cualquier borde al hacer foco en cualquier elemento */
+  
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Eliminar el borde y sombra en los botones del reproductor */
+#minimalPlayer button:focus,
+#minimalPlayer button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* Reset para botones: eliminar el estilo predeterminado */
+button {
+  -webkit-appearance: none;  /* Eliminar el estilo predeterminado de Webkit */
+  -moz-appearance: none;     /* Eliminar el estilo predeterminado en Firefox */
+  appearance: none;          /* Eliminar el estilo predeterminado en todos los navegadores */
+}
+
+/* Ajustes específicos para el reproductor */
 #minimalPlayer {
   position: fixed;
   bottom: 20px;
@@ -266,6 +287,7 @@ html,body{
   margin-top: -5px;
   cursor: pointer;
 }
+
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
   color: #fff;
@@ -730,6 +752,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
