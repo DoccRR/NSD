@@ -188,6 +188,7 @@ html,body{
     max-height:450px;
   }
 }
+/* Contenedor del reproductor minimalista */
 #minimalPlayer {
   position: fixed;
   bottom: 20px;
@@ -200,45 +201,58 @@ html,body{
   background: transparent;
 }
 
+/* Estilo general de los botones */
 #minimalPlayer button {
-  background: none;
-  border: none;
-  font-size: 32px;   /* un poco más grande */
+  background: none;        /* Sin fondo */
+  border: none;            /* Sin bordes */
+  font-size: 32px;         /* Tamaño de fuente más grande */
   cursor: pointer;
-  transition: 0.2s;
+  color: white;            /* Color blanco para los botones por defecto */
+  transition: transform 0.2s ease-in-out;
+  outline: none;           /* Eliminar el borde de enfoque */
 }
 
-/* Botones normales */
+/* Estilo cuando los botones son enfocados o presionados */
+#minimalPlayer button:focus, #minimalPlayer button:active {
+  background: none;        /* Sin fondo */
+  outline: none;           /* Eliminar contorno azul */
+}
+
+/* Botones de prev y next */
 #prevBtn, #nextBtn {
-  color: white; /* flechas en blanco */
+  color: white; /* Color blanco para las flechas */
 }
 
-/* Play en blanco */
+/* Estilo para el botón de Play (color blanco) */
 #playPauseBtn.play {
   color: white;
 }
 
-/* Pause en rojo sangre */
+/* Estilo para el botón de Pause (color rojo sangre) */
 #playPauseBtn.pause {
-  color: #b00000; /* rojo sangre */
+  color: #b00000; /* Rojo sangre */
 }
 
+/* Estilo cuando el ratón pasa por encima de los botones */
 #minimalPlayer button:hover {
-  transform: scale(1.2);
+  transform: scale(1.2); /* Aumenta el tamaño del botón */
 }
 
+/* Estilo del slider (control de volumen) */
 #minimalPlayer input[type="range"] {
   -webkit-appearance: none;
   width: 100px;
   background: transparent;
 }
 
+/* Estilo del track del slider */
 #minimalPlayer input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   background: white;
   border-radius: 2px;
 }
 
+/* Estilo del thumb (manija) del slider */
 #minimalPlayer input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 14px;
@@ -714,6 +728,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
