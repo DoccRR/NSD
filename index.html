@@ -188,138 +188,74 @@ html,body{
     max-height:450px;
   }
 }
-  /* Eliminar borde de enfoque para todos los botones */
-button:focus, 
-button:focus-visible, 
-#playPauseBtn:focus, 
-#playPauseBtn:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;  /* Asegurarse de que no quede ningún borde residual */
-}
-
-/* También para los campos de entrada (en móviles) */
-input:focus, 
-textarea:focus, 
-select:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;  /* Eliminar borde en inputs */
-}
-
-/* Eliminar borde en canvas */
-#snakeCanvas:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Solución para navegadores que muestran el borde naranja (Android) */
-button, input, textarea, select, canvas {
-  -webkit-tap-highlight-color: transparent;  /* Para eliminar el borde en dispositivos móviles */
-}
-  /* Eliminar borde de enfoque para todos los botones enfocados, especialmente en playPauseBtn */
-button:focus, 
-#playPauseBtn:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Asegurarse de que también funcione en focus-visible */
-button:focus-visible, 
-#playPauseBtn:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-}
-/* Eliminar cualquier borde al hacer foco en cualquier elemento globalmente */
+/* Eliminar borde de enfoque para todos los botones y otros elementos enfocados */
+button:focus,
+button:focus-visible,
+#playPauseBtn:focus,
+#playPauseBtn:focus-visible,
+input:focus,
+textarea:focus,
+select:focus,
+#snakeCanvas:focus,
 *:focus {
   outline: none !important;
   box-shadow: none !important;
-}
-
-/* Eliminar borde y sombra al hacer foco en los botones del reproductor */
-#minimalPlayer button:focus,
-#minimalPlayer button:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Asegurarse de que los elementos puedan recibir el foco correctamente */
-#minimalPlayer button {
-  outline: none !important;
   border: none !important;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
 
-/* Específico para el Canvas, en caso de que reciba foco */
+/* Solución para evitar borde naranja en Android */
+button, input, textarea, select, canvas {
+  -webkit-tap-highlight-color: transparent !important;  /* Eliminar borde en dispositivos móviles */
+}
+
+/* Específico para el Canvas */
 #snakeCanvas:focus {
   outline: none !important;
   box-shadow: none !important;
 }
-/* Reset para botones: eliminar el estilo predeterminado */
-button {
-  -webkit-appearance: none;  /* Eliminar el estilo predeterminado de Webkit */
-  -moz-appearance: none;     /* Eliminar el estilo predeterminado en Firefox */
-  appearance: none;          /* Eliminar el estilo predeterminado en todos los navegadores */
-}
 
-/* Ajustes específicos para el reproductor */
-#minimalPlayer {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  z-index: 100;
-  background: transparent;
-}
-
-/* Estilo general de los botones */
+/* Estilos para los botones del reproductor */
 #minimalPlayer button {
-  background: none;        /* Sin fondo */
-  border: none;            /* Sin bordes */
-  font-size: 32px;         /* Tamaño de fuente más grande */
+  background: none;
+  border: none;
+  font-size: 32px;
   cursor: pointer;
-  color: white;            /* Color blanco para los botones por defecto */
+  color: white;
   transition: transform 0.2s ease-in-out;
-  outline: none;           /* Eliminar el borde de enfoque */
+  outline: none;
 }
 
-/* Eliminar el fondo y el contorno al hacer clic o enfocar el botón */
+/* Eliminar borde azul de enfoque visible en botones */
 #minimalPlayer button:focus-visible {
-  outline: none;           /* Eliminar el contorno azul al recibir foco visible */
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-/* Desactivar cualquier borde azul cuando se enfoca o hace clic */
-#minimalPlayer button:focus {
-  outline: none !important; /* Eliminar cualquier contorno de enfoque */
-  box-shadow: none !important; /* Eliminar cualquier sombra de enfoque */
-}
-
-/* Estilo cuando el ratón pasa por encima de los botones */
+/* Estilo para hover y enfoque en los botones */
+#minimalPlayer button:focus,
 #minimalPlayer button:hover {
-  transform: scale(1.2); /* Aumenta el tamaño del botón */
+  transform: scale(1.2);
 }
 
-/* Botones de prev y next */
+/* Estilo para los botones prev/next */
 #prevBtn, #nextBtn {
-  color: white; /* Color blanco para las flechas */
+  color: white;
 }
 
-/* Estilo para el botón de Play (color blanco) */
+/* Estilo del botón de Play (color blanco) */
 #playPauseBtn.play {
   color: white;
 }
 
 /* Estilo para el botón de Pause (color rojo sangre) */
 #playPauseBtn.pause {
-  color: #b00000; /* Rojo sangre */
+  color: #b00000;
 }
 
-/* Estilo del slider (control de volumen) */
+/* Estilos del slider */
 #minimalPlayer input[type="range"] {
   -webkit-appearance: none;
   width: 100px;
@@ -343,6 +279,14 @@ button {
   margin-top: -5px;
   cursor: pointer;
 }
+
+/* Asegurarse de que no haya borde en el overlay de bienvenida */
+#welcomeOverlay .welcome-content p {
+  margin: 8px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
 
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
@@ -808,6 +752,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
