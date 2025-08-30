@@ -188,39 +188,72 @@ html,body{
     max-height:450px;
   }
 }
-
-/* Player Controls */
-#playerControls{
-  position:fixed;
-  bottom:20px; left:50%;
-  transform:translateX(-50%);
-  background:#000;
-  border:2px solid var(--fg);
-  border-radius:40px;
-  padding:10px 20px;
-  font-size:16px; font-weight:700;
-  color:#fff;
-  display:flex; align-items:center; gap:15px;
-  z-index:50;
-}
-#playerControls button{
-  background:none; border:none; color:#fff;
-  font-size:20px; cursor:pointer;
-}
-#playerControls button:disabled{opacity:.5; cursor:not-allowed;}
-#volumeSlider{width:100px;}
-#welcomeOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: none;             /* 🔒 oculto por defecto */
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+/* 🎧 Underground Player Styles */
+#undergroundPlayer {
+  background: linear-gradient(145deg, #000, #111);
+  border: 2px solid var(--accent); /* usa tu color principal */
+  border-radius: 12px;
+  padding: 15px;
+  width: 90%;
+  max-width: 400px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  box-shadow: 0 0 15px var(--accent), inset 0 0 5px #000;
   text-align: center;
-  padding: 20px;
-  z-index: 5;
+
+  /* 👇 fijo abajo */
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
 }
+
+#undergroundPlayer .track-info {
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-shadow: 0 0 8px var(--accent);
+}
+
+#undergroundPlayer .controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+#undergroundPlayer .controls button {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 20px;
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#undergroundPlayer .controls button:hover {
+  background: var(--accent);
+  color: #000;
+  transform: scale(1.1);
+}
+
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.1s linear;
+}
+
 
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
@@ -283,7 +316,25 @@ html,body{
 <div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
 <div class="arrow right" onclick="scrollCarousel(1)">❯</div>
 <button id="shareBtn" title="Compartir">↗️</button>
+
 <main class="carousel-container">
+  <!-- aquí va tu contenido del carrusel -->
+</main>
+
+<!-- 🎧 Underground Player -->
+<div id="undergroundPlayer">
+  <div class="track-info">Reproduciendo: <span id="trackTitle">Cargando...</span></div>
+  
+  <div class="controls">
+    <button id="prevBtn">⏮</button>
+    <button id="playPauseBtn">▶️</button>
+    <button id="nextBtn">⏭</button>
+  </div>
+
+  <div class="progress-container">
+    <div id="progressBar"></div>
+  </div>
+</div>
   <!-- WELCOME -->
 <div class="slide welcome" style="background-image:url('NSD.jpg')" onclick="toggleWelcomeOverlay()">
   <span>WELCOME</span>
@@ -647,6 +698,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
