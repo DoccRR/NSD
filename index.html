@@ -313,6 +313,33 @@ html,body{
   opacity: 1;
   transform: translateY(0);
 }
+     #welcomeOverlay {
+      display: none; /* oculto al inicio */
+      position: fixed;
+      inset: 0; /* ocupa toda la pantalla */
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #welcomeOverlay .welcome-content {
+      text-align: center;
+      max-width: 80%;
+    }
+
+    #welcomeOverlay .welcome-content p {
+      margin: 8px 0;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    #welcomeOverlay .welcome-content .small {
+      font-size: 14px;
+      opacity: 0.8;
+    }
 </style>
 </head>
 <body>
@@ -329,12 +356,6 @@ html,body{
    <!-- WELCOME -->
 <div class="slide welcome" style="background-image:url('NSD.jpg')" onclick="toggleWelcomeOverlay()">
   <span>WELCOME</span>
-  <div id="welcomeOverlay">
-    <div class="welcome-content">
-      <p>This is NSD official website.</p>
-      <p class="small">Underground crew</p>
-    </div>
-  </div>
 </div>
 
 <!-- Enlaces -->
@@ -346,26 +367,33 @@ html,body{
   <a class="slide" href="https://triple6-shop.nl/collections/nsd" target="_blank" style="background-image:url('merch.png')"><span>MERCHANDISING</span></a>
 
   <!-- Snake -->
-  <div class="slide snake-slide">
-    <div class="play-inner" id="snake">
-      <div id="snakeWrap">
-        <div class="score" id="score">SCORE: 0</div>
-        <canvas id="snakeCanvas" width="400" height="400"></canvas>
-        <div id="gameOverOverlay">
-          <h2>NSD TOP FREAKS</h2>
-          <div id="ranking"></div>
-          <div id="rankError" aria-live="polite"></div>
-          <input type="text" id="nicknameInput" placeholder="Nickname" maxlength="20">
-          <button id="submitScore">Save Score</button>
-          <button id="playAgainBtn">Play Again</button>
-        </div>
+<div class="slide snake-slide">
+  <div class="play-inner" id="snake">
+    <div id="snakeWrap">
+      <div class="score" id="score">SCORE: 0</div>
+      <canvas id="snakeCanvas" width="400" height="400"></canvas>
+      <div id="gameOverOverlay">
+        <h2>NSD TOP FREAKS</h2>
+        <div id="ranking"></div>
+        <div id="rankError" aria-live="polite"></div>
+        <input type="text" id="nicknameInput" placeholder="Nickname" maxlength="20">
+        <button id="submitScore">Save Score</button>
+        <button id="playAgainBtn">Play Again</button>
       </div>
-      <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
-    </div>
-  </div>
-  
+    </div> <!-- cierre snakeWrap -->
+    <div class="snake-ui">Mueve con flechas o deslizando el dedo</div>
+  </div> <!-- cierre play-inner -->
+</div> <!-- cierre slide -->
 </main>
 
+<!-- Overlay fuera del carrusel -->
+<div id="welcomeOverlay">
+  <div class="welcome-content">
+    <p>This is NSD official website.</p>
+    <p class="small">Underground crew</p>
+  </div>
+</div>
+  
 <footer class="footer-genres">Hardcore, Terrorcore, Speedcore, Uptempo Hardcore</footer>
 <div class="footer-records">DOCTRINE RECORDS</div>
 
@@ -395,8 +423,7 @@ html,body{
 ></iframe>
 
 <script src="https://w.soundcloud.com/player/api.js"></script>
-
-<script>
+  <script>
 function toggleWelcomeOverlay() {
   const overlay = document.getElementById('welcomeOverlay');
   const isVisible = overlay.style.display === 'flex';
@@ -697,6 +724,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
