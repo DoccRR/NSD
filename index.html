@@ -188,6 +188,35 @@ html,body{
     max-height:450px;
   }
 }
+  /* Eliminar borde de enfoque para todos los botones */
+button:focus, 
+button:focus-visible, 
+#playPauseBtn:focus, 
+#playPauseBtn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;  /* Asegurarse de que no quede ningún borde residual */
+}
+
+/* También para los campos de entrada (en móviles) */
+input:focus, 
+textarea:focus, 
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;  /* Eliminar borde en inputs */
+}
+
+/* Eliminar borde en canvas */
+#snakeCanvas:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Solución para navegadores que muestran el borde naranja (Android) */
+button, input, textarea, select, canvas {
+  -webkit-tap-highlight-color: transparent;  /* Para eliminar el borde en dispositivos móviles */
+}
   /* Eliminar borde de enfoque para todos los botones enfocados, especialmente en playPauseBtn */
 button:focus, 
 #playPauseBtn:focus {
@@ -779,6 +808,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
