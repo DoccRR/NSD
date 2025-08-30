@@ -188,6 +188,7 @@ html,body{
     max-height:450px;
   }
 }
+/* Contenedor del reproductor minimalista */
 #minimalPlayer {
   position: fixed;
   bottom: 20px;
@@ -212,10 +213,13 @@ html,body{
 }
 
 /* Eliminar el fondo y el contorno al hacer clic o enfocar el botón */
-#minimalPlayer button:focus, 
-#minimalPlayer button:active {
-  background: none;        /* Sin fondo */
-  outline: none;           /* Eliminar contorno azul al estar enfocado o activo */
+#minimalPlayer button:focus-visible {
+  outline: none;           /* Eliminar el contorno azul al recibir foco visible */
+}
+
+/* Estilo cuando el ratón pasa por encima de los botones */
+#minimalPlayer button:hover {
+  transform: scale(1.2); /* Aumenta el tamaño del botón */
 }
 
 /* Botones de prev y next */
@@ -231,11 +235,6 @@ html,body{
 /* Estilo para el botón de Pause (color rojo sangre) */
 #playPauseBtn.pause {
   color: #b00000; /* Rojo sangre */
-}
-
-/* Estilo cuando el ratón pasa por encima de los botones */
-#minimalPlayer button:hover {
-  transform: scale(1.2); /* Aumenta el tamaño del botón */
 }
 
 /* Estilo del slider (control de volumen) */
@@ -727,6 +726,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
