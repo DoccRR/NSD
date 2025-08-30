@@ -188,16 +188,30 @@ html,body{
     max-height:450px;
   }
 }
-/* Eliminar cualquier borde al hacer foco en cualquier elemento */
-  
+/* Eliminar cualquier borde al hacer foco en cualquier elemento globalmente */
 *:focus {
   outline: none !important;
   box-shadow: none !important;
 }
 
-/* Eliminar el borde y sombra en los botones del reproductor */
+/* Eliminar borde y sombra al hacer foco en los botones del reproductor */
 #minimalPlayer button:focus,
 #minimalPlayer button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Asegurarse de que los elementos puedan recibir el foco correctamente */
+#minimalPlayer button {
+  outline: none !important;
+  border: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Específico para el Canvas, en caso de que reciba foco */
+#snakeCanvas:focus {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -752,6 +766,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
