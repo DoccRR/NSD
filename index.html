@@ -201,12 +201,11 @@ html,body{
   box-shadow: 0 0 15px var(--accent), inset 0 0 5px #000;
   text-align: center;
 
-  /* 👇 fijo abajo */
   position: fixed;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 200;
+  z-index: 20; /* ✅ más bajo, no bloquea las slides */
 }
 
 #undergroundPlayer .track-info {
@@ -303,6 +302,12 @@ html,body{
   pointer-events: none;
   white-space: nowrap;
 }
+  #shareBtn img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  pointer-events: none;
+}
 
 #shareBtn:hover::after {
   opacity: 1;
@@ -315,7 +320,10 @@ html,body{
 <!-- Flechas -->
 <div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
 <div class="arrow right" onclick="scrollCarousel(1)">❯</div>
-<button id="shareBtn" title="Compartir">↗️</button>
+  
+<button id="shareBtn" title="Compartir">
+  <img src="share.jpg" alt="Compartir">
+</button>
 
 <main class="carousel-container">
   <!-- aquí va tu contenido del carrusel -->
@@ -698,6 +706,7 @@ volumeSlider.addEventListener('input', function(e){
 </html>
 
  
+
 
 
 
