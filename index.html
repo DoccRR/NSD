@@ -188,7 +188,6 @@ html,body{
     max-height:450px;
   }
 }
-/* Contenedor del reproductor minimalista */
 #minimalPlayer {
   position: fixed;
   bottom: 20px;
@@ -215,6 +214,12 @@ html,body{
 /* Eliminar el fondo y el contorno al hacer clic o enfocar el botón */
 #minimalPlayer button:focus-visible {
   outline: none;           /* Eliminar el contorno azul al recibir foco visible */
+}
+
+/* Desactivar cualquier borde azul cuando se enfoca o hace clic */
+#minimalPlayer button:focus {
+  outline: none !important; /* Eliminar cualquier contorno de enfoque */
+  box-shadow: none !important; /* Eliminar cualquier sombra de enfoque */
 }
 
 /* Estilo cuando el ratón pasa por encima de los botones */
@@ -261,7 +266,6 @@ html,body{
   margin-top: -5px;
   cursor: pointer;
 }
-
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
   color: #fff;
@@ -726,6 +730,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
