@@ -188,6 +188,19 @@ html,body{
     max-height:450px;
   }
 }
+  /* Eliminar borde de enfoque para todos los botones enfocados, especialmente en playPauseBtn */
+button:focus, 
+#playPauseBtn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Asegurarse de que también funcione en focus-visible */
+button:focus-visible, 
+#playPauseBtn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
 /* Eliminar cualquier borde al hacer foco en cualquier elemento globalmente */
 *:focus {
   outline: none !important;
@@ -766,6 +779,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
