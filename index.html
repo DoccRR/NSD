@@ -182,10 +182,11 @@ html,body{
 
 @media(min-width:768px){
   #snakeCanvas{
-    width:80vw;
-    height:45vw;
-    max-width:800px;
-    max-height:450px;
+    width: min(70vh, 70vw);
+    aspect-ratio: 1 / 1;   /* Mantiene el cuadrado */
+    height: auto;
+    max-width: 800px;
+    max-height: 800px;
   }
 }
 /* Eliminar borde de enfoque para botones, campos de entrada y canvas */
@@ -412,6 +413,30 @@ carousel.addEventListener('wheel',e=>{
 /* Snake Game */
 const canvasEl=document.getElementById('snakeCanvas');
 const ctx=canvasEl.getContext('2d');
+  // Ajuste de tamaño real del canvas y densidad de píxeles
+function fitCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+
+  const target = Math.min(
+    800,
+    Math.min(window.innerWidth * 0.7, window.innerHeight * 0.7)
+  );
+
+  canvasEl.style.width = target + "px";
+  canvasEl.style.height = target + "px";
+
+  canvasEl.width  = Math.round(target * dpr);
+  canvasEl.height = Math.round(target * dpr);
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+fitCanvas();
+window.addEventListener('resize', () => {
+  fitCanvas();
+  recomputeGrid();
+  drawSnake();
+});
+
 const scoreEl=document.getElementById('score');
 const overlay=document.getElementById('gameOverOverlay');
 const rankingEl=document.getElementById('ranking');
@@ -419,9 +444,21 @@ const rankErrorEl=document.getElementById('rankError');
 const nicknameInput=document.getElementById('nicknameInput');
 const submitScoreBtn=document.getElementById('submitScore');
 const playAgainBtn=document.getElementById('playAgainBtn');
-const GRID=20,SPEED=140;
-const W=canvasEl.width,H=canvasEl.height;
-const CELL=W/GRID;
+let GRID, SPEED = 140;
+let W, H, CELL;
+
+function recomputeGrid(){
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+  GRID = isDesktop ? 28 : 20;
+
+  W = canvasEl.clientWidth;
+  H = canvasEl.clientHeight;
+
+  const S = Math.min(W, H);
+  CELL = S / GRID;
+}
+recomputeGrid();
+
 let snake,dir,food,score,pendingDir,gameLoop,lives=1;
 
 function resetSnake(){
@@ -460,14 +497,47 @@ function step(){
   drawSnake();
 }
 function drawSnake(){
-  ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='#fff'; ctx.lineWidth=4; ctx.strokeRect(0,0,W,H);
-  const fx=food.x*CELL+CELL/2,fy=food.y*CELL+CELL/2;
-  ctx.fillStyle='#e60000'; ctx.beginPath(); ctx.arc(fx,fy,CELL*0.35,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.font=(CELL*0.5)+"px Orbitron"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("NSD",fx,fy+1);
-  ctx.fillStyle='#fff'; snake.forEach(seg=>{const m=CELL*0.25; ctx.fillRect(seg.x*CELL+m/2,seg.y*CELL+m/2,CELL-m,CELL-m);});
-  scoreEl.textContent='SCORE: '+score+' | LIVES: '+lives;
+  // Fondo y borde
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(0, 0, W, H);
+
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+  // --- Food (más pequeña en desktop)
+  const fx = food.x * CELL + CELL / 2;
+  const fy = food.y * CELL + CELL / 2;
+  const foodR = CELL * (isDesktop ? 0.25 : 0.35);
+  ctx.fillStyle = '#e60000';
+  ctx.beginPath();
+  ctx.arc(fx, fy, foodR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Texto dentro de la comida
+  ctx.fillStyle = '#fff';
+  ctx.font = (CELL * (isDesktop ? 0.38 : 0.5)) + "px Orbitron";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("NSD", fx, fy + 1);
+
+  // --- Snake segments (más pequeños en desktop)
+  ctx.fillStyle = '#fff';
+  snake.forEach(seg => {
+    const shrink = CELL * (isDesktop ? 0.40 : 0.25);
+    ctx.fillRect(
+      seg.x * CELL + shrink / 2,
+      seg.y * CELL + shrink / 2,
+      CELL - shrink,
+      CELL - shrink
+    );
+  });
+
+  // Marcador
+  scoreEl.textContent = 'SCORE: ' + score + ' | LIVES: ' + lives;
 }
+
 
 // =====================
 //  Ranking (Firebase)
@@ -638,6 +708,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
