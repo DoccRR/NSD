@@ -271,55 +271,6 @@ button, input, textarea, select, canvas {
   font-size: 14px;
   opacity: 0.8;
 }
-#shareBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #fff; /* 🔥 fondo blanco */
-  color: #000;      /* icono o texto en negro para contraste */
-  font-size: 18px;
-  border: none;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  transition: transform 0.2s ease;
-}
-#shareBtn:hover {
-  transform: scale(1.1);
-}
-#shareBtn::after {
-  content: "Compartir";
-  position: absolute;
-  bottom: 60px;
-  right: 0;
-  background: rgba(0,0,0,0.8);
-  color: #fff;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  pointer-events: none;
-  white-space: nowrap;
-}
-  #shareBtn img {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-#shareBtn:hover::after {
-  opacity: 1;
-  transform: translateY(0);
-}
      #welcomeOverlay {
       display: none; /* oculto al inicio */
       position: fixed;
@@ -727,6 +678,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
