@@ -389,31 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
   overlay.addEventListener('click', () => {
     overlay.style.display = 'none';
   });
-
-  // 📌 Botón de compartir
-  const shareBtn = document.getElementById("shareBtn");
-  if (shareBtn) {
-    shareBtn.addEventListener("click", async () => {
-      const shareData = {
-        title: "NOIZE SECRET DOCTRINE — Official",
-        text: "Hardcore, Terrorcore, Speedcore, Uptempo Hardcore",
-        url: window.location.href
-      };
-
-      if (navigator.share) {
-        try {
-          await navigator.share(shareData);
-        } catch (err) {
-          console.log("Compartir cancelado o falló:", err);
-        }
-      } else {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-          alert("🔗 Link copiado al portapapeles");
-        });
-      }
-    });
-  }
-});
+  
 </script>
 
 
@@ -678,6 +654,7 @@ volumeSlider.addEventListener('input', function(e){
 
 
  
+
 
 
 
