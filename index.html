@@ -249,17 +249,6 @@ button, input, textarea, select, canvas {
   cursor: pointer;
 }
 
-/* Ajustes para pantallas móviles */
-@media (max-width: 768px) {
-  /* Asegurarse de que el botón de "share" esté en la parte superior */
-  #shareBtn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 200;
-  }
-}
-
 
 #welcomeOverlay .welcome-content p {
   margin: 8px 0;
@@ -305,10 +294,6 @@ button, input, textarea, select, canvas {
 <!-- Flechas -->
 <div class="arrow left" onclick="scrollCarousel(-1)">❮</div>
 <div class="arrow right" onclick="scrollCarousel(1)">❯</div>
-  
-<button id="shareBtn" title="Compartir">
-  <img src="share.jpg" alt="Compartir">
-</button>
 
 <main class="carousel-container">
    <!-- WELCOME -->
